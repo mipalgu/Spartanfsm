@@ -46,3 +46,14 @@
 *.lso
 *.cmd_log
 *.lst
+*.sh
+*.bat
+*.rst
+*.js
+*.srp
+*.xdl
+*.bin
+*.edf
+*.drc
+*.edif
+*.ngo
