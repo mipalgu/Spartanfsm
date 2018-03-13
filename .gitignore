@@ -32,3 +32,17 @@
 *.wpc
 *.ppr
 *.tcl
+*.vdbx
+*.vdbl
+*.xbcd
+*.projectmgr
+*.xreport
+*.xise
+*.ngm
+*.twr
+*.ngr
+*.ngd
+*.ngc
+*.lso
+*.cmd_log
+*.lst
