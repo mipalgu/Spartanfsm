@@ -158,10 +158,12 @@ setTargetState state = "targetState <= " ++ state ++ ";\ninternalState <= OnExit
 transitionToVhdl :: Int -> Int -> String -> String
 transitionToVhdl n m s
     | n > m            = error "n cannot be greater than m in transitionToVhdl"
-    | n == 0 && n == m = "if (t" ++ (show n) ++ "):" ++ (beautify 1 $ setTargetState s) ++ "end if;" 
-    | n == 0           = "if (t" ++ (show n) ++ "):" ++ (beautify 1 $ setTargetState s)
-    | n == m           = "elseif (t" ++ (show n) ++ "):" ++ (beautify 1 $ setTargetState s) ++ "end if;"
-    | otherwise        = "elseif (t" ++ (show n) ++ "):" ++ (beautify 1 $ setTargetState s)
+    | n == 0 && n == m = "if (t" ++ (show n) ++ ") then"
+        ++ (beautify 1 $ setTargetState s) ++ "else\n    internalState <= Internal;\nend if;" 
+    | n == 0           = "if (t" ++ (show n) ++ ") then" ++ (beautify 1 $ setTargetState s)
+    | n == m           = "elseif (t" ++ (show n) ++ ") then"
+        ++ (beautify 1 $ setTargetState s) ++ "else\n    internalState <= Internal;\nend if;"
+    | otherwise        = "elseif (t" ++ (show n) ++ ") then" ++ (beautify 1 $ setTargetState s)
 
 createTransitionCode :: [String] -> [String] -> String
 createTransitionCode trans states = createCode trans states 0 ((length trans) - 1) ((createTransitionInitialCode trans) ++ "\n")
