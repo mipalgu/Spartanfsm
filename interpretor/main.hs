@@ -5,6 +5,12 @@ import Data.List
 collectInternals :: String -> String -> (IO String, IO String, IO String, IO String)
 collectInternals state dir = (return state, getOnEntry dir state, getInternal dir state, getOnExit dir state)
 
+--STRING FORMATING
+
+infixl 2 +\>
+(+\>) :: String -> String -> String
+str1 +\> str2 = str1 ++ "\n" ++ str2
+
 isCharWhitespace :: Char -> Bool
 isCharWhitespace c = case c of
     ' '      -> True
@@ -28,7 +34,27 @@ trim cs | isWhitespace cs            = ""
         | otherwise                  = cs
 
 ioTrim :: String -> IO String
-ioTrim str = return (trim str) 
+ioTrim str = return (trim str)
+
+beautifyLine :: Int -> String -> String
+beautifyLine n str | n <= 0    = str
+                   | otherwise = beautifyLine (n-1) (tab ++ str)
+
+beautify :: Int -> String -> String
+beautify n str = foldl (\x y -> x ++ "\n" ++ y)  "" (map (\x -> beautifyLine n x) (lines str)) ++ "\n"
+
+tab :: String
+tab = "    "
+
+getProjectName :: String -> String
+getProjectName dir = head (splitOn ".machine" (last (filter (\x -> x /= "") (splitOn "/" dir))))
+
+hasTransitionInFileName :: String -> Bool
+hasTransitionInFileName file = length (filter (\x -> x == "Transition") (splitOn "_" file)) > 0
+
+--END STRING FORMATTING
+
+--STATE CODE
 
 getStates :: String -> [String]
 getStates str = filter (\x -> not $ isWhitespace x) (map removeWhitespace (lines str))
@@ -36,8 +62,11 @@ getStates str = filter (\x -> not $ isWhitespace x) (map removeWhitespace (lines
 ioGetStates :: String -> IO [String]
 ioGetStates str = return (getStates str)
 
-getFileContents :: String -> IO String
-getFileContents path = readFile path >>= ioTrim
+getStateNameFromTransition :: String -> String
+getStateNameFromTransition str = head (splitOn "_Transition" $ foldl (++) "" (splitOn "State_" str))
+
+hasState :: String -> String -> Bool
+hasState str state = state == getStateNameFromTransition str
 
 getAllStates :: String -> IO [String]
 getAllStates dir = getFileContents (dir ++ "/States") >>= ioGetStates
@@ -54,15 +83,56 @@ getOnExit dir state = getInternalStates dir state "OnExit"
 getInternal :: String -> String -> IO String
 getInternal dir state = getInternalStates dir state "Internal"
 
-tab :: String
-tab = "    "
+--END STATE CODE
 
-beautifyLine :: Int -> String -> String
-beautifyLine n str | n <= 0    = str
-                   | otherwise = beautifyLine (n-1) (tab ++ str)
+--FILE IO AND SYSTEM CALLS
 
-beautify :: Int -> String -> String
-beautify n str = foldl (\x y -> x ++ "\n" ++ y)  "" (map (\x -> beautifyLine n x) (lines str)) ++ "\n"
+getFileContents :: String -> IO String
+getFileContents path = readFile path >>= ioTrim
+
+callLs :: String -> IO String
+callLs dir = readProcess ("ls") [dir] ""
+
+getAllTransitionFiles :: String -> IO [String]
+getAllTransitionFiles dir = callLs dir >>= seperateTransitions 
+
+openTrans :: String -> String -> IO String
+openTrans dir t = getFileContents (dir ++ "/" ++ t)
+
+openAllTrans :: String -> [String] -> IO [IO String]
+openAllTrans dir ts = return (map (\x -> openTrans dir x) ts)
+
+--END FILE IO AND SYSTEM CALLS
+
+--TRANSITION CODE
+
+filterForState :: String -> [String] -> IO [String]
+filterForState state trans = return (filter (\x -> hasState x state) trans)
+
+getTransitionsForState :: String -> String -> IO [String]
+getTransitionsForState state dir = getAllTransitionFiles dir >>= (filterForState state) 
+
+seperateTransitions :: String -> IO [String]
+seperateTransitions files = return (filter hasTransitionInFileName (lines files))
+
+getTransCodeForState :: String -> String -> IO [IO String]
+getTransCodeForState dir state = getTransitionsForState state dir >>= openAllTrans dir
+
+--END TRANSITION CODE
+
+-- VHDL CODE
+
+createVarDecForTransition :: String -> Int -> String
+createVarDecForTransition condition n
+    | n == 0    = "t" ++ (show n) ++ " = " ++ condition ++ ";"
+    | otherwise = "t" ++ (show n) ++ " = " ++ condition ++ " and not t" ++  (show (n-1)) ++ ";"
+
+createTransitionInitialCode :: [String] -> String
+createTransitionInitialCode trans = trim (calc trans 0 "")
+    where
+        calc :: [String] -> Int -> String -> String
+        calc ts n carry | n == length ts = carry
+                        | otherwise      = calc ts (n+1) (carry +\> createVarDecForTransition (ts!!n) n)
 
 numberOfBits :: Integer -> Integer
 numberOfBits num = calc num 0
@@ -73,26 +143,40 @@ numberOfBits num = calc num 0
                    | num > 2^n = calc num (n+1)
                    | otherwise = n
 
-callLs :: String -> IO String
-callLs dir = readProcess ("ls") [dir] ""
+setTargetState :: String -> String
+setTargetState state = "targetState <= " ++ state ++ ";"
 
-hasTransitionInFileName :: String -> Bool
-hasTransitionInFileName file = length (filter (\x -> x == "Transition") (splitOn "_" file)) > 0 
+transitionToVhdl :: Int -> Int -> String -> String
+transitionToVhdl n m s
+    | n > m            = error "n cannot be greater than m in transitionToVhdl"
+    | n == 0 && n == m = "if (t" ++ (show n) ++ "):" ++ (beautify 1 $ setTargetState s) ++ "end if;" 
+    | n == 0           = "if (t" ++ (show n) ++ "):" ++ (beautify 1 $ setTargetState s)
+    | n == m           = "elseif (t" ++ (show n) ++ "):" ++ (beautify 1 $ setTargetState s) ++ "end if;"
+    | otherwise        = "elseif (t" ++ (show n) ++ "):" ++ (beautify 1 $ setTargetState s)
 
-seperateTransitions :: String -> IO [String]
-seperateTransitions files = return (filter hasTransitionInFileName (lines files))
+createTransitionCode :: [String] -> [String] -> IO String
+createTransitionCode trans states = createCode trans states 0 ((length trans) - 1) ((createTransitionInitialCode trans) ++ "\n")
+    where
+        createCode :: [String] -> [String] -> Int -> Int -> String -> IO String
+        createCode ts ss n m carry
+            | n > m     = return carry
+            | otherwise = createCode ts ss (n+1) m (carry ++ (transitionToVhdl n m (ss!!n)))
 
-getAllTransitionFiles :: String -> IO [String]
-getAllTransitionFiles dir = callLs dir >>= seperateTransitions 
+internalStateVhdl :: String
+internalStateVhdl =
+    "--Internal State Representation Bits\n"
+    ++ "constant OnEntry: std_logic_vector(1 downto 0) := \"00\";\n"
+    ++ "constant CheckTransition: std_logic_vector(1 downto 0) := \"01\";\n"
+    ++ "constant OnExit: std_logic_vector(1 downto 0) := \"10\";\n"
+    ++ "constant Internal: std_logic_vector(1 downto 0) := \"11\";\n"
+    ++ "signal internalState: std_logic_vector(1 downto 0) := OnEntry;\n"
 
-getStateNameFromTransition :: String -> String
-getStateNameFromTransition str = head (splitOn "_Transition" $ foldl (++) "" (splitOn "State_" str))
 
-hasState :: String -> String -> Bool
-hasState str state = state == getStateNameFromTransition str
+--END VHDL CODE
 
-filterForState :: String -> [String] -> IO [String]
-filterForState state trans = return (filter (\x -> hasState x state) trans)
+--CONVENIENCE CODE
 
-getTransitionsForState :: String -> String -> IO [String]
-getTransitionsForState state dir = getAllTransitionFiles dir >>= (filterForState state)
+mapTuple :: (a -> IO b) -> (IO a, IO a, IO a, IO a, IO a) -> (IO b, IO b, IO b, IO b, IO b)
+mapTuple f (a0, a1, a2, a3, a4) = (a0 >>= f, a1 >>= f, a2 >>= f, a3 >>= f, a4 >>= f)
+
+--END CONVENIENCE CODE
