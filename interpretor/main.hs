@@ -182,7 +182,73 @@ createTargetState :: Int -> String
 createTargetState bits = "signal targetState: std_logic_vector(" ++ (show (bits - 1)) ++ " downto 0);\n"
 
 
+createState :: Int -> String -> String -> String
+createState size bin state = "constant " ++ state ++ ": std_logic_vector(" ++ (show (size - 1)) ++ " downto 0) := \"" ++ bin ++ "\";\n"
 
+createAllStates :: Int -> [String] -> [String] -> String
+createAllStates size bins states = foldl (++) "" $ map (\x -> createState size (bins!!x) (states!!x)) [0..((length states) - 1)]
+
+getBins :: [String] -> [String]
+getBins states = map (\x -> decToBin (numberOfBits (length states)) x) [0..((length states) - 1)]
+
+createArchitectureVariables :: Int -> [String] -> String
+createArchitectureVariables size states = internalStateVhdl
+    ++ createAllStates (numberOfBits $ length states) (getBins states) states
+    ++ (createCurrentState (states!!0) (numberOfBits (length states)))
+    ++ createTargetState (numberOfBits $ length states)
+
+createStateCode :: String -> String -> String -> String
+createStateCode state code appendedCode = "when " ++ state ++ " =>" ++ (beautify 1 (code +\> appendedCode));
+
+createOnEntry :: String -> String
+createOnEntry code = createStateCode "OnEntry" code "internalState <= CheckTransition;"
+
+createInternal :: String -> String
+createInternal code = createStateCode "Internal" code "internalState <= CheckTransition;"
+
+createOnExit :: String -> String
+createOnExit code = createStateCode "OnExit" code "internalState <= OnEntry;\ncurrentState <= targetState;"
+
+createSingleState :: String -> [String] -> String
+createSingleState state code = "\n    when " ++ state ++ " =>\n        case internalState is"
+    ++ (beautify 3 (createOnEntry (code!!0) ++ createInternal (code!!1) ++ createOnExit (code!!2)))
+    ++ "        end case;\n" 
+
+createAllStateCode :: [String] -> [[String]] -> String
+createAllStateCode states codes = 
+    beautify 1 (
+        foldl (++) ""
+            $ map 
+                (\x -> createSingleState (states!!x) (codes!!x))
+                [0..((length states) - 1)]
+        )
+
+createRisingEdge :: [String] -> [[String]] -> String
+createRisingEdge states codes = "if (rising_edge(clk50)) then"
+    ++ beautify 1 "case currentState is"
+    ++ createAllStateCode states codes
+    ++ "    end case;\nend if;"
+
+createFallingEdge :: [String] -> [[String]] -> String
+createFallingEdge states codes = "if (falling_edge(clk50)) then"
+    ++ beautify 1 "case currentState is"
+    ++ createAllStateCode states codes
+    ++ "    end case;\nend if;"
+
+createProcessBlock :: [String] -> [[String]] -> [[String]] -> String
+createProcessBlock states risingEdge fallingEdge = "process (clk50)\n    begin"
+    ++ beautify 2 (createRisingEdge states risingEdge)
+    ++ beautify 2 (createFallingEdge states fallingEdge)
+    ++ "    end process;"
+
+
+createArchitecture :: [String] -> [[String]] -> [[String]] -> Int -> String -> String
+createArchitecture states risingEdgeCode fallingEdgeCode size name = 
+    "architecture Behavioural of " ++ name ++ " is"
+    ++ beautify 1 (createArchitectureVariables size states)
+    ++ "begin\n"
+    ++ createProcessBlock states risingEdgeCode fallingEdgeCode
+    ++ "\nend Behavioural;"
 --END VHDL CODE
 
 --CONVENIENCE CODE
@@ -190,17 +256,16 @@ createTargetState bits = "signal targetState: std_logic_vector(" ++ (show (bits 
 mapTuple :: (a -> IO b) -> (IO a, IO a, IO a, IO a, IO a) -> (IO b, IO b, IO b, IO b, IO b)
 mapTuple f (a0, a1, a2, a3, a4) = (a0 >>= f, a1 >>= f, a2 >>= f, a3 >>= f, a4 >>= f)
 
-decToBin :: Int -> String
-decToBin num = sanitiseBin $ calcBin (numberOfBits num) num ""
+decToBin :: Int -> Int -> String
+decToBin size num = sanitiseBin size $ calcBin size num ""
     where
         calcBin :: Int -> Int -> String -> String
         calcBin ind n carry | ind < 0      = carry
                             | n >= (2^ind) = calcBin (ind-1) (n - (2^ind)) (carry ++ "1")
                             | otherwise    = calcBin (ind-1) n (carry ++ "0")
 
-sanitiseBin :: String -> String
-sanitiseBin bin | length bin == 1 = bin
-                | head bin == '0' = sanitiseBin (tail bin)
-                | otherwise       = bin
+sanitiseBin :: Int -> String -> String
+sanitiseBin size bin | length bin > size && head bin == '0' = sanitiseBin size (tail bin)
+                     | otherwise                            = bin
 
 --END CONVENIENCE CODE
