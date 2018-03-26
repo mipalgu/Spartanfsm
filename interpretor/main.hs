@@ -83,6 +83,12 @@ getOnExit dir state = getInternalStates dir state "OnExit"
 getInternal :: String -> String -> IO String
 getInternal dir state = getInternalStates dir state "Internal"
 
+getInternals :: String -> String -> [IO String]
+getInternals dir state =  [getOnEntry dir state, getInternal dir state, getOnExit dir state]
+
+getAllInternals :: String -> [String] -> [[IO String]]
+getAllInternals dir states = map (getInternals dir) states
+
 --END STATE CODE
 
 --FILE IO AND SYSTEM CALLS
@@ -118,6 +124,9 @@ seperateTransitions files = return (filter hasTransitionInFileName (lines files)
 getTransCodeForState :: String -> String -> IO [IO String]
 getTransCodeForState dir state = getTransitionsForState state dir >>= openAllTrans dir
 
+getAllTransCodeForAllStates :: String -> [String] -> [IO [IO String]]
+getAllTransCodeForAllStates dir states = map (getTransCodeForState dir) states
+
 --END TRANSITION CODE
 
 -- VHDL CODE
@@ -144,7 +153,7 @@ numberOfBits num = calc num 0
                    | otherwise = n
 
 setTargetState :: String -> String
-setTargetState state = "targetState <= " ++ state ++ ";"
+setTargetState state = "targetState <= " ++ state ++ ";\ninternalState <= OnExit;"
 
 transitionToVhdl :: Int -> Int -> String -> String
 transitionToVhdl n m s
@@ -154,13 +163,28 @@ transitionToVhdl n m s
     | n == m           = "elseif (t" ++ (show n) ++ "):" ++ (beautify 1 $ setTargetState s) ++ "end if;"
     | otherwise        = "elseif (t" ++ (show n) ++ "):" ++ (beautify 1 $ setTargetState s)
 
-createTransitionCode :: [String] -> [String] -> IO String
+createTransitionCode :: [String] -> [String] -> String
 createTransitionCode trans states = createCode trans states 0 ((length trans) - 1) ((createTransitionInitialCode trans) ++ "\n")
     where
-        createCode :: [String] -> [String] -> Int -> Int -> String -> IO String
+        createCode :: [String] -> [String] -> Int -> Int -> String -> String
         createCode ts ss n m carry
-            | n > m     = return carry
+            | n > m     = carry
             | otherwise = createCode ts ss (n+1) m (carry ++ (transitionToVhdl n m (ss!!n)))
+
+createSingleTransitionCode :: String -> [String] -> [String] -> String
+createSingleTransitionCode state transitions targetStates =
+    beautify 1 ("when " ++ state ++ " =>" ++ (beautify 2 (createTransitionCode transitions targetStates)))
+
+joinTransitionBlocks :: [String] -> [[String]] -> [[String]] -> String
+joinTransitionBlocks states trans targets =
+    "    case currentState is"
+    ++ beautify 1 (foldl (++) "" $ map (\x -> createSingleTransitionCode (states!!x) (trans!!x) (targets!!x)) [0..((length states) - 1)])
+    ++ "    end case;"
+
+createAllTransitionsCode :: [String] -> [[String]] -> [[String]] -> String
+createAllTransitionsCode states trans targets = "case internalState is\n    when CheckTransition =>"
+    ++ beautify 1 (joinTransitionBlocks states trans targets)
+    ++ "end case;\n"
 
 internalStateVhdl :: String
 internalStateVhdl =
@@ -223,32 +247,42 @@ createAllStateCode states codes =
                 [0..((length states) - 1)]
         )
 
+
+
 createRisingEdge :: [String] -> [[String]] -> String
 createRisingEdge states codes = "if (rising_edge(clk50)) then"
     ++ beautify 1 "case currentState is"
     ++ createAllStateCode states codes
     ++ "    end case;\nend if;"
 
-createFallingEdge :: [String] -> [[String]] -> String
-createFallingEdge states codes = "if (falling_edge(clk50)) then"
-    ++ beautify 1 "case currentState is"
-    ++ createAllStateCode states codes
-    ++ "    end case;\nend if;"
+createFallingEdge :: [String] -> [[String]] -> [[String]] -> String
+createFallingEdge states trans targets = "if (falling_edge(clk50)) then"
+    ++ beautify 1 (createAllTransitionsCode states trans targets)
+    ++ "end if;"
 
-createProcessBlock :: [String] -> [[String]] -> [[String]] -> String
-createProcessBlock states risingEdge fallingEdge = "process (clk50)\n    begin"
+createProcessBlock :: [String] -> [[String]] -> [[String]] -> [[String]] -> String
+createProcessBlock states risingEdge transitions targets = "process (clk50)\n    begin"
     ++ beautify 2 (createRisingEdge states risingEdge)
-    ++ beautify 2 (createFallingEdge states fallingEdge)
+    ++ beautify 2 (createFallingEdge states transitions targets)
     ++ "    end process;"
 
 
-createArchitecture :: [String] -> [[String]] -> [[String]] -> Int -> String -> String
-createArchitecture states risingEdgeCode fallingEdgeCode size name = 
+createArchitecture :: [String] -> [[String]] -> [[String]] -> [[String]] -> Int -> String -> String
+createArchitecture states risingEdgeCode transitions targets size name = 
     "architecture Behavioural of " ++ name ++ " is"
     ++ beautify 1 (createArchitectureVariables size states)
     ++ "begin\n"
-    ++ createProcessBlock states risingEdgeCode fallingEdgeCode
+    ++ createProcessBlock states risingEdgeCode transitions targets
     ++ "\nend Behavioural;"
+
+--build :: String -> String
+--build dir = (getProjectName dir) 
+--    >>= ((getNumberOfBits dir) 
+--    >>= ((getAllStates dir >>= (getAllTransCodeForAllStates dir)) 
+--    >>= ((getAllStates dir >>= (getAllInternals dir))
+--    >>= ((getAllStates dir) >>= createArchitecture))))
+    
+
 --END VHDL CODE
 
 --CONVENIENCE CODE
