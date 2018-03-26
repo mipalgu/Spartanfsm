@@ -199,7 +199,8 @@ decToBin num = sanitiseBin $ calcBin (numberOfBits num) num ""
                             | otherwise    = calcBin (ind-1) n (carry ++ "0")
 
 sanitiseBin :: String -> String
-sanitiseBin bin | head bin == '0' = sanitiseBin (tail bin)
+sanitiseBin bin | length bin == 1 = bin
+                | head bin == '0' = sanitiseBin (tail bin)
                 | otherwise       = bin
 
 --END CONVENIENCE CODE
