@@ -1,3 +1,7 @@
+import System.Process
+import Data.List.Split
+import Data.List
+
 collectInternals :: String -> String -> (IO String, IO String, IO String, IO String)
 collectInternals state dir = (return state, getOnEntry dir state, getInternal dir state, getOnExit dir state)
 
@@ -69,4 +73,26 @@ numberOfBits num = calc num 0
                    | num > 2^n = calc num (n+1)
                    | otherwise = n
 
+callLs :: String -> IO String
+callLs dir = readProcess ("ls") [dir] ""
 
+hasTransitionInFileName :: String -> Bool
+hasTransitionInFileName file = length (filter (\x -> x == "Transition") (splitOn "_" file)) > 0 
+
+seperateTransitions :: String -> IO [String]
+seperateTransitions files = return (filter hasTransitionInFileName (lines files))
+
+getAllTransitionFiles :: String -> IO [String]
+getAllTransitionFiles dir = callLs dir >>= seperateTransitions 
+
+getStateNameFromTransition :: String -> String
+getStateNameFromTransition str = head (splitOn "_Transition" $ foldl (++) "" (splitOn "State_" str))
+
+hasState :: String -> String -> Bool
+hasState str state = state == getStateNameFromTransition str
+
+filterForState :: String -> [String] -> IO [String]
+filterForState state trans = return (filter (\x -> hasState x state) trans)
+
+getTransitionsForState :: String -> String -> IO [String]
+getTransitionsForState state dir = getAllTransitionFiles dir >>= (filterForState state)
