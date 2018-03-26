@@ -134,10 +134,10 @@ createTransitionInitialCode trans = trim (calc trans 0 "")
         calc ts n carry | n == length ts = carry
                         | otherwise      = calc ts (n+1) (carry +\> createVarDecForTransition (ts!!n) n)
 
-numberOfBits :: Integer -> Integer
+numberOfBits :: Int -> Int
 numberOfBits num = calc num 0
     where
-        calc :: Integer -> Integer -> Integer
+        calc :: Int -> Int -> Int
         calc num n | num == 1  = 1
                    | num < 0   = error "Number must be positive"
                    | num > 2^n = calc num (n+1)
@@ -171,6 +171,17 @@ internalStateVhdl =
     ++ "constant Internal: std_logic_vector(1 downto 0) := \"11\";\n"
     ++ "signal internalState: std_logic_vector(1 downto 0) := OnEntry;\n"
 
+getNumberOfBits :: String -> IO Int
+getNumberOfBits dir = getAllStates dir >>= (\x -> return (length x)) >>= (\y -> return (numberOfBits y)) 
+
+createCurrentState :: String -> Int -> String
+createCurrentState firstState bits =
+    "signal currentState: std_logic_vector(" ++ (show (bits - 1)) ++ " downto 0) := " ++ firstState ++ ";\n"
+
+createTargetState :: Int -> String
+createTargetState bits = "signal targetState: std_logic_vector(" ++ (show (bits - 1)) ++ " downto 0);\n"
+
+
 
 --END VHDL CODE
 
@@ -178,5 +189,17 @@ internalStateVhdl =
 
 mapTuple :: (a -> IO b) -> (IO a, IO a, IO a, IO a, IO a) -> (IO b, IO b, IO b, IO b, IO b)
 mapTuple f (a0, a1, a2, a3, a4) = (a0 >>= f, a1 >>= f, a2 >>= f, a3 >>= f, a4 >>= f)
+
+decToBin :: Int -> String
+decToBin num = sanitiseBin $ calcBin (numberOfBits num) num ""
+    where
+        calcBin :: Int -> Int -> String -> String
+        calcBin ind n carry | ind < 0      = carry
+                            | n >= (2^ind) = calcBin (ind-1) (n - (2^ind)) (carry ++ "1")
+                            | otherwise    = calcBin (ind-1) n (carry ++ "0")
+
+sanitiseBin :: String -> String
+sanitiseBin bin | head bin == '0' = sanitiseBin (tail bin)
+                | otherwise       = bin
 
 --END CONVENIENCE CODE
