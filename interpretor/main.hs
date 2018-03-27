@@ -105,8 +105,8 @@ getAllTransitionFiles dir = callLs dir >>= seperateTransitions
 openTrans :: String -> String -> IO String
 openTrans dir t = getFileContents (dir ++ "/" ++ t)
 
-openAllTrans :: String -> [String] -> IO [IO String]
-openAllTrans dir ts = return (map (\x -> openTrans dir x) ts)
+openAllTrans :: String -> [String] -> IO [String]
+openAllTrans dir ts = sequence (map (\x -> openTrans dir x) ts)
 
 --END FILE IO AND SYSTEM CALLS
 
@@ -121,11 +121,11 @@ getTransitionsForState state dir = getAllTransitionFiles dir >>= (filterForState
 seperateTransitions :: String -> IO [String]
 seperateTransitions files = return (filter hasTransitionInFileName (lines files))
 
-getTransCodeForState :: String -> String -> IO [IO String]
+getTransCodeForState :: String -> String -> IO [String]
 getTransCodeForState dir state = getTransitionsForState state dir >>= openAllTrans dir
 
-getAllTransCodeForAllStates :: String -> [String] -> [IO [IO String]]
-getAllTransCodeForAllStates dir states = map (getTransCodeForState dir) states
+getAllTransCodeForAllStates :: String -> [String] -> IO [[String]]
+getAllTransCodeForAllStates dir states = sequence $ map (getTransCodeForState dir) states
 
 --END TRANSITION CODE
 
