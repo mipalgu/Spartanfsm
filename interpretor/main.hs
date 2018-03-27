@@ -15,7 +15,9 @@ main = do
     stateBitSize <- getNumberOfBits dir
     projectName <- return $ getProjectName dir
     architecture <- return $ createArchitecture states internals transitions targetStates stateBitSize projectName
-    writeFile "test.txt" architecture
+    variables <- getVariables dir projectName
+    entity <- return $ createEntity projectName variables
+    writeFile "test.txt" (entity ++ "\n\n" ++ architecture)
 
     
 
@@ -125,6 +127,9 @@ openTrans dir t = getFileContents (dir ++ "/" ++ t)
 openAllTrans :: String -> [String] -> IO [String]
 openAllTrans dir ts = sequence (map (\x -> openTrans dir x) ts)
 
+getVariables :: String -> String -> IO String
+getVariables dir name = getFileContents (dir ++ "/" ++ name ++ "_Variables.h")
+
 --END FILE IO AND SYSTEM CALLS
 
 --TRANSITION CODE
@@ -213,12 +218,14 @@ transitionToVhdl n m s
     | otherwise        = "elseif (t" ++ (show n) ++ ") then" ++ (beautify 1 $ setTargetState s)
 
 createTransitionCode :: [String] -> [String] -> String
-createTransitionCode trans states = createCode trans states 0 ((length trans) - 1) ((createTransitionInitialCode trans) ++ "\n")
-    where
-        createCode :: [String] -> [String] -> Int -> Int -> String -> String
-        createCode ts ss n m carry
-            | n > m     = carry
-            | otherwise = createCode ts ss (n+1) m (carry ++ (transitionToVhdl n m (ss!!n)))
+createTransitionCode trans states
+    | trans == [] = "internalState <= Internal;"
+    | otherwise   = createCode trans states 0 ((length trans) - 1) ((createTransitionInitialCode trans) ++ "\n")
+        where
+            createCode :: [String] -> [String] -> Int -> Int -> String -> String
+            createCode ts ss n m carry
+                | n > m     = carry
+                | otherwise = createCode ts ss (n+1) m (carry ++ (transitionToVhdl n m (ss!!n)))
 
 createSingleTransitionCode :: String -> [String] -> [String] -> String
 createSingleTransitionCode state transitions targetStates =
@@ -324,13 +331,28 @@ createArchitecture states risingEdgeCode transitions targets size name =
     ++ createProcessBlock states risingEdgeCode transitions targets
     ++ "\nend Behavioural;"
 
+isComment :: String -> Bool
+isComment str | length (trim str) < 2 = False
+              | otherwise             = (trim str)!!0 == '/' && (trim str)!!1 == '/'
+
+filterOutComments :: String -> String
+filterOutComments str = trim (foldl (+\>) "" (filter (\x -> not $ isComment x) (lines str)))
+
+removeTrailingComment :: String -> String
+removeTrailingComment str = trim ((splitOn "///<" str)!!0)
+
+removeAllTrailingComments :: String -> String
+removeAllTrailingComments str = trim (foldl (+\>) "" (map removeTrailingComment (lines str)))
+
+createEntity :: String -> String -> String
+createEntity name vars = "entity " ++ name ++ " is"
+    ++ beautify 1 (removeAllTrailingComments $ filterOutComments vars)
+    ++ "end " ++ name ++ ";"
+
 
 --END VHDL CODE
 
 --CONVENIENCE CODE
-
-mapTuple :: (a -> IO b) -> (IO a, IO a, IO a, IO a, IO a) -> (IO b, IO b, IO b, IO b, IO b)
-mapTuple f (a0, a1, a2, a3, a4) = (a0 >>= f, a1 >>= f, a2 >>= f, a3 >>= f, a4 >>= f)
 
 decToBin :: Int -> Int -> String
 decToBin size num = sanitiseBin size $ calcBin size num ""
