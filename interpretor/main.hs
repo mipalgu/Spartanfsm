@@ -3,6 +3,22 @@ import Data.List.Split
 import Data.List
 import Data.Char
 
+main :: IO ()
+main = do
+    dir <- getLine
+    states <- getAllStates dir
+    internals <- getAllInternals dir states
+    transitions <- getAllTransCodeForAllStates dir states
+    numberOfTargets <- return $ getNumberOfTargets states transitions
+    targets <- getAllTargets dir states numberOfTargets
+    targetStates <- return $ allTargetsToState states targets
+    stateBitSize <- getNumberOfBits dir
+    projectName <- return $ getProjectName dir
+    architecture <- return $ createArchitecture states internals transitions targetStates stateBitSize projectName
+    writeFile "test.txt" architecture
+
+    
+
 collectInternals :: String -> String -> (IO String, IO String, IO String, IO String)
 collectInternals state dir = (return state, getOnEntry dir state, getInternal dir state, getOnExit dir state)
 
@@ -84,11 +100,11 @@ getOnExit dir state = getInternalStates dir state "OnExit"
 getInternal :: String -> String -> IO String
 getInternal dir state = getInternalStates dir state "Internal"
 
-getInternals :: String -> String -> [IO String]
-getInternals dir state =  [getOnEntry dir state, getInternal dir state, getOnExit dir state]
+getInternals :: String -> String -> IO [String]
+getInternals dir state =  sequence ([getOnEntry dir state, getInternal dir state, getOnExit dir state])
 
-getAllInternals :: String -> [String] -> [[IO String]]
-getAllInternals dir states = map (getInternals dir) states
+getAllInternals :: String -> [String] -> IO [[String]]
+getAllInternals dir states = sequence $ map (getInternals dir) states
 
 --END STATE CODE
 
@@ -146,7 +162,17 @@ getTargetsForState dir state n
     | otherwise = sequence $ map (\x -> readTargetTransition x (dir ++ "/State_" ++ state ++".h")) [0..(n-1)]
 
 getAllTargets :: String -> [String] -> [Int] -> IO [[Int]]
-getAllTargets dir states ns = sequence $ map (\x -> getTargetsForState dir (states!!x) (ns!!x)) [0..((length states) - 1)]
+getAllTargets dir states ns =
+    sequence $ map (\x -> (getTargetsForState dir (states!!x) (ns!!x))) [0..((length states) - 1)]
+
+targetToState :: [String] -> [Int] -> [String]
+targetToState states targets = map (\x -> states!!x) targets
+
+allTargetsToState :: [String] -> [[Int]] -> [[String]]
+allTargetsToState states targets = map (\x -> targetToState states (targets!!x)) [0..((length states) - 1)]
+
+getNumberOfTargets :: [String] -> [[String]] -> [Int]
+getNumberOfTargets states transitions = map (\x -> length (transitions!!x)) [0..((length states) - 1)]
 
 --END TRANSITION CODE
 
