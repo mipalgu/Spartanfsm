@@ -1,6 +1,7 @@
 import System.Process
 import Data.List.Split
 import Data.List
+import Data.Char
 
 collectInternals :: String -> String -> (IO String, IO String, IO String, IO String)
 collectInternals state dir = (return state, getOnEntry dir state, getInternal dir state, getOnExit dir state)
@@ -126,6 +127,26 @@ getTransCodeForState dir state = getTransitionsForState state dir >>= openAllTra
 
 getAllTransCodeForAllStates :: String -> [String] -> IO [[String]]
 getAllTransCodeForAllStates dir states = sequence $ map (getTransCodeForState dir) states
+
+getTargetTransitionLine :: Int -> String -> String 
+getTargetTransitionLine n contents =
+    (lines (splitOn "}" (splitOn "{" ((splitOn ("class Transition_" ++ (show n)) contents)!!1)!!1)!!0))!!2
+
+getTargetTransition :: Int -> String -> IO Int
+getTargetTransition n contents = case (trim ((splitOn ")" ((splitOn "= " (getTargetTransitionLine n contents))!!1))!!0)) of
+    x : [] -> return $ digitToInt x
+    _      -> error "Failed to get target transition" 
+
+readTargetTransition :: Int -> String -> IO Int
+readTargetTransition n file = getFileContents file >>= getTargetTransition n
+
+getTargetsForState :: String -> String -> Int -> IO [Int]
+getTargetsForState dir state n
+    | n == 0    = return []
+    | otherwise = sequence $ map (\x -> readTargetTransition x (dir ++ "/State_" ++ state ++".h")) [0..(n-1)]
+
+getAllTargets :: String -> [String] -> [Int] -> IO [[Int]]
+getAllTargets dir states ns = sequence $ map (\x -> getTargetsForState dir (states!!x) (ns!!x)) [0..((length states) - 1)]
 
 --END TRANSITION CODE
 
@@ -277,13 +298,6 @@ createArchitecture states risingEdgeCode transitions targets size name =
     ++ createProcessBlock states risingEdgeCode transitions targets
     ++ "\nend Behavioural;"
 
---build :: String -> String
---build dir = (getProjectName dir) 
---    >>= ((getNumberOfBits dir) 
---    >>= ((getAllStates dir >>= (getAllTransCodeForAllStates dir)) 
---    >>= ((getAllStates dir >>= (getAllInternals dir))
---    >>= ((getAllStates dir) >>= createArchitecture))))
-    
 
 --END VHDL CODE
 
