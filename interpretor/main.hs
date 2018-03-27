@@ -2,10 +2,12 @@ import System.Process
 import Data.List.Split
 import Data.List
 import Data.Char
+import System.Environment
 
 main :: IO ()
 main = do
-    dir <- getLine
+    args <- getArgs
+    dir <- return $ head args
     states <- getAllStates dir
     internals <- getAllInternals dir states
     transitions <- getAllTransCodeForAllStates dir states
@@ -17,7 +19,7 @@ main = do
     architecture <- return $ createArchitecture states internals transitions targetStates stateBitSize projectName
     variables <- getVariables dir projectName
     entity <- return $ createEntity projectName variables
-    writeFile (projectName ++ ".vhd") (entity ++ "\n\n" ++ architecture)
+    writeFile ("src/" ++ projectName ++ ".vhd") (entity ++ "\n\n" ++ architecture)
 
 
 --STRING FORMATING
