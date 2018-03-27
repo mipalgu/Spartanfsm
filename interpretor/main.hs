@@ -17,7 +17,7 @@ main = do
     architecture <- return $ createArchitecture states internals transitions targetStates stateBitSize projectName
     variables <- getVariables dir projectName
     entity <- return $ createEntity projectName variables
-    writeFile "test.txt" (entity ++ "\n\n" ++ architecture)
+    writeFile (projectName ++ ".vhd") (entity ++ "\n\n" ++ architecture)
 
 
 --STRING FORMATING
@@ -347,7 +347,7 @@ removeAllTrailingComments :: String -> String
 removeAllTrailingComments str = trim (foldl (+\>) "" (map removeTrailingComment (lines str)))
 
 createEntity :: String -> String -> String
-createEntity name vars = "entity " ++ name ++ " is"
+createEntity name vars = "library IEEE;\nuse IEEE.std_logic_1164.All;\n\nentity " ++ name ++ " is"
     ++ beautify 1 (removeAllTrailingComments $ filterOutComments vars)
     ++ "end " ++ name ++ ";"
 
