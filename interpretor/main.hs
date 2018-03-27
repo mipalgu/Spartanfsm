@@ -19,10 +19,6 @@ main = do
     entity <- return $ createEntity projectName variables
     writeFile "test.txt" (entity ++ "\n\n" ++ architecture)
 
-    
-
-collectInternals :: String -> String -> (IO String, IO String, IO String, IO String)
-collectInternals state dir = (return state, getOnEntry dir state, getInternal dir state, getOnExit dir state)
 
 --STRING FORMATING
 
@@ -184,9 +180,7 @@ getNumberOfTargets states transitions = map (\x -> length (transitions!!x)) [0..
 -- VHDL CODE
 
 createVarDecForTransition :: String -> Int -> String
-createVarDecForTransition condition n
-    | n == 0    = "t" ++ (show n) ++ " = " ++ condition ++ ";"
-    | otherwise = "t" ++ (show n) ++ " = " ++ condition ++ " and not t" ++  (show (n-1)) ++ ";"
+createVarDecForTransition condition n = "variable t" ++ (show n) ++ " : boolean := " ++ condition ++ ";"
 
 createTransitionInitialCode :: [String] -> String
 createTransitionInitialCode trans = trim (calc trans 0 "")
@@ -207,15 +201,23 @@ numberOfBits num = calc num 0
 setTargetState :: String -> String
 setTargetState state = "targetState <= " ++ state ++ ";\ninternalState <= OnExit;"
 
+buildCondition :: Int -> String
+buildCondition n0 = build n0 ""
+    where
+        build :: Int -> String -> String
+        build n carry | n < 0     = carry
+                      | n == n0   = build (n-1) (carry ++ "(t" ++ (show n) ++ ")")
+                      | otherwise = build (n-1) (carry ++ " and (not t" ++ (show n) ++ ")")
+
 transitionToVhdl :: Int -> Int -> String -> String
 transitionToVhdl n m s
     | n > m            = error "n cannot be greater than m in transitionToVhdl"
     | n == 0 && n == m = "if (t" ++ (show n) ++ ") then"
         ++ (beautify 1 $ setTargetState s) ++ "else\n    internalState <= Internal;\nend if;" 
     | n == 0           = "if (t" ++ (show n) ++ ") then" ++ (beautify 1 $ setTargetState s)
-    | n == m           = "elseif (t" ++ (show n) ++ ") then"
+    | n == m           = "elseif " ++ (buildCondition n) ++" then"
         ++ (beautify 1 $ setTargetState s) ++ "else\n    internalState <= Internal;\nend if;"
-    | otherwise        = "elseif (t" ++ (show n) ++ ") then" ++ (beautify 1 $ setTargetState s)
+    | otherwise        = "elseif " ++ (buildCondition n) ++ " then" ++ (beautify 1 $ setTargetState s)
 
 createTransitionCode :: [String] -> [String] -> String
 createTransitionCode trans states
