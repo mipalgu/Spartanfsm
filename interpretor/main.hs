@@ -7,7 +7,7 @@ import System.Environment
 main :: IO ()
 main = do
     args <- getArgs
-    dir <- return $ head args
+    dir <- return $ if last (head args) == '/' then init (head args) else head args
     states <- getAllStates dir
     internals <- getAllInternals dir states
     transitions <- getAllTransCodeForAllStates dir states
