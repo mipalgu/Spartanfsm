@@ -1,4 +1,4 @@
-SRCS = $(shell ls *.hs)
+SRCS!= ls *.hs
 
 all:
 	ghc $(SRCS) -odir bin -hidir bin
