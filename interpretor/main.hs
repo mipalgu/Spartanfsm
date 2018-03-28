@@ -69,6 +69,11 @@ getProjectName dir = head (splitOn ".machine" (last (filter (\x -> x /= "") (spl
 hasTransitionInFileName :: String -> Bool
 hasTransitionInFileName file = length (filter (\x -> x == "Transition") (splitOn "_" file)) > 0
 
+removeFirstNewLine :: String -> String
+removeFirstNewLine str | str == []        = str
+                       | head str == '\n' = tail str
+                       | otherwise        = str
+
 --END STRING FORMATTING
 
 --STATE CODE
@@ -238,7 +243,7 @@ createSingleTransitionCode state transitions targetStates =
 joinTransitionBlocks :: [String] -> [[String]] -> [[String]] -> String
 joinTransitionBlocks states trans targets =
     "    case currentState is"
-    ++ beautify 1 (foldl (++) "" $ map (\x -> createSingleTransitionCode (states!!x) (trans!!x) (targets!!x)) [0..((length states) - 1)])
+    ++ removeFirstNewLine (beautify 1 (foldl (++) "" $ map (\x -> createSingleTransitionCode (states!!x) (trans!!x) (targets!!x)) [0..((length states) - 1)]))
     ++ "    end case;"
 
 createAllTransitionsCode :: [String] -> [[String]] -> [[String]] -> String
@@ -294,7 +299,7 @@ createOnExit :: String -> String
 createOnExit code = createStateCode "OnExit" code "internalState <= OnEntry;\ncurrentState <= targetState;"
 
 createSingleState :: String -> [String] -> String
-createSingleState state code = "\n    when " ++ state ++ " =>\n        case internalState is"
+createSingleState state code = "    when " ++ state ++ " =>\n        case internalState is"
     ++ (beautify 3 (createOnEntry (code!!0) ++ createInternal (code!!1) ++ createOnExit (code!!2)))
     ++ "        end case;\n" 
 
@@ -312,7 +317,7 @@ createAllStateCode states codes =
 createRisingEdge :: [String] -> [[String]] -> String
 createRisingEdge states codes = "if (rising_edge(clk50)) then"
     ++ beautify 1 "case currentState is"
-    ++ createAllStateCode states codes
+    ++ removeFirstNewLine (createAllStateCode states codes)
     ++ "    end case;\nend if;"
 
 createFallingEdge :: [String] -> [[String]] -> [[String]] -> String
@@ -323,7 +328,7 @@ createFallingEdge states trans targets = "if (falling_edge(clk50)) then"
 createProcessBlock :: [String] -> [[String]] -> [[String]] -> [[String]] -> String
 createProcessBlock states risingEdge transitions targets = "process (clk50)\n    begin"
     ++ beautify 2 (createRisingEdge states risingEdge)
-    ++ beautify 2 (createFallingEdge states transitions targets)
+    ++ removeFirstNewLine (beautify 2 (createFallingEdge states transitions targets))
     ++ "    end process;"
 
 
