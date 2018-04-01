@@ -211,23 +211,23 @@ numberOfBits num = calc num 0
 setTargetState :: String -> String
 setTargetState state = "targetState <= " ++ state ++ ";\ninternalState <= OnExit;"
 
-buildCondition :: Int -> String
-buildCondition n0 = build n0 ""
+buildCondition :: Int -> [String] -> String
+buildCondition n0 ts = build n0 ts ""
     where
-        build :: Int -> String -> String
-        build n carry | n < 0     = carry
-                      | n == n0   = build (n-1) (carry ++ "(t" ++ (show n) ++ ")")
-                      | otherwise = build (n-1) (carry ++ " and (not t" ++ (show n) ++ ")")
+        build :: Int -> [String] -> String -> String
+        build n ts carry   | n < 0     = carry
+                           | n == n0   = build (n-1) ts (carry ++ "(" ++ (ts!!n) ++ ")")
+                           | otherwise = build (n-1) ts (carry ++ " and (not (" ++ (ts!!n) ++ "))")
 
-transitionToVhdl :: Int -> Int -> String -> String
-transitionToVhdl n m s
+transitionToVhdl :: Int -> Int -> [String] -> String -> String
+transitionToVhdl n m ts s
     | n > m            = error "n cannot be greater than m in transitionToVhdl"
-    | n == 0 && n == m = "if (t" ++ (show n) ++ ") then"
+    | n == 0 && n == m = "if (" ++ ts!!n ++ ") then"
         ++ (beautify 1 $ setTargetState s) ++ "else\n    internalState <= Internal;\nend if;" 
-    | n == 0           = "if (t" ++ (show n) ++ ") then" ++ (beautify 1 $ setTargetState s)
-    | n == m           = "elseif " ++ (buildCondition n) ++" then"
+    | n == 0           = "if (" ++ ts!!n ++ ") then" ++ (beautify 1 $ setTargetState s)
+    | n == m           = "elseif " ++ (buildCondition n ts) ++" then"
         ++ (beautify 1 $ setTargetState s) ++ "else\n    internalState <= Internal;\nend if;"
-    | otherwise        = "elseif " ++ (buildCondition n) ++ " then" ++ (beautify 1 $ setTargetState s)
+    | otherwise        = "elseif " ++ (buildCondition n ts) ++ " then" ++ (beautify 1 $ setTargetState s)
 
 createTransitionCode :: [String] -> [String] -> String
 createTransitionCode trans states
@@ -237,7 +237,7 @@ createTransitionCode trans states
             createCode :: [String] -> [String] -> Int -> Int -> String -> String
             createCode ts ss n m carry
                 | n > m     = carry
-                | otherwise = createCode ts ss (n+1) m (carry ++ (transitionToVhdl n m (ss!!n)))
+                | otherwise = createCode ts ss (n+1) m (carry ++ (transitionToVhdl n m ts (ss!!n)))
 
 createSingleTransitionCode :: String -> [String] -> [String] -> String
 createSingleTransitionCode state transitions targetStates =
