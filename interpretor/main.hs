@@ -189,16 +189,6 @@ getNumberOfTargets states transitions = map (\x -> length (transitions!!x)) [0..
 
 -- VHDL CODE
 
-createVarDecForTransition :: String -> Int -> String
-createVarDecForTransition condition n = "variable t" ++ (show n) ++ " : boolean := " ++ condition ++ ";"
-
-createTransitionInitialCode :: [String] -> String
-createTransitionInitialCode trans = trim (calc trans 0 "")
-    where
-        calc :: [String] -> Int -> String -> String
-        calc ts n carry | n == length ts = carry
-                        | otherwise      = calc ts (n+1) (carry +\> createVarDecForTransition (ts!!n) n)
-
 numberOfBits :: Int -> Int
 numberOfBits num = calc num 0
     where
@@ -232,7 +222,7 @@ transitionToVhdl n m ts s
 createTransitionCode :: [String] -> [String] -> String
 createTransitionCode trans states
     | trans == [] = "internalState <= Internal;"
-    | otherwise   = createCode trans states 0 ((length trans) - 1) ((createTransitionInitialCode trans) ++ "\n")
+    | otherwise   = createCode trans states 0 ((length trans) - 1) ""
         where
             createCode :: [String] -> [String] -> Int -> Int -> String -> String
             createCode ts ss n m carry
