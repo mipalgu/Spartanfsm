@@ -74,6 +74,9 @@ removeFirstNewLine str | str == []        = str
                        | head str == '\n' = tail str
                        | otherwise        = str
 
+othersNullBlock :: String
+othersNullBlock = "when others =>" ++ beautify 1 "null;"
+
 --END STRING FORMATTING
 
 --STATE CODE
@@ -244,11 +247,13 @@ joinTransitionBlocks :: [String] -> [[String]] -> [[String]] -> String
 joinTransitionBlocks states trans targets =
     "    case currentState is"
     ++ removeFirstNewLine (beautify 1 (foldl (++) "" $ map (\x -> createSingleTransitionCode (states!!x) (trans!!x) (targets!!x)) [0..((length states) - 1)]))
+    ++ removeFirstNewLine (beautify 2 othersNullBlock)
     ++ "    end case;"
 
 createAllTransitionsCode :: [String] -> [[String]] -> [[String]] -> String
 createAllTransitionsCode states trans targets = "case internalState is\n    when CheckTransition =>"
     ++ beautify 1 (joinTransitionBlocks states trans targets)
+    ++ removeFirstNewLine (beautify 1 othersNullBlock)
     ++ "end case;\n"
 
 internalStateVhdl :: String
@@ -300,17 +305,18 @@ createOnExit code = createStateCode "OnExit" code "internalState <= OnEntry;\ncu
 
 createSingleState :: String -> [String] -> String
 createSingleState state code = "    when " ++ state ++ " =>\n        case internalState is"
-    ++ (beautify 3 (createOnEntry (code!!0) ++ createInternal (code!!1) ++ createOnExit (code!!2)))
+    ++ (beautify 3 (createOnEntry (code!!0) ++ createInternal (code!!1) ++ createOnExit (code!!2) ++ othersNullBlock))
     ++ "        end case;\n" 
 
 createAllStateCode :: [String] -> [[String]] -> String
 createAllStateCode states codes = 
     beautify 1 (
-        foldl (++) ""
+        (foldl (++) ""
             $ map 
                 (\x -> createSingleState (states!!x) (codes!!x))
                 [0..((length states) - 1)]
-        )
+        ) ++ (removeFirstNewLine (beautify 1 othersNullBlock))
+    )
 
 
 
