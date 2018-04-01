@@ -241,7 +241,7 @@ createTransitionCode trans states
 
 createSingleTransitionCode :: String -> [String] -> [String] -> String
 createSingleTransitionCode state transitions targetStates =
-    beautify 1 ("when " ++ state ++ " =>" ++ (beautify 2 (createTransitionCode transitions targetStates)))
+    beautify 1 ("when " ++ state ++ " =>" ++ (beautify 1 (createTransitionCode transitions targetStates)))
 
 joinTransitionBlocks :: [String] -> [[String]] -> [[String]] -> String
 joinTransitionBlocks states trans targets =
