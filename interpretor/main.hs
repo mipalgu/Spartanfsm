@@ -215,9 +215,9 @@ transitionToVhdl n m ts s
     | n == 0 && n == m = "if (" ++ ts!!n ++ ") then"
         ++ (beautify 1 $ setTargetState s) ++ "else\n    internalState <= Internal;\nend if;" 
     | n == 0           = "if (" ++ ts!!n ++ ") then" ++ (beautify 1 $ setTargetState s)
-    | n == m           = "elseif " ++ (buildCondition n ts) ++" then"
+    | n == m           = "elsif " ++ (buildCondition n ts) ++" then"
         ++ (beautify 1 $ setTargetState s) ++ "else\n    internalState <= Internal;\nend if;"
-    | otherwise        = "elseif " ++ (buildCondition n ts) ++ " then" ++ (beautify 1 $ setTargetState s)
+    | otherwise        = "elsif " ++ (buildCondition n ts) ++ " then" ++ (beautify 1 $ setTargetState s)
 
 createTransitionCode :: [String] -> [String] -> String
 createTransitionCode trans states
@@ -240,9 +240,22 @@ joinTransitionBlocks states trans targets =
     ++ removeFirstNewLine (beautify 2 othersNullBlock)
     ++ "    end case;"
 
+pseudoStateCode :: String -> String
+pseudoStateCode state = "    case currentState is"
+    ++ beautify 2 ("When InitialPseudoState =>" ++ beautify 1 ("targetState <= " ++ state ++ ";\ninternalState <= OnExit;"))
+
+joinTransitionBlocksWithPseudoState :: [String] -> [[String]] -> [[String]] -> String
+joinTransitionBlocksWithPseudoState states trans targets
+    | head states == "InitialPseudoState" = 
+        pseudoStateCode (states!!1)
+        ++ removeFirstNewLine (beautify 1 (foldl (++) "" $ map (\x -> createSingleTransitionCode ((tail states)!!x) ((tail trans)!!x) ((tail targets)!!x)) [0..((length (tail states)) - 1)]))
+        ++ removeFirstNewLine (beautify 2 othersNullBlock)
+        ++ "    end case;"
+    | otherwise                           = joinTransitionBlocks states trans targets
+
 createAllTransitionsCode :: [String] -> [[String]] -> [[String]] -> String
 createAllTransitionsCode states trans targets = "case internalState is\n    when CheckTransition =>"
-    ++ beautify 1 (joinTransitionBlocks states trans targets)
+    ++ beautify 1 (joinTransitionBlocksWithPseudoState states trans targets)
     ++ removeFirstNewLine (beautify 1 othersNullBlock)
     ++ "end case;\n"
 
