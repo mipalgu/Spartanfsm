@@ -304,7 +304,8 @@ createInternal :: String -> String
 createInternal code = createStateCode "Internal" code "internalState <= CheckTransition;"
 
 createOnExit :: String -> String
-createOnExit code = createStateCode "OnExit" code "internalState <= OnEntry;\ncurrentState <= targetState;"
+createOnExit code = createStateCode "OnExit" code ("if (currentState = targetState) then\n    "
+    ++ "internalState <= internal;\nelse\n    internalState <= OnEntry;\nend if;\ncurrentState <= targetState;")
 
 createSingleState :: String -> [String] -> String
 createSingleState state code = "    when " ++ state ++ " =>\n        case internalState is"
