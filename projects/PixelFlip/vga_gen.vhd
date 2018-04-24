@@ -32,11 +32,11 @@ architecture Behavioral of vga_gen is
    constant v_max        : natural := 720+29;
    signal   v_count      : unsigned(11 downto 0) := (others => '0');
 	
-	constant width: integer := 1;
-	constant height: integer := 1;
+	constant width: integer := 50;
+	constant height: integer := 50;
 	
-	type column is array (height downto 0) of std_logic_vector(7 downto 0);
-	type screen is array (width downto 0) of column;
+	type column is array ((height - 1) downto 0) of std_logic_vector(7 downto 0);
+	type screen is array ((width - 1) downto 0) of column;
 	
 	signal greenOut: screen;
 	signal redOut: screen;
@@ -50,8 +50,8 @@ architecture Behavioral of vga_gen is
 	end component;
 begin
 
-	PixelY: for I in 0 to width generate
-		PixelX: for J in 0 to height generate
+	PixelY: for I in 0 to (width - 1) generate
+		PixelX: for J in 0 to (height - 1) generate
 			PixelFlipGen: PixelFlip port map(
 				clk50 => clk75,
 				redOut => redOut(i)(j),
@@ -66,7 +66,7 @@ process(clk75)
       if rising_edge(clk75) then
 			
          if h_count < h_rez and v_count < v_rez then
-				if h_count <= width and v_count <= height then
+				if h_count < width and v_count < height then
 					red <= redOut(to_integer(h_count))(to_integer(v_count));
 					green <= greenOut(to_integer(h_count))(to_integer(v_count));
 					blue <= (others => '0');
