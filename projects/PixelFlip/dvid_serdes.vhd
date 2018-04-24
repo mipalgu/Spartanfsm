@@ -14,7 +14,6 @@ entity dvid_serdes is
     Port ( clk50 : in  STD_LOGIC;
            tmds_out_p : out  STD_LOGIC_VECTOR(3 downto 0);
            tmds_out_n : out  STD_LOGIC_VECTOR(3 downto 0);
-           btns : in  STD_LOGIC_VECTOR(3 downto 0);
 			  leds : out  STD_LOGIC_VECTOR(1 downto 0));
 			  
 end dvid_serdes;
@@ -50,9 +49,7 @@ architecture Behavioral of dvid_serdes is
 		blue  : OUT std_logic_vector(7 downto 0);
 		blank : OUT std_logic;
 		hsync : OUT std_logic;
-		vsync : OUT std_logic;
-		pattern  : in STD_LOGIC_VECTOR (3 downto 0)
-
+		vsync : OUT std_logic
 		);
 	END COMPONENT;
 
@@ -108,8 +105,7 @@ i_vga_gen: vga_gen PORT MAP(
 		blue  => blue_t,
 		blank => blank_t,
 		hsync => hsync_t,
-		vsync => vsync_t,
-		pattern => btns
+		vsync => vsync_t
 	);
 
 		

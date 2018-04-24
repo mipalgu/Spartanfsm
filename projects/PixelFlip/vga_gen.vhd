@@ -14,8 +14,7 @@ entity vga_gen is
            blue  : out STD_LOGIC_VECTOR (7 downto 0) := (others => '0');
            blank : out STD_LOGIC := '0';
            hsync : out STD_LOGIC := '0';
-           vsync : out STD_LOGIC := '0';
-			  pattern  : in STD_LOGIC_VECTOR (3 downto 0)
+           vsync : out STD_LOGIC := '0'
 			  );
 end vga_gen;
 
