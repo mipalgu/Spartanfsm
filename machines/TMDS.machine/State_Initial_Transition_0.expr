@@ -1,0 +1,1 @@
+ones > 4 or (ones = 4 and data(0) = '0')
