@@ -395,20 +395,20 @@ createAllStateCode states codes =
 
 -- Create Rising edge code
 createRisingEdge :: [String] -> [[String]] -> String
-createRisingEdge states codes = "if (rising_edge(clk50)) then"
+createRisingEdge states codes = "if (rising_edge(clk)) then"
     ++ beautify 1 "case currentState is"
     ++ removeFirstNewLine (createAllStateCode states codes)
     ++ "    end case;\nend if;"
 
 --Create Falling edge code
 createFallingEdge :: [String] -> [[String]] -> [[String]] -> String
-createFallingEdge states trans targets = "if (falling_edge(clk50)) then"
+createFallingEdge states trans targets = "if (falling_edge(clk)) then"
     ++ beautify 1 (createAllTransitionsCode states trans targets)
     ++ "end if;"
 
 --create process block
 createProcessBlock :: [String] -> [[String]] -> [[String]] -> [[String]] -> String
-createProcessBlock states risingEdge transitions targets = "process (clk50)\n    begin"
+createProcessBlock states risingEdge transitions targets = "process (clk)\n    begin"
     ++ beautify 2 (createRisingEdge states risingEdge)
     ++ removeFirstNewLine (beautify 2 (createFallingEdge states transitions targets))
     ++ "    end process;"
@@ -416,7 +416,7 @@ createProcessBlock states risingEdge transitions targets = "process (clk50)\n   
 --Create entire architecture block
 createArchitecture :: [String] -> [[String]] -> [[String]] -> [[String]] -> Int -> String -> String
 createArchitecture states risingEdgeCode transitions targets size name = 
-    "architecture Behavioural of " ++ name ++ " is"
+    "architecture LLFSM of " ++ name ++ " is"
     ++ beautify 1 (createArchitectureVariables size (map toStateName states))
     ++ "begin\n"
     ++ createProcessBlock (map toStateName states) risingEdgeCode transitions targets
