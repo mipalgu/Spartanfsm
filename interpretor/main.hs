@@ -29,6 +29,12 @@ infixl 2 +\>
 (+\>) :: String -> String -> String
 str1 +\> str2 = str1 ++ "\n" ++ str2
 
+infixl 2 ++>
+(++>) :: String -> String -> String
+str1 ++> str2 | str1 == ""                                       = str2
+              | length str1 == 1 && isCharWhitespace (head str1) = str1 ++ str2
+              | otherwise                                        = str1 ++ " " ++ str2
+
 --Determins if a character is whitespace
 isCharWhitespace :: Char -> Bool
 isCharWhitespace c = case c of
@@ -370,7 +376,7 @@ createArchitectureVariables size states vars = internalStateVhdl
     ++ createAllStates (numberOfBits $ length states) (getBins states) states
     ++ (createCurrentState (states!!0) (numberOfBits (length states)))
     ++ createTargetState (numberOfBits $ length states)
-    ++ createArchitectureSnapshots (filter isExternal (lines vars))
+    ++ createArchitectureSnapshots (getExternalVars vars)
     ++ createVariables (getMachineVars vars)
 
 -- create case statement for states
@@ -476,8 +482,19 @@ getExternals str = getAllExternalVariableCode $ filter isExternal (lines str)
 isMachineVar :: String -> Bool
 isMachineVar code = (splitOn "\t" code)!!0 == "#machine"
 
+addSemiColon :: String -> String
+addSemiColon str | last str == ';' = str
+                 | otherwise       = str ++ ";"
+
+formatEntityVariableAsArchitecture :: String -> String
+formatEntityVariableAsArchitecture str
+  = addSemiColon $ "signal " ++ ((splitOn ": " str)!!0) ++ ": " ++ (foldl (++>) "" $ tail (splitOn " " ((splitOn ": " str)!!1)))
+
 getMachineVariableCode :: String -> String
 getMachineVariableCode code = (splitOn "\t" code)!!1
+
+getExternalVars :: String -> [String]
+getExternalVars str = map (\x -> formatEntityVariableAsArchitecture (getMachineVariableCode x)) $ filter isExternal (lines str)
 
 getMachineVars :: String -> [String]
 getMachineVars str = map getMachineVariableCode $ filter isMachineVar (lines str)
