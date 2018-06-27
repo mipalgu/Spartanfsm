@@ -94,6 +94,9 @@ othersNullBlock = "when others =>" ++ beautify 1 "null;"
 toStateName :: String -> String
 toStateName str = "STATE_" ++ str
 
+toExternalName :: String -> String
+toExternalName str = "EXTERNAL_" ++ str
+
 --END STRING FORMATTING
 
 --STATE CODE
@@ -447,7 +450,11 @@ isExternal code = (splitOn "\t" code)!!0 == "#extern"
 
 -- Gets the code from an external var
 getExternalVariableCode :: String -> String
-getExternalVariableCode code = (splitOn "\t" code)!!1
+getExternalVariableCode code
+    = convertCodeToExternalName (splitOn ": " ((splitOn "\t" code)!!1))
+
+convertCodeToExternalName :: [String] -> String
+convertCodeToExternalName xs = toExternalName (xs!!0) ++ ": " ++ xs!!1
 
 -- Get the code for all external variables
 getAllExternalVariableCode :: [String] -> [String]
