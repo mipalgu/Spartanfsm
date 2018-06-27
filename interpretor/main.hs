@@ -27,7 +27,8 @@ main = do
 --Operator to concatenate strings with a new line in between them
 infixl 2 +\>
 (+\>) :: String -> String -> String
-str1 +\> str2 = str1 ++ "\n" ++ str2
+str1 +\> str2 | str1 == "" = str2
+              | otherwise  = str1 ++ "\n" ++ str2
 
 infixl 2 ++>
 (++>) :: String -> String -> String
@@ -322,7 +323,7 @@ joinTransitionBlocksWithPseudoState states trans targets
 createAllTransitionsCode :: [String] -> [[String]] -> [[String]] -> String
 createAllTransitionsCode states trans targets = "case internalState is\n    when CheckTransition =>"
     ++ beautify 1 (joinTransitionBlocksWithPseudoState states trans targets)
-    ++ removeFirstNewLine (beautify 1 othersNullBlock)
+
 
 -- Internal state representation
 internalStateVhdl :: String
@@ -441,8 +442,10 @@ createRisingEdge states codes = "if (rising_edge(clk)) then"
 --Create Falling edge code
 createFallingEdge :: [String] -> [[String]] -> [[String]] -> String -> String
 createFallingEdge states trans targets vars = "if (falling_edge(clk)) then"
-    ++ beautify 1 ((createAllTransitionsCode states trans targets) ++ createReadToSnapshot vars ++ "end case;\n")
-    ++ "end if;"
+    ++ beautify 1 (createAllTransitionsCode states trans targets)
+    ++ removeFirstNewLine (beautify 2 (createReadToSnapshot vars))
+    ++ removeFirstNewLine (beautify 1 (removeFirstNewLine (beautify 1 othersNullBlock)))
+    ++ "    end case;\nend if;"
 
 --create process block
 createProcessBlock :: [String] -> [[String]] -> [[String]] -> [[String]] -> String -> String
