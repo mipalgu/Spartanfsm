@@ -323,7 +323,6 @@ createAllTransitionsCode :: [String] -> [[String]] -> [[String]] -> String
 createAllTransitionsCode states trans targets = "case internalState is\n    when CheckTransition =>"
     ++ beautify 1 (joinTransitionBlocksWithPseudoState states trans targets)
     ++ removeFirstNewLine (beautify 1 othersNullBlock)
-    ++ "end case;\n"
 
 -- Internal state representation
 internalStateVhdl :: String
@@ -333,9 +332,9 @@ internalStateVhdl =
     ++ "constant CheckTransition: std_logic_vector(2 downto 0) := \"001\";\n"
     ++ "constant OnExit: std_logic_vector(2 downto 0) := \"010\";\n"
     ++ "constant Internal: std_logic_vector(2 downto 0) := \"011\";\n"
-    ++ "constant readToSnapshot: std_logic_vector(2 downto 0) := \"100\";\n"
-    ++ "constant writeFromSnapshot: std_logic_vector(2 downto 0) := \"101\";\n"
-    ++ "signal internalState: std_logic_vector(2 downto 0) := OnEntry;\n"
+    ++ "constant ReadToSnapshot: std_logic_vector(2 downto 0) := \"100\";\n"
+    ++ "constant WriteFromSnapshot: std_logic_vector(2 downto 0) := \"101\";\n"
+    ++ "signal internalState: std_logic_vector(2 downto 0) := readToSnapshot;\n"
 
 -- Get number of bits to represent the states in dir
 getNumberOfBits :: String -> IO Int
@@ -350,6 +349,9 @@ createCurrentState firstState bits =
 createTargetState :: Int -> String
 createTargetState bits = "signal targetState: std_logic_vector(" ++ (show (bits - 1)) ++ " downto 0);\n"
 
+--Code to create previousRinglet signal.
+createPreviousRinglet :: Int -> String
+createPreviousRinglet bits = "signal previousRinglet: std_logic_vector(" ++ (show (bits - 1)) ++ " downto 0);\n"
 
 -- VHDL Binary representation of a state
 createState :: Int -> String -> String -> String
@@ -363,10 +365,11 @@ createAllStates size bins states = foldl (++) "--State Representation Bits\n" $ 
 getBins :: [String] -> [String]
 getBins states = map (\x -> decToBin (numberOfBits (length states)) x) [0..((length states) - 1)]
 
+--Creates snapshot variable code.
 createArchitectureSnapshots :: [String] -> String
 createArchitectureSnapshots vars = "--Snapshot of External Variables" ++ (foldl (+\>) "" vars) ++ "\n"
 
-
+--Creates machine variable code.
 createVariables :: [String] -> String
 createVariables vars = "--Machine Variables" ++ (foldl (+\>) "" vars) ++ "\n"
 
@@ -376,12 +379,27 @@ createArchitectureVariables size states vars = internalStateVhdl
     ++ createAllStates (numberOfBits $ length states) (getBins states) states
     ++ (createCurrentState (states!!0) (numberOfBits (length states)))
     ++ createTargetState (numberOfBits $ length states)
+    ++ createPreviousRinglet (numberOfBits $ length states)
     ++ createArchitectureSnapshots (getExternalVars vars)
     ++ createVariables (getMachineVars vars)
 
 -- create case statement for states
 createStateCode :: String -> String -> String -> String
 createStateCode state code appendedCode = "when " ++ state ++ " =>" ++ (beautify 1 (code +\> appendedCode));
+
+createReadLine :: String -> String
+createReadLine varName = varName ++ " <= " ++ toExternalName varName ++ ";"
+
+createReadCode :: String -> String
+createReadCode vars
+  = foldl (+\>) "" $ map (\s -> createReadLine (getExternalVarName s)) $ getInputExternalVars vars
+
+createReadToTransition :: String
+createReadToTransition
+  = "if (previousRinglet = currentState) then\n    internalState <= Internal;\nelse\n    internalState <= OnEntry;\nend if;"
+
+createReadToSnapshot :: String -> String
+createReadToSnapshot vars = createStateCode "ReadToSnapshot" (createReadCode vars) createReadToTransition
 
 -- Create onEntry code
 createOnEntry :: String -> String
@@ -421,16 +439,16 @@ createRisingEdge states codes = "if (rising_edge(clk)) then"
     ++ "    end case;\nend if;"
 
 --Create Falling edge code
-createFallingEdge :: [String] -> [[String]] -> [[String]] -> String
-createFallingEdge states trans targets = "if (falling_edge(clk)) then"
-    ++ beautify 1 (createAllTransitionsCode states trans targets)
+createFallingEdge :: [String] -> [[String]] -> [[String]] -> String -> String
+createFallingEdge states trans targets vars = "if (falling_edge(clk)) then"
+    ++ beautify 1 ((createAllTransitionsCode states trans targets) ++ createReadToSnapshot vars ++ "end case;\n")
     ++ "end if;"
 
 --create process block
-createProcessBlock :: [String] -> [[String]] -> [[String]] -> [[String]] -> String
-createProcessBlock states risingEdge transitions targets = "process (clk)\n    begin"
+createProcessBlock :: [String] -> [[String]] -> [[String]] -> [[String]] -> String -> String
+createProcessBlock states risingEdge transitions targets vars = "process (clk)\n    begin"
     ++ beautify 2 (createRisingEdge states risingEdge)
-    ++ removeFirstNewLine (beautify 2 (createFallingEdge states transitions targets))
+    ++ removeFirstNewLine (beautify 2 (createFallingEdge states transitions targets vars))
     ++ "    end process;"
 
 --Create entire architecture block
@@ -439,7 +457,7 @@ createArchitecture states risingEdgeCode transitions targets size name vars =
     "architecture LLFSM of " ++ name ++ " is"
     ++ beautify 1 (createArchitectureVariables size (map toStateName states) vars)
     ++ "begin\n"
-    ++ createProcessBlock (map toStateName states) risingEdgeCode transitions targets
+    ++ createProcessBlock (map toStateName states) risingEdgeCode transitions targets vars
     ++ "\nend LLFSM;"
 
 --Checks if code is a comment
@@ -479,26 +497,33 @@ getAllExternalVariableCode = map getExternalVariableCode
 getExternals :: String -> [String]
 getExternals str = getAllExternalVariableCode $ filter isExternal (lines str)
 
+--Is the variable a machine variable?
 isMachineVar :: String -> Bool
 isMachineVar code = (splitOn "\t" code)!!0 == "#machine"
 
+--Add semicolon to line iff the last character is not a semi colon
 addSemiColon :: String -> String
 addSemiColon str | last str == ';' = str
                  | otherwise       = str ++ ";"
 
+--Change the code format in the entity declaration to a format suitable for the architecture declaration
 formatEntityVariableAsArchitecture :: String -> String
 formatEntityVariableAsArchitecture str
   = addSemiColon $ "signal " ++ ((splitOn ": " str)!!0) ++ ": " ++ (foldl (++>) "" $ tail (splitOn " " ((splitOn ": " str)!!1)))
 
+--Get the code for a variable
 getMachineVariableCode :: String -> String
 getMachineVariableCode code = (splitOn "\t" code)!!1
 
+--Get the architecture code for external variables
 getExternalVars :: String -> [String]
 getExternalVars str = map (\x -> formatEntityVariableAsArchitecture (getMachineVariableCode x)) $ filter isExternal (lines str)
 
+--Get the architecture code for machine variables
 getMachineVars :: String -> [String]
 getMachineVars str = map getMachineVariableCode $ filter isMachineVar (lines str)
 
+--Create the port delcaration in the entity statement
 createPortDeclaration :: [String] -> String
 createPortDeclaration xs = init (foldl (\x y -> x ++ "\n    " ++ y) "port (\n    clk: in std_logic;" xs) ++ "\n);"
 
@@ -508,6 +533,27 @@ createEntity name vars = "library IEEE;\nuse IEEE.std_logic_1164.All;\n\nentity 
     ++ beautify 1 (createPortDeclaration $ getExternals $ removeAllTrailingComments $ filterOutComments vars)
     ++ "end " ++ name ++ ";"
 
+
+isExternalModeInput :: String -> Bool
+isExternalModeInput str = str == "in" || str == "inout"
+
+isExternalModeOutput :: String -> Bool
+isExternalModeOutput str = str == "out" || str == "inout"
+
+isExternalInput :: String -> Bool
+isExternalInput str = isExternalModeInput ((splitOn " " ((splitOn ": " ((splitOn "\t" str)!!1))!!1))!!0)
+
+isExternalOutput :: String -> Bool
+isExternalOutput str = isExternalModeOutput ((splitOn " "((splitOn ": " ((splitOn "\t" str)!!1))!!1))!!0)
+
+getInputExternalVars :: String -> [String]
+getInputExternalVars vars = filter isExternalInput $ filter isExternal (lines vars)
+
+getOutputExternalVars :: String -> [String]
+getOutputExternalVars vars = filter isExternalOutput $ filter isExternal (lines vars)
+
+getExternalVarName :: String -> String
+getExternalVarName varCode = (splitOn ": " ((splitOn "\t" varCode)!!1))!!0
 
 --END VHDL CODE
 
