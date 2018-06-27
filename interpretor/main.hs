@@ -90,6 +90,10 @@ removeFirstNewLine str | str == []        = str
 othersNullBlock :: String
 othersNullBlock = "when others =>" ++ beautify 1 "null;"
 
+--Namespace State
+toStateName :: String -> String
+toStateName str = "STATE_" ++ str
+
 --END STRING FORMATTING
 
 --STATE CODE
@@ -413,9 +417,9 @@ createProcessBlock states risingEdge transitions targets = "process (clk50)\n   
 createArchitecture :: [String] -> [[String]] -> [[String]] -> [[String]] -> Int -> String -> String
 createArchitecture states risingEdgeCode transitions targets size name = 
     "architecture Behavioural of " ++ name ++ " is"
-    ++ beautify 1 (createArchitectureVariables size states)
+    ++ beautify 1 (createArchitectureVariables size (map toStateName states))
     ++ "begin\n"
-    ++ createProcessBlock states risingEdgeCode transitions targets
+    ++ createProcessBlock (map toStateName states) risingEdgeCode transitions targets
     ++ "\nend Behavioural;"
 
 --Checks if code is a comment
