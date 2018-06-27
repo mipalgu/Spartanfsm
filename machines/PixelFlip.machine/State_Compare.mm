@@ -18,7 +18,6 @@ Compare::Compare(const char *name): CLState(name, *new Compare::OnEntry, *new Co
 {
 	_transitions[0] = new Transition_0();
 	_transitions[1] = new Transition_1();
-	_transitions[2] = new Transition_2();
 }
 
 Compare::~Compare()
@@ -29,7 +28,6 @@ Compare::~Compare()
 
 	delete _transitions[0];
 	delete _transitions[1];
-	delete _transitions[2];
 }
 
 void Compare::OnEntry::perform(CLMachine *_machine, CLState *_state) const
@@ -81,17 +79,5 @@ bool Compare::Transition_1::check(CLMachine *_machine, CLState *_state) const
 	return
 	(
 #		include "State_Compare_Transition_1.expr"
-	);
-}
-bool Compare::Transition_2::check(CLMachine *_machine, CLState *_state) const
-{
-#	include "PixelFlip_VarRefs.mm"
-#	include "State_Compare_VarRefs.mm"
-#	include "PixelFlip_FuncRefs.mm"
-#	include "State_Compare_FuncRefs.mm"
-
-	return
-	(
-#		include "State_Compare_Transition_2.expr"
 	);
 }

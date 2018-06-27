@@ -1,10 +1,10 @@
 //
-// State_Waits.h
+// State_Wait.h
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
-#ifndef clfsm_PixelFlip_State_Waits_h
-#define clfsm_PixelFlip_State_Waits_h
+#ifndef clfsm_PixelFlip_State_Wait_h
+#define clfsm_PixelFlip_State_Wait_h
 
 #include "CLState.h"
 #include "CLAction.h"
@@ -18,7 +18,7 @@ namespace FSM
       {
         namespace State
         {
-            class Waits: public CLState
+            class Wait: public CLState
             {
                 class OnEntry: public CLAction
                 {
@@ -46,14 +46,14 @@ namespace FSM
                 CLTransition *_transitions[1];
 
                 public:
-                    Waits(const char *name = "Waits");
-                    virtual ~Waits();
+                    Wait(const char *name = "Wait");
+                    virtual ~Wait();
 
                     virtual CLTransition * const *transitions() const { return _transitions; }
                     virtual int numberOfTransitions() const { return 1; }
 
-#                   include "State_Waits_Variables.h"
-#                   include "State_Waits_Methods.h"
+#                   include "State_Wait_Variables.h"
+#                   include "State_Wait_Methods.h"
             };
         }
       }

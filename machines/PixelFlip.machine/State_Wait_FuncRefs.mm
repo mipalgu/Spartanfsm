@@ -1,5 +1,5 @@
 //
-// State_Waits_FuncRefs.mm
+// State_Wait_FuncRefs.mm
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //

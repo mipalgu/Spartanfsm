@@ -1,5 +1,5 @@
 //
-// State_Waits_Variables.h
+// State_Wait_Variables.h
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //

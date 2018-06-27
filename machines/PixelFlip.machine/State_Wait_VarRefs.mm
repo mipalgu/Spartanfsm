@@ -1,5 +1,5 @@
 //
-// State_Waits_VarRefs.mm
+// State_Wait_VarRefs.mm
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
@@ -7,7 +7,7 @@
 #pragma clang diagnostic ignored "-Wunused-variable"
 #pragma clang diagnostic ignored "-Wshadow"
 
-Waits *_s = static_cast<Waits *>(_state);
+Wait *_s = static_cast<Wait *>(_state);
 
 
 #pragma clang diagnostic pop

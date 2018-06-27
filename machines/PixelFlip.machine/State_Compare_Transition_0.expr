@@ -1,1 +1,1 @@
-(redIn /= pastRed) or (greenIn /= pastGreen)
+pastRed /= "11111111"

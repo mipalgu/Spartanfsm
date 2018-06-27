@@ -9,7 +9,7 @@
 #include "State_Compare.h"
 #include "State_Red.h"
 #include "State_Green.h"
-#include "State_Waits.h"
+#include "State_Wait.h"
 
 using namespace FSM;
 using namespace CLM;
@@ -27,7 +27,7 @@ PixelFlip::PixelFlip(int mid, const char *name): CLMachine(mid, name)
 	_states[0] = new FSMPixelFlip::State::Compare;
 	_states[1] = new FSMPixelFlip::State::Red;
 	_states[2] = new FSMPixelFlip::State::Green;
-	_states[3] = new FSMPixelFlip::State::Waits;
+	_states[3] = new FSMPixelFlip::State::Wait;
 
 	setInitialState(_states[0]);            // set initial state
 }
