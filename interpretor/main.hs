@@ -402,6 +402,20 @@ createReadToTransition
 createReadToSnapshot :: String -> String
 createReadToSnapshot vars = createStateCode "ReadToSnapshot" (createReadCode vars) createReadToTransition
 
+createWriteLine :: String -> String
+createWriteLine varName = toExternalName varName ++ " <= " ++ varName ++ ";"
+
+createWriteCode :: String -> String
+createWriteCode vars
+  = foldl (+\>) "" $ map (\s -> createWriteLine (getExternalVarName s)) $ getOutputExternalVars vars
+
+createWriteFromTransition :: String
+createWriteFromTransition  = "internalState <= ReadToSnapshot;\nif (currentState = targetState) then\n"
+    ++ "    previousRinglet <= currentState;\nelse\n    currentState <= targetState;\nend if;"
+
+createWriteFromSnapshot :: String -> String
+createWriteFromSnapshot vars = createStateCode "WriteFromSnapshot" (createWriteCode vars) createWriteFromTransition
+
 -- Create onEntry code
 createOnEntry :: String -> String
 createOnEntry code = createStateCode "OnEntry" code "internalState <= CheckTransition;"
@@ -412,31 +426,30 @@ createInternal code = createStateCode "Internal" code "internalState <= CheckTra
 
 -- Create onExit code
 createOnExit :: String -> String
-createOnExit code = createStateCode "OnExit" code ("if (currentState = targetState) then\n    "
-    ++ "internalState <= internal;\nelse\n    internalState <= OnEntry;\nend if;\ncurrentState <= targetState;")
+createOnExit code = createStateCode "OnExit" code "internalState <= WriteFromSnapshot;\npreviousRinglet <= currentState;"
 
 --creates internalStates code for a single state.
-createSingleState :: String -> [String] -> String
-createSingleState state code = "    when " ++ state ++ " =>\n        case internalState is"
-    ++ (beautify 3 (createOnEntry (code!!0) ++ createInternal (code!!1) ++ createOnExit (code!!2) ++ othersNullBlock))
+createSingleState :: String -> [String] -> String -> String
+createSingleState state code vars = "    when " ++ state ++ " =>\n        case internalState is"
+    ++ (beautify 3 (createOnEntry (code!!0) ++ createInternal (code!!1) ++ createOnExit (code!!2) ++ (createWriteFromSnapshot vars) ++ othersNullBlock))
     ++ "        end case;\n" 
 
 --Create internalStates code for all states.
-createAllStateCode :: [String] -> [[String]] -> String
-createAllStateCode states codes = 
+createAllStateCode :: [String] -> [[String]] -> String -> String
+createAllStateCode states codes vars = 
     beautify 1 (
         (foldl (++) ""
             $ map 
-                (\x -> createSingleState (states!!x) (codes!!x))
+                (\x -> createSingleState (states!!x) (codes!!x) vars)
                 [0..((length states) - 1)]
         ) ++ (removeFirstNewLine (beautify 1 othersNullBlock))
     )
 
 -- Create Rising edge code
-createRisingEdge :: [String] -> [[String]] -> String
-createRisingEdge states codes = "if (rising_edge(clk)) then"
+createRisingEdge :: [String] -> [[String]] -> String -> String
+createRisingEdge states codes vars = "if (rising_edge(clk)) then"
     ++ beautify 1 "case currentState is"
-    ++ removeFirstNewLine (createAllStateCode states codes)
+    ++ removeFirstNewLine (createAllStateCode states codes vars)
     ++ "    end case;\nend if;"
 
 --Create Falling edge code
@@ -450,7 +463,7 @@ createFallingEdge states trans targets vars = "if (falling_edge(clk)) then"
 --create process block
 createProcessBlock :: [String] -> [[String]] -> [[String]] -> [[String]] -> String -> String
 createProcessBlock states risingEdge transitions targets vars = "process (clk)\n    begin"
-    ++ beautify 2 (createRisingEdge states risingEdge)
+    ++ beautify 2 (createRisingEdge states risingEdge vars)
     ++ removeFirstNewLine (beautify 2 (createFallingEdge states transitions targets vars))
     ++ "    end process;"
 
