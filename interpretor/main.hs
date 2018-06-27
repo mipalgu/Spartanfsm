@@ -320,11 +320,13 @@ createAllTransitionsCode states trans targets = "case internalState is\n    when
 internalStateVhdl :: String
 internalStateVhdl =
     "--Internal State Representation Bits\n"
-    ++ "constant OnEntry: std_logic_vector(1 downto 0) := \"00\";\n"
-    ++ "constant CheckTransition: std_logic_vector(1 downto 0) := \"01\";\n"
-    ++ "constant OnExit: std_logic_vector(1 downto 0) := \"10\";\n"
-    ++ "constant Internal: std_logic_vector(1 downto 0) := \"11\";\n"
-    ++ "signal internalState: std_logic_vector(1 downto 0) := OnEntry;\n"
+    ++ "constant OnEntry: std_logic_vector(2 downto 0) := \"000\";\n"
+    ++ "constant CheckTransition: std_logic_vector(2 downto 0) := \"001\";\n"
+    ++ "constant OnExit: std_logic_vector(2 downto 0) := \"010\";\n"
+    ++ "constant Internal: std_logic_vector(2 downto 0) := \"011\";\n"
+    ++ "constant readSnapshot: std_logic_vector(2 downto 0) := \"100\";\n"
+    ++ "constant writeSnapshot: std_logic_vector(2 downto 0) := \"101\";\n"
+    ++ "signal internalState: std_logic_vector(2 downto 0) := OnEntry;\n"
 
 -- Get number of bits to represent the states in dir
 getNumberOfBits :: String -> IO Int
