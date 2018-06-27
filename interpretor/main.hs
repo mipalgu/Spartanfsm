@@ -368,11 +368,11 @@ getBins states = map (\x -> decToBin (numberOfBits (length states)) x) [0..((len
 
 --Creates snapshot variable code.
 createArchitectureSnapshots :: [String] -> String
-createArchitectureSnapshots vars = "--Snapshot of External Variables" ++ (foldl (+\>) "" vars) ++ "\n"
+createArchitectureSnapshots vars =  (foldl (+\>) "--Snapshot of External Variables" vars) ++ "\n"
 
 --Creates machine variable code.
 createVariables :: [String] -> String
-createVariables vars = "--Machine Variables" ++ (foldl (+\>) "" vars) ++ "\n"
+createVariables vars =  (foldl (+\>) "--Machine Variables" vars) ++ "\n"
 
 -- Create variables in architecture block
 createArchitectureVariables :: Int -> [String] -> String -> String
