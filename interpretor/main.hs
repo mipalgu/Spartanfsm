@@ -16,8 +16,8 @@ main = do
     targetStates <- return $ allTargetsToState states targets
     stateBitSize <- getNumberOfBits dir
     projectName <- return $ getProjectName dir
-    architecture <- return $ createArchitecture states internals transitions targetStates stateBitSize projectName
     variables <- getVariables dir projectName
+    architecture <- return $ createArchitecture states internals transitions targetStates stateBitSize projectName variables
     entity <- return $ createEntity projectName variables
     writeFile ("src/" ++ projectName ++ ".vhd") (entity ++ "\n\n" ++ architecture)
 
@@ -357,12 +357,21 @@ createAllStates size bins states = foldl (++) "--State Representation Bits\n" $ 
 getBins :: [String] -> [String]
 getBins states = map (\x -> decToBin (numberOfBits (length states)) x) [0..((length states) - 1)]
 
+createArchitectureSnapshots :: [String] -> String
+createArchitectureSnapshots vars = "--Snapshot of External Variables" ++ (foldl (+\>) "" vars) ++ "\n"
+
+
+createVariables :: [String] -> String
+createVariables vars = "--Machine Variables" ++ (foldl (+\>) "" vars) ++ "\n"
+
 -- Create variables in architecture block
-createArchitectureVariables :: Int -> [String] -> String
-createArchitectureVariables size states = internalStateVhdl
+createArchitectureVariables :: Int -> [String] -> String -> String
+createArchitectureVariables size states vars = internalStateVhdl
     ++ createAllStates (numberOfBits $ length states) (getBins states) states
     ++ (createCurrentState (states!!0) (numberOfBits (length states)))
     ++ createTargetState (numberOfBits $ length states)
+    ++ createArchitectureSnapshots (filter isExternal (lines vars))
+    ++ createVariables (getMachineVars vars)
 
 -- create case statement for states
 createStateCode :: String -> String -> String -> String
@@ -419,10 +428,10 @@ createProcessBlock states risingEdge transitions targets = "process (clk)\n    b
     ++ "    end process;"
 
 --Create entire architecture block
-createArchitecture :: [String] -> [[String]] -> [[String]] -> [[String]] -> Int -> String -> String
-createArchitecture states risingEdgeCode transitions targets size name = 
+createArchitecture :: [String] -> [[String]] -> [[String]] -> [[String]] -> Int -> String -> String -> String
+createArchitecture states risingEdgeCode transitions targets size name vars = 
     "architecture LLFSM of " ++ name ++ " is"
-    ++ beautify 1 (createArchitectureVariables size (map toStateName states))
+    ++ beautify 1 (createArchitectureVariables size (map toStateName states) vars)
     ++ "begin\n"
     ++ createProcessBlock (map toStateName states) risingEdgeCode transitions targets
     ++ "\nend LLFSM;"
@@ -463,6 +472,15 @@ getAllExternalVariableCode = map getExternalVariableCode
 --Filters to only include external variables code
 getExternals :: String -> [String]
 getExternals str = getAllExternalVariableCode $ filter isExternal (lines str)
+
+isMachineVar :: String -> Bool
+isMachineVar code = (splitOn "\t" code)!!0 == "#machine"
+
+getMachineVariableCode :: String -> String
+getMachineVariableCode code = (splitOn "\t" code)!!1
+
+getMachineVars :: String -> [String]
+getMachineVars str = map getMachineVariableCode $ filter isMachineVar (lines str)
 
 createPortDeclaration :: [String] -> String
 createPortDeclaration xs = init (foldl (\x y -> x ++ "\n    " ++ y) "port (\n    clk: in std_logic;" xs) ++ "\n);"
