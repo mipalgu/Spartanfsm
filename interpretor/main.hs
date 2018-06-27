@@ -248,7 +248,7 @@ numberOfBits num = calc num 0
 
 -- Code for setting the target state
 setTargetState :: String -> String
-setTargetState state = "targetState <= " ++ state ++ ";\ninternalState <= OnExit;"
+setTargetState state = "targetState <= " ++ toStateName state ++ ";\ninternalState <= OnExit;"
 
 -- Builds the conditionals for transitions
 buildCondition :: Int -> [String] -> String
@@ -420,7 +420,7 @@ createArchitecture states risingEdgeCode transitions targets size name =
     ++ beautify 1 (createArchitectureVariables size (map toStateName states))
     ++ "begin\n"
     ++ createProcessBlock (map toStateName states) risingEdgeCode transitions targets
-    ++ "\nend Behavioural;"
+    ++ "\nend LLFSM;"
 
 --Checks if code is a comment
 isComment :: String -> Bool
