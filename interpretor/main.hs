@@ -441,10 +441,29 @@ removeTrailingComment str = trim ((splitOn "///<" str)!!0)
 removeAllTrailingComments :: String -> String
 removeAllTrailingComments str = trim (foldl (+\>) "" (map removeTrailingComment (lines str)))
 
+-- Checks if var is an external var
+isExternal :: String -> Bool
+isExternal code = (splitOn "\t" code)!!0 == "#extern"
+
+-- Gets the code from an external var
+getExternalVariableCode :: String -> String
+getExternalVariableCode code = (splitOn "\t" code)!!1
+
+-- Get the code for all external variables
+getAllExternalVariableCode :: [String] -> [String]
+getAllExternalVariableCode = map getExternalVariableCode
+
+--Filters to only include external variables code
+getExternals :: String -> [String]
+getExternals str = getAllExternalVariableCode $ filter isExternal (lines str)
+
+createPortDeclaration :: [String] -> String
+createPortDeclaration xs = init (foldl (\x y -> x ++ "\n    " ++ y) "port (\n    clk: in std_logic;" xs) ++ "\n);"
+
 --Create entity block
 createEntity :: String -> String -> String
 createEntity name vars = "library IEEE;\nuse IEEE.std_logic_1164.All;\n\nentity " ++ name ++ " is"
-    ++ beautify 1 (removeAllTrailingComments $ filterOutComments vars)
+    ++ beautify 1 (createPortDeclaration $ getExternals $ removeAllTrailingComments $ filterOutComments vars)
     ++ "end " ++ name ++ ";"
 
 
