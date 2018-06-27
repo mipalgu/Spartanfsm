@@ -324,8 +324,8 @@ internalStateVhdl =
     ++ "constant CheckTransition: std_logic_vector(2 downto 0) := \"001\";\n"
     ++ "constant OnExit: std_logic_vector(2 downto 0) := \"010\";\n"
     ++ "constant Internal: std_logic_vector(2 downto 0) := \"011\";\n"
-    ++ "constant readSnapshot: std_logic_vector(2 downto 0) := \"100\";\n"
-    ++ "constant writeSnapshot: std_logic_vector(2 downto 0) := \"101\";\n"
+    ++ "constant readToSnapshot: std_logic_vector(2 downto 0) := \"100\";\n"
+    ++ "constant writeFromSnapshot: std_logic_vector(2 downto 0) := \"101\";\n"
     ++ "signal internalState: std_logic_vector(2 downto 0) := OnEntry;\n"
 
 -- Get number of bits to represent the states in dir
@@ -348,7 +348,7 @@ createState size bin state = "constant " ++ state ++ ": std_logic_vector(" ++ (s
 
 -- VHDL Binary representation of all states
 createAllStates :: Int -> [String] -> [String] -> String
-createAllStates size bins states = foldl (++) "" $ map (\x -> createState size (bins!!x) (states!!x)) [0..((length states) - 1)]
+createAllStates size bins states = foldl (++) "--State Representation Bits\n" $ map (\x -> createState size (bins!!x) (states!!x)) [0..((length states) - 1)]
 
 -- Get binary representation of all states
 getBins :: [String] -> [String]
