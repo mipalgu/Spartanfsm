@@ -274,10 +274,10 @@ transitionToVhdl :: Int -> Int -> [String] -> String -> String
 transitionToVhdl n m ts s
     | n > m            = error "n cannot be greater than m in transitionToVhdl"
     | n == 0 && n == m = "if (" ++ ts!!n ++ ") then"
-        ++ (beautify 1 $ setTargetState s) ++ "else\n    internalState <= Internal;\nend if;" 
+        ++ (beautify 1 $ setTargetState s) ++ "else\n    internalState <= WriteFromSnapshot;\nend if;" 
     | n == 0           = "if (" ++ ts!!n ++ ") then" ++ (beautify 1 $ setTargetState s)
     | n == m           = "elsif " ++ (buildCondition n ts) ++" then"
-        ++ (beautify 1 $ setTargetState s) ++ "else\n    internalState <= Internal;\nend if;"
+        ++ (beautify 1 $ setTargetState s) ++ "else\n    internalState <= WriteFromSnapshot;\nend if;"
     | otherwise        = "elsif " ++ (buildCondition n ts) ++ " then" ++ (beautify 1 $ setTargetState s)
 
 -- Converts all transitions to VHDL code.
