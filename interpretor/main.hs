@@ -335,7 +335,7 @@ internalStateVhdl =
     ++ "constant Internal: std_logic_vector(2 downto 0) := \"011\";\n"
     ++ "constant ReadToSnapshot: std_logic_vector(2 downto 0) := \"100\";\n"
     ++ "constant WriteFromSnapshot: std_logic_vector(2 downto 0) := \"101\";\n"
-    ++ "signal internalState: std_logic_vector(2 downto 0) := readToSnapshot;\n"
+    ++ "signal internalState: std_logic_vector(2 downto 0) := ReadToSnapshot;\n"
 
 -- Get number of bits to represent the states in dir
 getNumberOfBits :: String -> IO Int
