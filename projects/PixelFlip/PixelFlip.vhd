@@ -2,99 +2,114 @@ library IEEE;
 use IEEE.std_logic_1164.All;
 
 entity PixelFlip is
-    port(
-        clk50: in std_logic;
-        redOut: out std_logic_vector(7 downto 0);
-        greenOut: out std_logic_vector(7 downto 0)
+    port (
+        clk: in std_logic;
+        EXTERNAL_redOut: out std_logic_vector(7 downto 0);
+        EXTERNAL_greenOut: out std_logic_vector(7 downto 0)
     );
 end PixelFlip;
 
-architecture Behavioural of PixelFlip is
+architecture LLFSM of PixelFlip is
     --Internal State Representation Bits
-    constant OnEntry: std_logic_vector(1 downto 0) := "00";
-    constant CheckTransition: std_logic_vector(1 downto 0) := "01";
-    constant OnExit: std_logic_vector(1 downto 0) := "10";
-    constant Internal: std_logic_vector(1 downto 0) := "11";
-    signal internalState: std_logic_vector(1 downto 0) := OnEntry;
-    constant Compare: std_logic_vector(1 downto 0) := "00";
-    constant Red: std_logic_vector(1 downto 0) := "01";
-    constant Green: std_logic_vector(1 downto 0) := "10";
-    constant Waits: std_logic_vector(1 downto 0) := "11";
-    signal currentState: std_logic_vector(1 downto 0) := Compare;
+    constant OnEntry: std_logic_vector(2 downto 0) := "000";
+    constant CheckTransition: std_logic_vector(2 downto 0) := "001";
+    constant OnExit: std_logic_vector(2 downto 0) := "010";
+    constant Internal: std_logic_vector(2 downto 0) := "011";
+    constant ReadToSnapshot: std_logic_vector(2 downto 0) := "100";
+    constant WriteFromSnapshot: std_logic_vector(2 downto 0) := "101";
+    signal internalState: std_logic_vector(2 downto 0) := ReadToSnapshot;
+    --State Representation Bits
+    constant STATE_Compare: std_logic_vector(1 downto 0) := "00";
+    constant STATE_Red: std_logic_vector(1 downto 0) := "01";
+    constant STATE_Green: std_logic_vector(1 downto 0) := "10";
+    constant STATE_Wait: std_logic_vector(1 downto 0) := "11";
+    signal currentState: std_logic_vector(1 downto 0) := STATE_Compare;
     signal targetState: std_logic_vector(1 downto 0);
-
+    signal previousRinglet: std_logic_vector(1 downto 0);
+    --Snapshot of External Variables
+    signal redOut: std_logic_vector(7 downto 0);
+    signal greenOut: std_logic_vector(7 downto 0);
+    --Machine Variables
     signal pastRed: std_logic_vector(7 downto 0) := "00000000";
     signal pastGreen: std_logic_vector(7 downto 0) := "00000000";
-	 
-	 signal i: integer := 0;
-	 
+    signal i: integer := 0;
 begin
-process (clk50)
+process (clk)
     begin
-        if (rising_edge(clk50)) then
+        if (rising_edge(clk)) then
             case currentState is
-                when Compare =>
+                when STATE_Compare =>
                     case internalState is
                         when OnEntry =>
-                            
                             internalState <= CheckTransition;
                         when Internal =>
-                            
                             internalState <= CheckTransition;
                         when OnExit =>
-                            
+                            internalState <= WriteFromSnapshot;
+                            previousRinglet <= currentState;
+                        when WriteFromSnapshot =>
+                            EXTERNAL_redOut <= redOut;
+                            EXTERNAL_greenOut <= greenOut;
+                            internalState <= ReadToSnapshot;
                             if (currentState = targetState) then
-                                internalState <= internal;
+                                previousRinglet <= currentState;
                             else
-                                internalState <= OnEntry;
+                                currentState <= targetState;
                             end if;
-                            currentState <= targetState;
                         when others =>
                             null;
                     end case;
-                when Red =>
+                when STATE_Red =>
                     case internalState is
                         when OnEntry =>
                             redOut <= "11111111";
                             greenOut <= "00000000";
                             internalState <= CheckTransition;
                         when Internal =>
-                            
                             internalState <= CheckTransition;
                         when OnExit =>
                             pastRed <= "11111111";
                             pastGreen <= "00000000";
+                            internalState <= WriteFromSnapshot;
+                            previousRinglet <= currentState;
+                        when WriteFromSnapshot =>
+                            EXTERNAL_redOut <= redOut;
+                            EXTERNAL_greenOut <= greenOut;
+                            internalState <= ReadToSnapshot;
                             if (currentState = targetState) then
-                                internalState <= internal;
+                                previousRinglet <= currentState;
                             else
-                                internalState <= OnEntry;
+                                currentState <= targetState;
                             end if;
-                            currentState <= targetState;
                         when others =>
                             null;
                     end case;
-                when Green =>
+                when STATE_Green =>
                     case internalState is
                         when OnEntry =>
                             redOut <= "00000000";
                             greenOut <= "11111111";
                             internalState <= CheckTransition;
                         when Internal =>
-                            
                             internalState <= CheckTransition;
                         when OnExit =>
                             pastGreen <= "11111111";
                             pastRed <= "00000000";
+                            internalState <= WriteFromSnapshot;
+                            previousRinglet <= currentState;
+                        when WriteFromSnapshot =>
+                            EXTERNAL_redOut <= redOut;
+                            EXTERNAL_greenOut <= greenOut;
+                            internalState <= ReadToSnapshot;
                             if (currentState = targetState) then
-                                internalState <= internal;
+                                previousRinglet <= currentState;
                             else
-                                internalState <= OnEntry;
+                                currentState <= targetState;
                             end if;
-                            currentState <= targetState;
                         when others =>
                             null;
                     end case;
-                when Waits =>
+                when STATE_Wait =>
                     case internalState is
                         when OnEntry =>
                             i <= 0;
@@ -103,13 +118,17 @@ process (clk50)
                             i <= i + 1;
                             internalState <= CheckTransition;
                         when OnExit =>
-                            
+                            internalState <= WriteFromSnapshot;
+                            previousRinglet <= currentState;
+                        when WriteFromSnapshot =>
+                            EXTERNAL_redOut <= redOut;
+                            EXTERNAL_greenOut <= greenOut;
+                            internalState <= ReadToSnapshot;
                             if (currentState = targetState) then
-                                internalState <= internal;
+                                previousRinglet <= currentState;
                             else
-                                internalState <= OnEntry;
+                                currentState <= targetState;
                             end if;
-                            currentState <= targetState;
                         when others =>
                             null;
                     end case;
@@ -117,47 +136,53 @@ process (clk50)
                     null;
             end case;
         end if;
-        if (falling_edge(clk50)) then
+        if (falling_edge(clk)) then
             case internalState is
                 when CheckTransition =>
                     case currentState is
-                        when Compare =>
+                        when STATE_Compare =>
                             if (pastRed /= "11111111") then
-                                targetState <= Red;
+                                targetState <= STATE_Red;
                                 internalState <= OnExit;
                             elsif (pastGreen /= "11111111") and (not (pastRed /= "11111111")) then
-                                targetState <= Green;
+                                targetState <= STATE_Green;
                                 internalState <= OnExit;
                             else
-                                internalState <= Internal;
+                                internalState <= WriteFromSnapshot;
                             end if;
-                        when Red =>
+                        when STATE_Red =>
                             if (true) then
-                                targetState <= Waits;
+                                targetState <= STATE_Wait;
                                 internalState <= OnExit;
                             else
-                                internalState <= Internal;
+                                internalState <= WriteFromSnapshot;
                             end if;
-                        when Green =>
+                        when STATE_Green =>
                             if (true) then
-                                targetState <= Waits;
+                                targetState <= STATE_Wait;
                                 internalState <= OnExit;
                             else
-                                internalState <= Internal;
+                                internalState <= WriteFromSnapshot;
                             end if;
-                        when Waits =>
+                        when STATE_Wait =>
                             if (i >= 50000000) then
-                                targetState <= Compare;
+                                targetState <= STATE_Compare;
                                 internalState <= OnExit;
                             else
-                                internalState <= Internal;
+                                internalState <= WriteFromSnapshot;
                             end if;
                         when others =>
                             null;
                     end case;
+                when ReadToSnapshot =>
+                    if (previousRinglet = currentState) then
+                        internalState <= Internal;
+                    else
+                        internalState <= OnEntry;
+                    end if;
                 when others =>
                     null;
             end case;
         end if;
     end process;
-end Behavioural;
+end LLFSM;

@@ -42,9 +42,9 @@ architecture Behavioral of vga_gen is
 	
 	component PixelFlip
 		Port(
-			clk50: in std_logic;
-         redOut: out std_logic_vector(7 downto 0);
-         greenOut: out std_logic_vector(7 downto 0)
+			clk: in std_logic;
+         EXTERNAL_redOut: out std_logic_vector(7 downto 0);
+         EXTERNAL_greenOut: out std_logic_vector(7 downto 0)
 		);
 	end component;
 begin
@@ -52,9 +52,9 @@ begin
 	PixelY: for I in 0 to (width - 1) generate
 		PixelX: for J in 0 to (height - 1) generate
 			PixelFlipGen: PixelFlip port map(
-				clk50 => clk75,
-				redOut => redOut(i)(j),
-				greenOut => greenOut(i)(j)
+				clk => clk75,
+				EXTERNAL_redOut => redOut(i)(j),
+				EXTERNAL_greenOut => greenOut(i)(j)
 			);			
 		end generate PixelX;
 	end generate PixelY;
