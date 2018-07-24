@@ -274,10 +274,10 @@ transitionToVhdl :: Int -> Int -> [String] -> String -> String
 transitionToVhdl n m ts s
     | n > m            = error "n cannot be greater than m in transitionToVhdl"
     | n == 0 && n == m = "if (" ++ ts!!n ++ ") then"
-        ++ (beautify 1 $ setTargetState s) ++ "else\n    internalState <= WriteFromSnapshot;\nend if;" 
+        ++ (beautify 1 $ setTargetState s) ++ "else\n    internalState <= Internal;\nend if;" 
     | n == 0           = "if (" ++ ts!!n ++ ") then" ++ (beautify 1 $ setTargetState s)
     | n == m           = "elsif " ++ (buildCondition n ts) ++" then"
-        ++ (beautify 1 $ setTargetState s) ++ "else\n    internalState <= WriteFromSnapshot;\nend if;"
+        ++ (beautify 1 $ setTargetState s) ++ "else\n    internalState <= Internal;\nend if;"
     | otherwise        = "elsif " ++ (buildCondition n ts) ++ " then" ++ (beautify 1 $ setTargetState s)
 
 -- Converts all transitions to VHDL code.
@@ -348,7 +348,7 @@ createCurrentState firstState bits =
 
 -- Code to create targetState signal.
 createTargetState :: Int -> String
-createTargetState bits = "signal targetState: std_logic_vector(" ++ (show (bits - 1)) ++ " downto 0);\n"
+createTargetState bits = "signal targetState: std_logic_vector(" ++ (show (bits - 1)) ++ " downto 0) := currentState;\n"
 
 --Code to create previousRinglet signal.
 createPreviousRinglet :: Int -> String
@@ -397,7 +397,7 @@ createReadCode vars
 
 createReadToTransition :: String
 createReadToTransition
-  = "if (previousRinglet = currentState) then\n    internalState <= Internal;\nelse\n    internalState <= OnEntry;\nend if;"
+  = "if (previousRinglet = currentState) then\n    internalState <= CheckTransition;\nelse\n    internalState <= OnEntry;\nend if;"
 
 createReadToSnapshot :: String -> String
 createReadToSnapshot vars = createStateCode "ReadToSnapshot" (createReadCode vars) createReadToTransition
@@ -410,8 +410,7 @@ createWriteCode vars
   = foldl (+\>) "" $ map (\s -> createWriteLine (getExternalVarName s)) $ getOutputExternalVars vars
 
 createWriteFromTransition :: String
-createWriteFromTransition  = "internalState <= ReadToSnapshot;\nif (currentState = targetState) then\n"
-    ++ "    previousRinglet <= currentState;\nelse\n    currentState <= targetState;\nend if;"
+createWriteFromTransition  = "internalState <= ReadToSnapshot;\npreviousRinglet <= currentState;\ncurrentState <= targetState;"
 
 createWriteFromSnapshot :: String -> String
 createWriteFromSnapshot vars = createStateCode "WriteFromSnapshot" (createWriteCode vars) createWriteFromTransition
@@ -422,11 +421,11 @@ createOnEntry code = createStateCode "OnEntry" code "internalState <= CheckTrans
 
 -- Create Internal code
 createInternal :: String -> String
-createInternal code = createStateCode "Internal" code "internalState <= CheckTransition;"
+createInternal code = createStateCode "Internal" code "internalState <= WriteFromSnapshot;"
 
 -- Create onExit code
 createOnExit :: String -> String
-createOnExit code = createStateCode "OnExit" code "internalState <= WriteFromSnapshot;\npreviousRinglet <= currentState;"
+createOnExit code = createStateCode "OnExit" code "internalState <= WriteFromSnapshot;"
 
 --creates internalStates code for a single state.
 createSingleState :: String -> [String] -> String -> String
