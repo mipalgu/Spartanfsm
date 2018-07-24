@@ -181,10 +181,10 @@ process (clk)
                                 internalState <= Internal;
                             end if;
                         when STATE_CountNeighbours =>
-                            if (count >= 2 and count <= 3) then
+                            if (count = 2 or count = 3) then
                                 targetState <= STATE_TurnOn;
                                 internalState <= OnExit;
-                            elsif (true) and (not (count >= 2 and count <= 3)) then
+                            elsif (true) and (not (count = 2 or count = 3)) then
                                 targetState <= STATE_TurnOff;
                                 internalState <= OnExit;
                             else
