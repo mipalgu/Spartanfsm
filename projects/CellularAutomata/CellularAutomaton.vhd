@@ -9,7 +9,11 @@ entity CellularAutomaton is
         EXTERNAL_south: in std_logic;
         EXTERNAL_west: in std_logic;
         EXTERNAL_status: out std_logic;
-        EXTERNAL_defaultStatus: in std_logic
+        EXTERNAL_defaultStatus: in std_logic;
+        EXTERNAL_northEast: in std_logic;
+        EXTERNAL_southEast: in std_logic;
+        EXTERNAL_southWest: in std_logic;
+        EXTERNAL_northWest: in std_logic
     );
 end CellularAutomaton;
 
@@ -38,6 +42,10 @@ architecture LLFSM of CellularAutomaton is
     signal west: std_logic;
     signal status: std_logic;
     signal defaultStatus: std_logic;
+    signal northEast: std_logic;
+    signal southEast: std_logic;
+    signal southWest: std_logic;
+    signal northWest: std_logic;
     --Machine Variables
     signal count: integer := 0;
     signal i: integer := 0;
@@ -131,6 +139,18 @@ process (clk)
                             if (west = '1') then
                             	count <= count + 1;
                             end if;
+                            if (northEast = '1') then
+                            	count <= count + 1;
+                            end if;
+                            if (southEast = '1') then
+                            	count <= count + 1;
+                            end if;
+                            if (southWest = '1') then
+                            	count <= count + 1;
+                            end if;
+                            if (northWest = '1') then
+                            	count <= count + 1;
+                            end if;
                             internalState <= CheckTransition;
                         when Internal =>
                             internalState <= WriteFromSnapshot;
@@ -167,7 +187,7 @@ process (clk)
                                 internalState <= Internal;
                             end if;
                         when STATE_Wait =>
-                            if (i >= 500000000) then
+                            if (i >= 100000000) then
                                 targetState <= STATE_CountNeighbours;
                                 internalState <= OnExit;
                             else
@@ -181,10 +201,13 @@ process (clk)
                                 internalState <= Internal;
                             end if;
                         when STATE_CountNeighbours =>
-                            if (count = 2 or count = 3) then
+                            if (status = '0' and count = 3) then
                                 targetState <= STATE_TurnOn;
                                 internalState <= OnExit;
-                            elsif (true) and (not (count = 2 or count = 3)) then
+                            elsif (status = '1' and (count = 2 or count = 3)) and (not (status = '0' and count = 3)) then
+                                targetState <= STATE_TurnOn;
+                                internalState <= OnExit;
+                            elsif (true) and (not (status = '1' and (count = 2 or count = 3))) and (not (status = '0' and count = 3)) then
                                 targetState <= STATE_TurnOff;
                                 internalState <= OnExit;
                             else
@@ -199,6 +222,10 @@ process (clk)
                     south <= EXTERNAL_south;
                     west <= EXTERNAL_west;
                     defaultStatus <= EXTERNAL_defaultStatus;
+                    northEast <= EXTERNAL_northEast;
+                    southEast <= EXTERNAL_southEast;
+                    southWest <= EXTERNAL_southWest;
+                    northWest <= EXTERNAL_northWest;
                     if (previousRinglet = currentState) then
                         internalState <= CheckTransition;
                     else

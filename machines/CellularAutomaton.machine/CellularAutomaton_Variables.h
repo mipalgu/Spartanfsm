@@ -11,3 +11,7 @@
 #extern	status: out std_logic;	///<
 #machine	signal i: integer := 0;	///<
 #extern	defaultStatus: in std_logic;	///<
+#extern	northEast: in std_logic;	///<
+#extern	southEast: in std_logic;	///<
+#extern	southWest: in std_logic;	///<
+#extern	northWest: in std_logic;	///<

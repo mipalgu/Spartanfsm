@@ -18,6 +18,7 @@ CountNeighbours::CountNeighbours(const char *name): CLState(name, *new CountNeig
 {
 	_transitions[0] = new Transition_0();
 	_transitions[1] = new Transition_1();
+	_transitions[2] = new Transition_2();
 }
 
 CountNeighbours::~CountNeighbours()
@@ -28,6 +29,7 @@ CountNeighbours::~CountNeighbours()
 
 	delete _transitions[0];
 	delete _transitions[1];
+	delete _transitions[2];
 }
 
 void CountNeighbours::OnEntry::perform(CLMachine *_machine, CLState *_state) const
@@ -79,5 +81,17 @@ bool CountNeighbours::Transition_1::check(CLMachine *_machine, CLState *_state) 
 	return
 	(
 #		include "State_CountNeighbours_Transition_1.expr"
+	);
+}
+bool CountNeighbours::Transition_2::check(CLMachine *_machine, CLState *_state) const
+{
+#	include "CellularAutomaton_VarRefs.mm"
+#	include "State_CountNeighbours_VarRefs.mm"
+#	include "CellularAutomaton_FuncRefs.mm"
+#	include "State_CountNeighbours_FuncRefs.mm"
+
+	return
+	(
+#		include "State_CountNeighbours_Transition_2.expr"
 	);
 }
