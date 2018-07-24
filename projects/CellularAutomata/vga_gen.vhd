@@ -196,13 +196,13 @@ process(clk75)
 				currentStatus <= outs(to_integer(h_count))(to_integer(v_count));
 				if h_count < width and v_count < height then
 					if (currentStatus = '1') then
-						red <= (others => '1');
-						green <= (others => '0');
+						red <= (others => '0');
+						green <= (others => '1');
 						blue <= (others => '0');
 						blank <= '0';
 					else
-						red <= (others => '0');
-						green <= (others =>'1');
+						red <= (others => '1');
+						green <= (others =>'0');
 						blue <= (others => '0');
 						blank <= '0';
 					end if;

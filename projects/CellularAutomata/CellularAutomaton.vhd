@@ -29,7 +29,7 @@ architecture LLFSM of CellularAutomaton is
     constant STATE_TurnOff: std_logic_vector(2 downto 0) := "011";
     constant STATE_CountNeighbours: std_logic_vector(2 downto 0) := "100";
     signal currentState: std_logic_vector(2 downto 0) := STATE_Initial;
-    signal targetState: std_logic_vector(2 downto 0);
+    signal targetState: std_logic_vector(2 downto 0) := currentState;
     signal previousRinglet: std_logic_vector(2 downto 0);
     --Snapshot of External Variables
     signal north: std_logic;
@@ -52,18 +52,14 @@ process (clk)
                             status <= defaultStatus;
                             internalState <= CheckTransition;
                         when Internal =>
-                            internalState <= CheckTransition;
+                            internalState <= WriteFromSnapshot;
                         when OnExit =>
                             internalState <= WriteFromSnapshot;
-                            previousRinglet <= currentState;
                         when WriteFromSnapshot =>
                             EXTERNAL_status <= status;
                             internalState <= ReadToSnapshot;
-                            if (currentState = targetState) then
-                                previousRinglet <= currentState;
-                            else
-                                currentState <= targetState;
-                            end if;
+                            previousRinglet <= currentState;
+                            currentState <= targetState;
                         when others =>
                             null;
                     end case;
@@ -73,18 +69,14 @@ process (clk)
                             status <= '1';
                             internalState <= CheckTransition;
                         when Internal =>
-                            internalState <= CheckTransition;
+                            internalState <= WriteFromSnapshot;
                         when OnExit =>
                             internalState <= WriteFromSnapshot;
-                            previousRinglet <= currentState;
                         when WriteFromSnapshot =>
                             EXTERNAL_status <= status;
                             internalState <= ReadToSnapshot;
-                            if (currentState = targetState) then
-                                previousRinglet <= currentState;
-                            else
-                                currentState <= targetState;
-                            end if;
+                            previousRinglet <= currentState;
+                            currentState <= targetState;
                         when others =>
                             null;
                     end case;
@@ -95,18 +87,14 @@ process (clk)
                             internalState <= CheckTransition;
                         when Internal =>
                             i <= i + 1;
-                            internalState <= CheckTransition;
+                            internalState <= WriteFromSnapshot;
                         when OnExit =>
                             internalState <= WriteFromSnapshot;
-                            previousRinglet <= currentState;
                         when WriteFromSnapshot =>
                             EXTERNAL_status <= status;
                             internalState <= ReadToSnapshot;
-                            if (currentState = targetState) then
-                                previousRinglet <= currentState;
-                            else
-                                currentState <= targetState;
-                            end if;
+                            previousRinglet <= currentState;
+                            currentState <= targetState;
                         when others =>
                             null;
                     end case;
@@ -116,18 +104,14 @@ process (clk)
                             status <= '0';
                             internalState <= CheckTransition;
                         when Internal =>
-                            internalState <= CheckTransition;
+                            internalState <= WriteFromSnapshot;
                         when OnExit =>
                             internalState <= WriteFromSnapshot;
-                            previousRinglet <= currentState;
                         when WriteFromSnapshot =>
                             EXTERNAL_status <= status;
                             internalState <= ReadToSnapshot;
-                            if (currentState = targetState) then
-                                previousRinglet <= currentState;
-                            else
-                                currentState <= targetState;
-                            end if;
+                            previousRinglet <= currentState;
+                            currentState <= targetState;
                         when others =>
                             null;
                     end case;
@@ -149,18 +133,14 @@ process (clk)
                             end if;
                             internalState <= CheckTransition;
                         when Internal =>
-                            internalState <= CheckTransition;
+                            internalState <= WriteFromSnapshot;
                         when OnExit =>
                             internalState <= WriteFromSnapshot;
-                            previousRinglet <= currentState;
                         when WriteFromSnapshot =>
                             EXTERNAL_status <= status;
                             internalState <= ReadToSnapshot;
-                            if (currentState = targetState) then
-                                previousRinglet <= currentState;
-                            else
-                                currentState <= targetState;
-                            end if;
+                            previousRinglet <= currentState;
+                            currentState <= targetState;
                         when others =>
                             null;
                     end case;
@@ -177,28 +157,28 @@ process (clk)
                                 targetState <= STATE_CountNeighbours;
                                 internalState <= OnExit;
                             else
-                                internalState <= WriteFromSnapshot;
+                                internalState <= Internal;
                             end if;
                         when STATE_TurnOn =>
                             if (true) then
                                 targetState <= STATE_Wait;
                                 internalState <= OnExit;
                             else
-                                internalState <= WriteFromSnapshot;
+                                internalState <= Internal;
                             end if;
                         when STATE_Wait =>
                             if (i >= 500000000) then
                                 targetState <= STATE_CountNeighbours;
                                 internalState <= OnExit;
                             else
-                                internalState <= WriteFromSnapshot;
+                                internalState <= Internal;
                             end if;
                         when STATE_TurnOff =>
                             if (true) then
                                 targetState <= STATE_Wait;
                                 internalState <= OnExit;
                             else
-                                internalState <= WriteFromSnapshot;
+                                internalState <= Internal;
                             end if;
                         when STATE_CountNeighbours =>
                             if (count >= 2 and count <= 3) then
@@ -208,7 +188,7 @@ process (clk)
                                 targetState <= STATE_TurnOff;
                                 internalState <= OnExit;
                             else
-                                internalState <= WriteFromSnapshot;
+                                internalState <= Internal;
                             end if;
                         when others =>
                             null;
@@ -220,7 +200,7 @@ process (clk)
                     west <= EXTERNAL_west;
                     defaultStatus <= EXTERNAL_defaultStatus;
                     if (previousRinglet = currentState) then
-                        internalState <= Internal;
+                        internalState <= CheckTransition;
                     else
                         internalState <= OnEntry;
                     end if;
