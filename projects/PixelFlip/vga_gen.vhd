@@ -20,15 +20,15 @@ end vga_gen;
 
 architecture Behavioral of vga_gen is
    constant h_rez        : natural := 1024;
-   constant h_sync_start : natural := 1056;
-   constant h_sync_end   : natural := 1368;
-   constant h_max        : natural := 1400;
+   constant h_sync_start : natural := 1024+72;
+   constant h_sync_end   : natural := 1024+72+112;
+   constant h_max        : natural := 1024+72+112+184;
    signal   h_count      : unsigned(11 downto 0) := (others => '0');
 
    constant v_rez        : natural := 768;
-   constant v_sync_start : natural := 768;
-   constant v_sync_end   : natural := 777;
-   constant v_max        : natural := 807;
+   constant v_sync_start : natural := 768+1;
+   constant v_sync_end   : natural := 768+1+3;
+   constant v_max        : natural := 768+1+3+42;
    signal   v_count      : unsigned(11 downto 0) := (others => '0');
 	
 	constant width: integer := 12;
