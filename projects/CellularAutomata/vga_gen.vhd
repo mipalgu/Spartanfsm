@@ -19,29 +19,29 @@ entity vga_gen is
 end vga_gen;
 
 architecture Behavioral of vga_gen is
-   constant h_rez        : natural := 1280;
-   constant h_sync_start : natural := 1280+72;
-   constant h_sync_end   : natural := 1280+80;
-   constant h_max        : natural := 1647;
+   constant h_rez        : natural := 1024;
+   constant h_sync_start : natural := 1024+72;
+   constant h_sync_end   : natural := 1024+72+112;
+   constant h_max        : natural := 1024+72+112+184;
    signal   h_count      : unsigned(11 downto 0) := (others => '0');
 
-   constant v_rez        : natural :=720;
-   constant v_sync_start : natural := 720+3;
-   constant v_sync_end   : natural := 720+3+5;
-   constant v_max        : natural := 720+29;
+   constant v_rez        : natural :=768;
+   constant v_sync_start : natural := 768+1;
+   constant v_sync_end   : natural := 768+1+3;
+   constant v_max        : natural := 768+1+3+42;
    signal   v_count      : unsigned(11 downto 0) := (others => '0');
 	
-	constant width: integer := 7;
-	constant height: integer := 7;
+	constant width: integer := 9;
+	constant height: integer := 9;
 	
 	type column is array ((height - 1) downto 0) of std_logic;
 	type screen is array ((width - 1) downto 0) of column;
 	
-	signal defaults: screen := ((others => '0'), ('0', '1','1','1','0','0','0'),
-		('0','1','0','0','1','0','0'), ('0','1','0','0','0','1','0'),
-		('0','0','1','0','0','1','0'), ('0','0','0','1','1','1','0'),
-		(others => '0'));
-	signal outs: screen;
+	signal outs: screen := ((others => '0'),(others => '0'),
+		('0','0', '1','1','1','0','0','0','0'),
+		('0','0','1','0','0','1','0','0','0'), ('0','0','1','0','0','0','1','0','0'),
+		('0','0','0','1','0','0','1','0','0'), ('0','0','0','0','1','1','1','0','0'),
+		(others => '0'), (others =>'0'));
 	signal currentStatus: std_logic;
 	
 	component CellularAutomaton
@@ -69,159 +69,21 @@ architecture Behavioral of vga_gen is
 	--end component;
 begin
 
-	PixelX: for I in 0 to (width - 1) generate
-		PixelY: for J in 0 to (height - 1) generate	
-			if1: if (I = 0) and (J = 0) generate
-				CellularAutomatonGen1: CellularAutomaton port map(
-					clk => clk75,
-					EXTERNAL_north => outs(I)(J+1),
-					EXTERNAL_east => outs(I + 1)(J),
-					EXTERNAL_south => '0',
-					EXTERNAL_west => '0',
-					EXTERNAL_status => outs(I)(J),
-					EXTERNAL_defaultStatus => defaults(I)(J),
-					EXTERNAL_northEast => outs(I+1)(J+1),
-					EXTERNAL_southEast => '0',
-					EXTERNAL_southWest => '0',
-					EXTERNAL_northWest => '0'
-				);
-			end generate if1;
-			if2: if (I = width - 1) and (J = 0) generate
-				CellularAutomatonGen2: CellularAutomaton port map(
-					clk => clk75,
-					EXTERNAL_north => outs(I)(J+1),
-					EXTERNAL_east => '0',
-					EXTERNAL_south => '0',
-					EXTERNAL_west => outs(I-1)(J),
-					EXTERNAL_status => outs(I)(J),
-					EXTERNAL_defaultStatus => defaults(I)(J),
-					EXTERNAL_northEast => '0',
-					EXTERNAL_southEast => '0',
-					EXTERNAL_southWest => '0',
-					EXTERNAL_northWest => outs(I-1)(J+1)
-				);
-			end generate if2;
-			if3: if (I = 0) and (J = height - 1) generate
-				CellularAutomatonGen3: CellularAutomaton port map(
-					clk => clk75,
-					EXTERNAL_north => '0',
-					EXTERNAL_east => outs(I+1)(J),
-					EXTERNAL_south => outs(I)(J-1),
-					EXTERNAL_west => '0',
-					EXTERNAL_status => outs(I)(J),
-					EXTERNAL_defaultStatus => defaults(I)(J),
-					EXTERNAL_northEast => '0',
-					EXTERNAL_southEast => outs(I+1)(J-1),
-					EXTERNAL_southWest => '0',
-					EXTERNAL_northWest => '0'
-				);
-			end generate if3;
-			if4: if (I = width - 1) and (J = height - 1) generate
-				CellularAutomatonGen4: CellularAutomaton port map(
-					clk => clk75,
-					EXTERNAL_north => '0',
-					EXTERNAL_east => '0',
-					EXTERNAL_south => outs(I)(J-1),
-					EXTERNAL_west => outs(I-1)(J),
-					EXTERNAL_status => outs(I)(J),
-					EXTERNAL_defaultStatus => defaults(I)(J),
-					EXTERNAL_northEast => '0',
-					EXTERNAL_southEast => '0',
-					EXTERNAL_southWest => outs(I-1)(J-1),
-					EXTERNAL_northWest => '0'
-				);
-			end generate if4;
-			if5: if (I = width - 1)
-				and (J /= height - 1)
-				and (J /= 0)
-			generate
-				CellularAutomatonGen5: CellularAutomaton port map(
-					clk => clk75,
-					EXTERNAL_north => outs(i)(J+1),
-					EXTERNAL_east => '0',
-					EXTERNAL_south => outs(I)(J-1),
-					EXTERNAL_west => outs(I-1)(J),
-					EXTERNAL_status => outs(I)(J),
-					EXTERNAL_defaultStatus => defaults(I)(J),
-					EXTERNAL_northEast => '0',
-					EXTERNAL_southEast => '0',
-					EXTERNAL_southWest => outs(I-1)(J-1),
-					EXTERNAL_northWest => outs(I-1)(J+1)
-				);
-			end generate if5;
-			if6: if (I = 0)
-				and (J /= height - 1)
-				and (J /= 0)
-			generate
-				CellularAutomatonGen6: CellularAutomaton port map(
-					clk => clk75,
-					EXTERNAL_north => outs(I)(J+1),
-					EXTERNAL_east => outs(I+1)(J),
-					EXTERNAL_south => outs(I)(J-1),
-					EXTERNAL_west => '0',
-					EXTERNAL_status => outs(I)(J),
-					EXTERNAL_defaultStatus => defaults(I)(J),
-					EXTERNAL_northEast => outs(I+1)(J+1),
-					EXTERNAL_southEast => outs(I+1)(J-1),
-					EXTERNAL_southWest => '0',
-					EXTERNAL_northWest => '0'
-				);
-			end generate if6;
-			if7: if (J = 0)
-				and (I /= 0)
-				and (I /= width - 1)
-			generate
-				CellularAutomatonGen7: CellularAutomaton port map(
-					clk => clk75,
-					EXTERNAL_north => outs(I)(J+1),
-					EXTERNAL_east => outs(I+1)(J),
-					EXTERNAL_south => '0',
-					EXTERNAL_west => outs(I-1)(J),
-					EXTERNAL_status => outs(I)(J),
-					EXTERNAL_defaultStatus => defaults(I)(J),
-					EXTERNAL_northEast => outs(I+1)(J+1),
-					EXTERNAL_southEast => '0',
-					EXTERNAL_southWest => '0',
-					EXTERNAL_northWest => outs(I-1)(J+1)
-				);
-			end generate if7;
-			if8: if (J = height - 1)
-				and (I /= 0)
-				and (I /= width - 1)
-			generate
-				CellularAutomatonGen8: CellularAutomaton port map(
-					clk => clk75,
-					EXTERNAL_north => '0',
-					EXTERNAL_east => outs(I+1)(J),
-					EXTERNAL_south => outs(I)(J-1),
-					EXTERNAL_west => outs(I-1)(J),
-					EXTERNAL_status => outs(I)(J),
-					EXTERNAL_defaultStatus => defaults(I)(J),
-					EXTERNAL_northEast => '0',
-					EXTERNAL_southEast => outs(I+1)(J-1),
-					EXTERNAL_southWest => outs(I-1)(J-1),
-					EXTERNAL_northWest => '0'
-				);
-			end generate if8;
-			if9: if (J /= height - 1)
-				and (J /= 0)
-				and (I /= width - 1)
-				and (I /= 0)
-			generate
-				CellularAutomatonGen89: CellularAutomaton port map(
-					clk => clk75,
-					EXTERNAL_north => outs(I)(J+1),
-					EXTERNAL_east => outs(I+1)(J),
-					EXTERNAL_south => outs(I)(J-1),
-					EXTERNAL_west => outs(I-1)(J),
-					EXTERNAL_status => outs(I)(J),
-					EXTERNAL_defaultStatus => defaults(I)(J),
-					EXTERNAL_northEast => outs(I+1)(J+1),
-					EXTERNAL_southEast => outs(I+1)(J-1),
-					EXTERNAL_southWest => outs(I-1)(J-1),
-					EXTERNAL_northWest => outs(I-1)(J+1)
-				);
-			end generate if9;
+	PixelX: for I in 1 to (width - 2) generate
+		PixelY: for J in 1 to (height - 2) generate	
+			CellularAutomatonGen1: CellularAutomaton port map(
+				clk => clk75,
+				EXTERNAL_north => outs(I)(J+1),
+				EXTERNAL_east => outs(I + 1)(J),
+				EXTERNAL_south => outs(I)(J-1),
+				EXTERNAL_west => outs(I-1)(J),
+				EXTERNAL_status => outs(I)(J),
+				EXTERNAL_defaultStatus => outs(I)(J),
+				EXTERNAL_northEast => outs(I+1)(J+1),
+				EXTERNAL_southEast => outs(I+1)(J-1),
+				EXTERNAL_southWest => outs(I-1)(J-1),
+				EXTERNAL_northWest => outs(I-1)(J+1)
+			);
 		end generate PixelY;
 	end generate PixelX;
    pclk <= clk75;
@@ -231,9 +93,8 @@ process(clk75)
       if rising_edge(clk75) then
 			
          if h_count < h_rez and v_count < v_rez then
-				currentStatus <= outs(to_integer(h_count))(to_integer(v_count));
 				if h_count < width and v_count < height then
-					if (currentStatus = '1') then
+					if (outs(to_integer(h_count))(to_integer(v_count)) = '1') then
 						red <= (others => '0');
 						green <= (others => '1');
 						blue <= (others => '0');
