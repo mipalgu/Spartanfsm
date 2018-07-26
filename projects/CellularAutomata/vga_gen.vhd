@@ -76,23 +76,23 @@ architecture Behavioral of vga_gen is
 	--end component;
 begin
 
-	PixelX: for I in 1 to (width - 2) generate
-		PixelY: for J in 1 to (height - 2) generate	
-			CellularAutomatonGen1: CellularAutomaton port map(
-				clk => clk75,
-				EXTERNAL_north => outs(I)(J+1),
-				EXTERNAL_east => outs(I + 1)(J),
-				EXTERNAL_south => outs(I)(J-1),
-				EXTERNAL_west => outs(I-1)(J),
-				EXTERNAL_status => outs(I)(J),
-				EXTERNAL_defaultStatus => outs(I)(J),
-				EXTERNAL_northEast => outs(I+1)(J+1),
-				EXTERNAL_southEast => outs(I+1)(J-1),
-				EXTERNAL_southWest => outs(I-1)(J-1),
-				EXTERNAL_northWest => outs(I-1)(J+1)
-			);
-		end generate PixelY;
-	end generate PixelX;
+--	PixelX: for I in 1 to (width - 2) generate
+--		PixelY: for J in 1 to (height - 2) generate	
+--			CellularAutomatonGen1: CellularAutomaton port map(
+--				clk => clk75,
+--				EXTERNAL_north => outs(I)(J-1),
+--				EXTERNAL_east => outs(I + 1)(J),
+--				EXTERNAL_south => outs(I)(J+1),
+--				EXTERNAL_west => outs(I-1)(J),
+--				EXTERNAL_status => outs(I)(J),
+--				EXTERNAL_defaultStatus => outs(I)(J),
+--				EXTERNAL_northEast => outs(I+1)(J-1),
+--				EXTERNAL_southEast => outs(I+1)(J+1),
+--				EXTERNAL_southWest => outs(I-1)(J+1),
+--				EXTERNAL_northWest => outs(I-1)(J-1)
+--			);
+--		end generate PixelY;
+--	end generate PixelX;
    pclk <= clk75;
    
 process(clk75)
