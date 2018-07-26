@@ -31,38 +31,41 @@ architecture Behavioral of vga_gen is
    constant v_max        : natural := 768+1+3+42;
    signal   v_count      : unsigned(11 downto 0) := (others => '0');
 	
-	signal x: integer := 0;
-	signal y: integer := 0;
+	constant width: integer := 10;
+	constant height: integer := 10;
 	
-	constant width: integer := 9;
-	constant height: integer := 9;
+	type column is array (0 to (height - 1)) of std_logic;
+	type screen is array (0 to (width - 1)) of column;
 	
-	type column is array ((height - 1) downto 0) of std_logic;
-	type screen is array ((width - 1) downto 0) of column;
-	
-	signal outs: screen := ((others => '0'),(others => '0'),
-		('0','0', '1','1','1','0','0','0','0'),
-		('0','0','1','0','0','1','0','0','0'), ('0','0','1','0','0','0','1','0','0'),
-		('0','0','0','1','0','0','1','0','0'), ('0','0','0','0','1','1','1','0','0'),
-		(others => '0'), (others =>'0'));
-	--signal outs: screen := (others => (others => '0'));
+	--signal outs: screen := ((others => '0'),(others => '0'),
+	--	('0','0', '1','1','1','0','0','0','0'),
+	--	('0','0','1','0','0','1','0','0','0'), ('0','0','1','0','0','0','1','0','0'),
+	--	('0','0','0','1','0','0','1','0','0'), ('0','0','0','0','1','1','1','0','0'),
+	--	(others => '0'), (others =>'0'));
+	signal outs: screen := ((others => '0'),
+		('0', others => '1'), others => ('0', '1', others => '0'));
+	--signal outs: screen := ((others => '0'),(others => '0'),
+	--	('0','0','1','1','1','0','0','0','0'), ('0','0','1','0','0','1','0','0','0'),
+	--	('0','0','1','0','0','0','1','0','0'), ('0','0','0','1','0','0','1','0','0'),
+	--	('0','0','0','0','1','1','1','0','0'), (others => '0'), (others => '0'));
+	--outs(0) := (others => '1');
 	signal currentStatus: std_logic;
 	
-	--component CellularAutomaton
-	--	Port(
-	--		clk: in std_logic;
-	--		EXTERNAL_north: in std_logic;
-	--		EXTERNAL_east: in std_logic;
-	--		EXTERNAL_south: in std_logic;
-	--		EXTERNAL_west: in std_logic;
-	--		EXTERNAL_status: out std_logic;
-	--		EXTERNAL_defaultStatus: in std_logic;
-	--		EXTERNAL_northEast: in std_logic;
-	--		EXTERNAL_southEast: in std_logic;
-	--		EXTERNAL_southWest: in std_logic;
-	--		EXTERNAL_northWest: in std_logic
-	--	);
-	--end component;
+	component CellularAutomaton
+		Port(
+			clk: in std_logic;
+			EXTERNAL_north: in std_logic;
+			EXTERNAL_east: in std_logic;
+			EXTERNAL_south: in std_logic;
+			EXTERNAL_west: in std_logic;
+			EXTERNAL_status: out std_logic;
+			EXTERNAL_defaultStatus: in std_logic;
+			EXTERNAL_northEast: in std_logic;
+			EXTERNAL_southEast: in std_logic;
+			EXTERNAL_southWest: in std_logic;
+			EXTERNAL_northWest: in std_logic
+		);
+	end component;
 	
 	--component PixelFlip
 	--	Port(
@@ -73,23 +76,23 @@ architecture Behavioral of vga_gen is
 	--end component;
 begin
 
-	--PixelX: for I in 1 to (width - 2) generate
-	--	PixelY: for J in 1 to (height - 2) generate	
-	--		CellularAutomatonGen1: CellularAutomaton port map(
-	--			clk => clk75,
-	--			EXTERNAL_north => outs(I)(J+1),
-	--			EXTERNAL_east => outs(I + 1)(J),
-	--			EXTERNAL_south => outs(I)(J-1),
-	--			EXTERNAL_west => outs(I-1)(J),
-	--			EXTERNAL_status => outs(I)(J),
-	--			EXTERNAL_defaultStatus => outs(I)(J),
-	--			EXTERNAL_northEast => outs(I+1)(J+1),
-	--			EXTERNAL_southEast => outs(I+1)(J-1),
-	--			EXTERNAL_southWest => outs(I-1)(J-1),
-	--			EXTERNAL_northWest => outs(I-1)(J+1)
-	--		);
-	--	end generate PixelY;
-	--end generate PixelX;
+	PixelX: for I in 1 to (width - 2) generate
+		PixelY: for J in 1 to (height - 2) generate	
+			CellularAutomatonGen1: CellularAutomaton port map(
+				clk => clk75,
+				EXTERNAL_north => outs(I)(J+1),
+				EXTERNAL_east => outs(I + 1)(J),
+				EXTERNAL_south => outs(I)(J-1),
+				EXTERNAL_west => outs(I-1)(J),
+				EXTERNAL_status => outs(I)(J),
+				EXTERNAL_defaultStatus => outs(I)(J),
+				EXTERNAL_northEast => outs(I+1)(J+1),
+				EXTERNAL_southEast => outs(I+1)(J-1),
+				EXTERNAL_southWest => outs(I-1)(J-1),
+				EXTERNAL_northWest => outs(I-1)(J+1)
+			);
+		end generate PixelY;
+	end generate PixelX;
    pclk <= clk75;
    
 process(clk75)
@@ -108,14 +111,6 @@ process(clk75)
 						green <= (others =>'0');
 						blue <= (others => '0');
 						blank <= '0';
-					end if;
-					x <= x + 1;
-					if (x = width) then
-						x <= 0;
-						y <= y + 1;
-						if (y = height) then
-							y <= 0;
-						end if;
 					end if;
 					--red <= redOut(to_integer(h_count))(to_integer(v_count));
 					--green <= greenOut(to_integer(h_count))(to_integer(v_count));
