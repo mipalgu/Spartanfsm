@@ -187,7 +187,7 @@ process (clk)
                                 internalState <= Internal;
                             end if;
                         when STATE_Wait =>
-                            if (i >= 100000000) then
+                            if (i >= 10000000) then
                                 targetState <= STATE_CountNeighbours;
                                 internalState <= OnExit;
                             else
