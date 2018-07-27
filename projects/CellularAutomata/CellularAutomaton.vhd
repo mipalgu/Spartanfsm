@@ -173,7 +173,12 @@ process (clk)
                 when CheckTransition =>
                     case currentState is
                         when STATE_Initial =>
-                            internalState <= Internal;
+                            if (true) then
+                                targetState <= STATE_CountNeighbours;
+                                internalState <= OnExit;
+                            else
+                                internalState <= Internal;
+                            end if;
                         when STATE_TurnOn =>
                             if (true) then
                                 targetState <= STATE_Wait;
