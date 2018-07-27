@@ -100,8 +100,8 @@ Inst_clocking: clocking PORT MAP(
    
 i_vga_gen: vga_gen PORT MAP(
 		clk75 => pixel_clock_t,
-		red   => green_t,
-		green => red_t,
+		red   => red_t,
+		green => green_t,
 		blue  => blue_t,
 		blank => blank_t,
 		hsync => hsync_t,
