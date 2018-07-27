@@ -1,5 +1,6 @@
 library IEEE;
 use IEEE.std_logic_1164.All;
+use IEEE.numeric_std.all;
 
 entity CellularAutomaton is
     port (
@@ -49,8 +50,9 @@ architecture LLFSM of CellularAutomaton is
     signal northWest: std_logic;
     signal defaultStatus: std_logic;
     --Machine Variables
-    signal count: integer := 0;
+    signal count: unsigned(3 downto 0) := "0000";
     signal i: integer := 0;
+    signal j: unsigned(3 downto 0) := "0000";
 begin
 process (clk)
     begin
@@ -60,8 +62,10 @@ process (clk)
                     case internalState is
                         when OnEntry =>
                             statusOut <= defaultStatus;
+                            j <= "0000";
                             internalState <= CheckTransition;
                         when Internal =>
+                            j <= j + "0001";
                             internalState <= WriteFromSnapshot;
                         when OnExit =>
                             internalState <= WriteFromSnapshot;
@@ -128,31 +132,9 @@ process (clk)
                 when STATE_CountNeighbours =>
                     case internalState is
                         when OnEntry =>
-                            count <= 0;
-                            if (north = '1') then
-                            	count <= count + 1;
-                            end if;
-                            if (east = '1') then
-                            	count <= count + 1;
-                            end if;
-                            if (south = '1') then
-                            	count <= count + 1;
-                            end if;
-                            if (west = '1') then
-                            	count <= count + 1;
-                            end if;
-                            if (northEast = '1') then
-                            	count <= count + 1;
-                            end if;
-                            if (southEast = '1') then
-                            	count <= count + 1;
-                            end if;
-                            if (southWest = '1') then
-                            	count <= count + 1;
-                            end if;
-                            if (northWest = '1') then
-                            	count <= count + 1;
-                            end if;
+                            count <= "0000" + ("000" & north) + ("000" & northEast) + ("000" & east)
+                            	+ ("000" & southEast) + ("000" & south) + ("000" & southWest)
+                            	+ ("000" & west) + ("000" & northWest);
                             internalState <= CheckTransition;
                         when Internal =>
                             internalState <= WriteFromSnapshot;
@@ -175,7 +157,12 @@ process (clk)
                 when CheckTransition =>
                     case currentState is
                         when STATE_Initial =>
-                            internalState <= Internal;
+                            if (j >= "1010") then
+                                targetState <= STATE_CountNeighbours;
+                                internalState <= OnExit;
+                            else
+                                internalState <= Internal;
+                            end if;
                         when STATE_TurnOn =>
                             if (true) then
                                 targetState <= STATE_Wait;
@@ -198,13 +185,13 @@ process (clk)
                                 internalState <= Internal;
                             end if;
                         when STATE_CountNeighbours =>
-                            if (count = 3) then
+                            if (count = "0011") then
                                 targetState <= STATE_TurnOn;
                                 internalState <= OnExit;
-                            elsif (statusIn = '1' and count = 2) and (not (count = 3)) then
+                            elsif (statusIn = '1' and count = "0010") and (not (count = "0011")) then
                                 targetState <= STATE_TurnOn;
                                 internalState <= OnExit;
-                            elsif (true) and (not (statusIn = '1' and count = 2)) and (not (count = 3)) then
+                            elsif (true) and (not (statusIn = '1' and count = "0010")) and (not (count = "0011")) then
                                 targetState <= STATE_TurnOff;
                                 internalState <= OnExit;
                             else

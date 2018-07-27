@@ -7,7 +7,7 @@
 #extern	east: in std_logic;	///<
 #extern	south: in std_logic;	///<
 #extern	west: in std_logic;	///<
-#machine	signal count: integer := 0;	///<
+#machine	signal count: unsigned(3 downto 0) := "0000";	///<
 #extern	statusOut: out std_logic;	///<
 #machine	signal i: integer := 0;	///<
 #extern	statusIn: in std_logic;	///<
@@ -16,3 +16,4 @@
 #extern	southWest: in std_logic;	///<
 #extern	northWest: in std_logic;	///<
 #extern	defaultStatus: in std_logic;	///<
+#machine	signal j: unsigned(3 downto 0) := "0000";	///<
