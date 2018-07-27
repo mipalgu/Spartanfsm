@@ -42,9 +42,23 @@ architecture Behavioral of vga_gen is
 	--	('0','0','1','0','0','1','0','0','0'), ('0','0','1','0','0','0','1','0','0'),
 	--	('0','0','0','1','0','0','1','0','0'), ('0','0','0','0','1','1','1','0','0'),
 	--	(others => '0'), (others =>'0'));
-	signal outs: screen := ((others => '0'), (others => '0'), (others => '0'),
-		('0', '0', '0', '1', '1', others => '0'), ('0', '0', '0', '1', others => '0'),
-		('0','0', '0', '1', others => '0'), others => (others => '0'));
+--	signal outs: screen := ((others => '0'), (others => '0'), (others => '0'),
+--		('0', '0', '0', '1', '1', others => '0'), ('0', '0', '0', '1', others => '0'),
+--		('0','0', '0', '1', others => '0'), others => (others => '0'));
+--	signal outs: screen := ((others => '0'),
+--		('0','1','1','1', others => '0'),
+--		('0','1','0','0','1', others => '0'), ('0','1', others => '0'),
+--		('0','1', others => '0'), ('0','0', '1','0','1', others => '0'),
+--		others => (others => '0'));
+-- Blinker
+--	signal outs: screen := ((others => '0'), (others => '0'), (others => '0'),
+--		('0','0','0','1', others => '0'), ('0','0','0','1', others => '0'),
+--		('0','0','0','1', others => '0'), others => (others => '0'));
+--Block
+	signal defaults: screen := ((others => '0'), (others => '0'), (others => '0'),
+		('0','0','0','1','1', others => '0'), ('0','0','0','1','1', others => '0'),
+		others => (others => '0'));
+	signal outs: screen := (others => (others => '0'));
 	--signal outs: screen := ((others => '0'),(others => '0'),
 	--	('0','0','1','1','1','0','0','0','0'), ('0','0','1','0','0','1','0','0','0'),
 	--	('0','0','1','0','0','0','1','0','0'), ('0','0','0','1','0','0','1','0','0'),
@@ -86,7 +100,7 @@ begin
 				EXTERNAL_south => outs(I)(J+1),
 				EXTERNAL_west => outs(I-1)(J),
 				EXTERNAL_status => outs(I)(J),
-				EXTERNAL_defaultStatus => outs(I)(J),
+				EXTERNAL_defaultStatus => defaults(I)(J),
 				EXTERNAL_northEast => outs(I+1)(J-1),
 				EXTERNAL_southEast => outs(I+1)(J+1),
 				EXTERNAL_southWest => outs(I-1)(J+1),

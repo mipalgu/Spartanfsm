@@ -173,12 +173,7 @@ process (clk)
                 when CheckTransition =>
                     case currentState is
                         when STATE_Initial =>
-                            if (true) then
-                                targetState <= STATE_CountNeighbours;
-                                internalState <= OnExit;
-                            else
-                                internalState <= Internal;
-                            end if;
+                            internalState <= Internal;
                         when STATE_TurnOn =>
                             if (true) then
                                 targetState <= STATE_Wait;
@@ -187,7 +182,7 @@ process (clk)
                                 internalState <= Internal;
                             end if;
                         when STATE_Wait =>
-                            if (i >= 10000000) then
+                            if (i >= 100) then
                                 targetState <= STATE_CountNeighbours;
                                 internalState <= OnExit;
                             else
@@ -201,13 +196,13 @@ process (clk)
                                 internalState <= Internal;
                             end if;
                         when STATE_CountNeighbours =>
-                            if (status = '0' and count = 3) then
+                            if (count = 3) then
                                 targetState <= STATE_TurnOn;
                                 internalState <= OnExit;
-                            elsif (status = '1' and (count = 2 or count = 3)) and (not (status = '0' and count = 3)) then
+                            elsif (status = '1' and count = 2) and (not (count = 3)) then
                                 targetState <= STATE_TurnOn;
                                 internalState <= OnExit;
-                            elsif (true) and (not (status = '1' and (count = 2 or count = 3))) and (not (status = '0' and count = 3)) then
+                            elsif (true) and (not (status = '1' and count = 2)) and (not (count = 3)) then
                                 targetState <= STATE_TurnOff;
                                 internalState <= OnExit;
                             else

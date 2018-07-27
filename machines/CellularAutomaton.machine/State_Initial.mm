@@ -16,7 +16,6 @@ using namespace State;
 
 Initial::Initial(const char *name): CLState(name, *new Initial::OnEntry, *new Initial::OnExit, *new Initial::Internal)
 {
-	_transitions[0] = new Transition_0();
 }
 
 Initial::~Initial()
@@ -25,7 +24,6 @@ Initial::~Initial()
 	delete &onExitAction();
 	delete &internalAction();
 
-	delete _transitions[0];
 }
 
 void Initial::OnEntry::perform(CLMachine *_machine, CLState *_state) const
@@ -55,15 +53,3 @@ void Initial::Internal::perform(CLMachine *_machine, CLState *_state) const
 #	include "State_Initial_Internal.mm"
 }
 
-bool Initial::Transition_0::check(CLMachine *_machine, CLState *_state) const
-{
-#	include "CellularAutomaton_VarRefs.mm"
-#	include "State_Initial_VarRefs.mm"
-#	include "CellularAutomaton_FuncRefs.mm"
-#	include "State_Initial_FuncRefs.mm"
-
-	return
-	(
-#		include "State_Initial_Transition_0.expr"
-	);
-}
