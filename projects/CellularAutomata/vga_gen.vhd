@@ -51,13 +51,13 @@ architecture Behavioral of vga_gen is
 --		('0','1', others => '0'), ('0','0', '1','0','1', others => '0'),
 --		others => (others => '0'));
 -- Blinker
---	signal outs: screen := ((others => '0'), (others => '0'), (others => '0'),
---		('0','0','0','1', others => '0'), ('0','0','0','1', others => '0'),
---		('0','0','0','1', others => '0'), others => (others => '0'));
---Block
 	constant defaults: screen := ((others => '0'), (others => '0'), (others => '0'),
-		('0','0','0','1','1', others => '0'), ('0','0','0','1','1', others => '0'),
-		others => (others => '0'));
+		('0','0','0','1', others => '0'), ('0','0','0','1', others => '0'),
+		('0','0','0','1', others => '0'), others => (others => '0'));
+--Block
+--	constant defaults: screen := ((others => '0'), (others => '0'), (others => '0'),
+--		('0','0','0','1','1', others => '0'), ('0','0','0','1','1', others => '0'),
+--		others => (others => '0'));
 	signal outs: screen;
 	--signal outs: screen := (others => (others => '0'));
 	--signal outs: screen := ((others => '0'),(others => '0'),
