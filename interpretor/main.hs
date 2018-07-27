@@ -18,7 +18,8 @@ main = do
     projectName <- return $ getProjectName dir
     variables <- getVariables dir projectName
     architecture <- return $ createArchitecture states internals transitions targetStates stateBitSize projectName variables
-    entity <- return $ createEntity projectName variables
+    includes <- getIncludes dir projectName
+    entity <- return $ createEntity includes projectName variables
     writeFile ("src/" ++ projectName ++ ".vhd") (entity ++ "\n\n" ++ architecture)
 
 
@@ -179,6 +180,9 @@ openAllTrans dir ts = sequence (map (\x -> openTrans dir x) ts)
 --Gets the variables
 getVariables :: String -> String -> IO String
 getVariables dir name = getFileContents (dir ++ "/" ++ name ++ "_Variables.h")
+
+getIncludes :: String -> String -> IO String
+getIncludes dir name = getFileContents(dir ++ "/" ++ name ++ "_Includes.h")
 
 --END FILE IO AND SYSTEM CALLS
 
@@ -545,8 +549,8 @@ createPortDeclaration :: [String] -> String
 createPortDeclaration xs = init (foldl (\x y -> x ++ "\n    " ++ y) "port (\n    clk: in std_logic;" xs) ++ "\n);"
 
 --Create entity block
-createEntity :: String -> String -> String
-createEntity name vars = "library IEEE;\nuse IEEE.std_logic_1164.All;\n\nentity " ++ name ++ " is"
+createEntity :: String -> String -> String -> String
+createEntity includes name vars = "library IEEE;\nuse IEEE.std_logic_1164.All;\n" ++ includes ++ "\n\nentity " ++ name ++ " is"
     ++ beautify 1 (createPortDeclaration $ getExternals $ removeAllTrailingComments $ filterOutComments vars)
     ++ "end " ++ name ++ ";"
 
