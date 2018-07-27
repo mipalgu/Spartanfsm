@@ -31,8 +31,8 @@ architecture Behavioral of vga_gen is
    constant v_max        : natural := 768+1+3+42;
    signal   v_count      : unsigned(11 downto 0) := (others => '0');
 	
-	constant width: integer := 12;
-	constant height: integer := 12;
+	constant width: integer := 100;
+	constant height: integer := 100;
 	
 	type column is array ((height - 1) downto 0) of std_logic_vector(7 downto 0);
 	type screen is array ((width - 1) downto 0) of column;
