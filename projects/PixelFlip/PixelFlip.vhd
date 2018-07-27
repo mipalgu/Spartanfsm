@@ -25,7 +25,7 @@ architecture LLFSM of PixelFlip is
     constant STATE_Wait: std_logic_vector(1 downto 0) := "11";
     signal currentState: std_logic_vector(1 downto 0) := STATE_Compare;
     signal targetState: std_logic_vector(1 downto 0) := currentState;
-    signal previousRinglet: std_logic_vector(1 downto 0);
+    signal previousRinglet: std_logic_vector(1 downto 0) := STATE_Compare xor "11";
     --Snapshot of External Variables
     signal redOut: std_logic_vector(7 downto 0);
     signal greenOut: std_logic_vector(7 downto 0);
