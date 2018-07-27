@@ -21,5 +21,6 @@ CellularAutomaton *_m = static_cast<CellularAutomaton *>(_machine);
 #extern	&southEast: in std_logic = _m->southEast: in std_logic;	///<
 #extern	&southWest: in std_logic = _m->southWest: in std_logic;	///<
 #extern	&northWest: in std_logic = _m->northWest: in std_logic;	///<
+#extern	&defaultStatus: in std_logic = _m->defaultStatus: in std_logic;	///<
 
 #pragma clang diagnostic pop

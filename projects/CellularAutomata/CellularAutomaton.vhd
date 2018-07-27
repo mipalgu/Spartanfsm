@@ -13,7 +13,8 @@ entity CellularAutomaton is
         EXTERNAL_northEast: in std_logic;
         EXTERNAL_southEast: in std_logic;
         EXTERNAL_southWest: in std_logic;
-        EXTERNAL_northWest: in std_logic
+        EXTERNAL_northWest: in std_logic;
+        EXTERNAL_defaultStatus: in std_logic
     );
 end CellularAutomaton;
 
@@ -46,6 +47,7 @@ architecture LLFSM of CellularAutomaton is
     signal southEast: std_logic;
     signal southWest: std_logic;
     signal northWest: std_logic;
+    signal defaultStatus: std_logic;
     --Machine Variables
     signal count: integer := 0;
     signal i: integer := 0;
@@ -57,7 +59,7 @@ process (clk)
                 when STATE_Initial =>
                     case internalState is
                         when OnEntry =>
-                            statusOut <= statusIn;
+                            statusOut <= defaultStatus;
                             internalState <= CheckTransition;
                         when Internal =>
                             internalState <= WriteFromSnapshot;
@@ -173,12 +175,7 @@ process (clk)
                 when CheckTransition =>
                     case currentState is
                         when STATE_Initial =>
-                            if (true) then
-                                targetState <= STATE_CountNeighbours;
-                                internalState <= OnExit;
-                            else
-                                internalState <= Internal;
-                            end if;
+                            internalState <= Internal;
                         when STATE_TurnOn =>
                             if (true) then
                                 targetState <= STATE_Wait;
@@ -226,6 +223,7 @@ process (clk)
                     southEast <= EXTERNAL_southEast;
                     southWest <= EXTERNAL_southWest;
                     northWest <= EXTERNAL_northWest;
+                    defaultStatus <= EXTERNAL_defaultStatus;
                     if (previousRinglet = currentState) then
                         internalState <= CheckTransition;
                     else

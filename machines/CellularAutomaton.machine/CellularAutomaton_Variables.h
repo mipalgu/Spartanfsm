@@ -15,3 +15,4 @@
 #extern	southEast: in std_logic;	///<
 #extern	southWest: in std_logic;	///<
 #extern	northWest: in std_logic;	///<
+#extern	defaultStatus: in std_logic;	///<

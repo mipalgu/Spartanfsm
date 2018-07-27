@@ -55,9 +55,10 @@ architecture Behavioral of vga_gen is
 --		('0','0','0','1', others => '0'), ('0','0','0','1', others => '0'),
 --		('0','0','0','1', others => '0'), others => (others => '0'));
 --Block
-	signal outs: screen := ((others => '0'), (others => '0'), (others => '0'),
+	constant defaults: screen := ((others => '0'), (others => '0'), (others => '0'),
 		('0','0','0','1','1', others => '0'), ('0','0','0','1','1', others => '0'),
 		others => (others => '0'));
+	signal outs: screen;
 	--signal outs: screen := (others => (others => '0'));
 	--signal outs: screen := ((others => '0'),(others => '0'),
 	--	('0','0','1','1','1','0','0','0','0'), ('0','0','1','0','0','1','0','0','0'),
@@ -78,7 +79,8 @@ architecture Behavioral of vga_gen is
 			EXTERNAL_northEast: in std_logic;
 			EXTERNAL_southEast: in std_logic;
 			EXTERNAL_southWest: in std_logic;
-			EXTERNAL_northWest: in std_logic
+			EXTERNAL_northWest: in std_logic;
+			EXTERNAL_defaultStatus: in std_logic
 		);
 	end component;
 	
@@ -117,7 +119,8 @@ begin
 				EXTERNAL_northEast => outs(I+1)(J-1),
 				EXTERNAL_southEast => outs(I+1)(J+1),
 				EXTERNAL_southWest => outs(I-1)(J+1),
-				EXTERNAL_northWest => outs(I-1)(J-1)
+				EXTERNAL_northWest => outs(I-1)(J-1),
+				EXTERNAL_defaultStatus => defaults(I)(J)
 			);
 		end generate PixelY;
 	end generate PixelX;
