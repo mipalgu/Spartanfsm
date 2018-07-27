@@ -14,9 +14,9 @@ CellularAutomaton *_m = static_cast<CellularAutomaton *>(_machine);
 #extern	&south: in std_logic = _m->south: in std_logic;	///<
 #extern	&west: in std_logic = _m->west: in std_logic;	///<
 #machine	&signal count: integer := 0 = _m->signal count: integer := 0;	///<
-#extern	&status: out std_logic = _m->status: out std_logic;	///<
+#extern	&statusOut: out std_logic = _m->statusOut: out std_logic;	///<
 #machine	&signal i: integer := 0 = _m->signal i: integer := 0;	///<
-#extern	&defaultStatus: in std_logic = _m->defaultStatus: in std_logic;	///<
+#extern	&statusIn: in std_logic = _m->statusIn: in std_logic;	///<
 #extern	&northEast: in std_logic = _m->northEast: in std_logic;	///<
 #extern	&southEast: in std_logic = _m->southEast: in std_logic;	///<
 #extern	&southWest: in std_logic = _m->southWest: in std_logic;	///<

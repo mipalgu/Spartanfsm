@@ -1,1 +1,1 @@
-status <= '0';
+statusOut <= '0';

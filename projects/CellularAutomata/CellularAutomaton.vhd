@@ -8,8 +8,8 @@ entity CellularAutomaton is
         EXTERNAL_east: in std_logic;
         EXTERNAL_south: in std_logic;
         EXTERNAL_west: in std_logic;
-        EXTERNAL_status: out std_logic;
-        EXTERNAL_defaultStatus: in std_logic;
+        EXTERNAL_statusOut: out std_logic;
+        EXTERNAL_statusIn: in std_logic;
         EXTERNAL_northEast: in std_logic;
         EXTERNAL_southEast: in std_logic;
         EXTERNAL_southWest: in std_logic;
@@ -40,8 +40,8 @@ architecture LLFSM of CellularAutomaton is
     signal east: std_logic;
     signal south: std_logic;
     signal west: std_logic;
-    signal status: std_logic;
-    signal defaultStatus: std_logic;
+    signal statusOut: std_logic;
+    signal statusIn: std_logic;
     signal northEast: std_logic;
     signal southEast: std_logic;
     signal southWest: std_logic;
@@ -57,14 +57,14 @@ process (clk)
                 when STATE_Initial =>
                     case internalState is
                         when OnEntry =>
-                            status <= defaultStatus;
+                            statusOut <= statusIn;
                             internalState <= CheckTransition;
                         when Internal =>
                             internalState <= WriteFromSnapshot;
                         when OnExit =>
                             internalState <= WriteFromSnapshot;
                         when WriteFromSnapshot =>
-                            EXTERNAL_status <= status;
+                            EXTERNAL_statusOut <= statusOut;
                             internalState <= ReadToSnapshot;
                             previousRinglet <= currentState;
                             currentState <= targetState;
@@ -74,14 +74,14 @@ process (clk)
                 when STATE_TurnOn =>
                     case internalState is
                         when OnEntry =>
-                            status <= '1';
+                            statusOut <= '1';
                             internalState <= CheckTransition;
                         when Internal =>
                             internalState <= WriteFromSnapshot;
                         when OnExit =>
                             internalState <= WriteFromSnapshot;
                         when WriteFromSnapshot =>
-                            EXTERNAL_status <= status;
+                            EXTERNAL_statusOut <= statusOut;
                             internalState <= ReadToSnapshot;
                             previousRinglet <= currentState;
                             currentState <= targetState;
@@ -99,7 +99,7 @@ process (clk)
                         when OnExit =>
                             internalState <= WriteFromSnapshot;
                         when WriteFromSnapshot =>
-                            EXTERNAL_status <= status;
+                            EXTERNAL_statusOut <= statusOut;
                             internalState <= ReadToSnapshot;
                             previousRinglet <= currentState;
                             currentState <= targetState;
@@ -109,14 +109,14 @@ process (clk)
                 when STATE_TurnOff =>
                     case internalState is
                         when OnEntry =>
-                            status <= '0';
+                            statusOut <= '0';
                             internalState <= CheckTransition;
                         when Internal =>
                             internalState <= WriteFromSnapshot;
                         when OnExit =>
                             internalState <= WriteFromSnapshot;
                         when WriteFromSnapshot =>
-                            EXTERNAL_status <= status;
+                            EXTERNAL_statusOut <= statusOut;
                             internalState <= ReadToSnapshot;
                             previousRinglet <= currentState;
                             currentState <= targetState;
@@ -157,7 +157,7 @@ process (clk)
                         when OnExit =>
                             internalState <= WriteFromSnapshot;
                         when WriteFromSnapshot =>
-                            EXTERNAL_status <= status;
+                            EXTERNAL_statusOut <= statusOut;
                             internalState <= ReadToSnapshot;
                             previousRinglet <= currentState;
                             currentState <= targetState;
@@ -204,10 +204,10 @@ process (clk)
                             if (count = 3) then
                                 targetState <= STATE_TurnOn;
                                 internalState <= OnExit;
-                            elsif (status = '1' and count = 2) and (not (count = 3)) then
+                            elsif (statusIn = '1' and count = 2) and (not (count = 3)) then
                                 targetState <= STATE_TurnOn;
                                 internalState <= OnExit;
-                            elsif (true) and (not (status = '1' and count = 2)) and (not (count = 3)) then
+                            elsif (true) and (not (statusIn = '1' and count = 2)) and (not (count = 3)) then
                                 targetState <= STATE_TurnOff;
                                 internalState <= OnExit;
                             else
@@ -221,7 +221,7 @@ process (clk)
                     east <= EXTERNAL_east;
                     south <= EXTERNAL_south;
                     west <= EXTERNAL_west;
-                    defaultStatus <= EXTERNAL_defaultStatus;
+                    statusIn <= EXTERNAL_statusIn;
                     northEast <= EXTERNAL_northEast;
                     southEast <= EXTERNAL_southEast;
                     southWest <= EXTERNAL_southWest;

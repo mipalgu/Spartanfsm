@@ -1,1 +1,1 @@
-status <= defaultStatus;
+statusOut <= statusIn;
