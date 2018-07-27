@@ -34,7 +34,7 @@ architecture LLFSM of CellularAutomaton is
     constant STATE_CountNeighbours: std_logic_vector(2 downto 0) := "100";
     signal currentState: std_logic_vector(2 downto 0) := STATE_Initial;
     signal targetState: std_logic_vector(2 downto 0) := currentState;
-    signal previousRinglet: std_logic_vector(2 downto 0);
+    signal previousRinglet: std_logic_vector(2 downto 0) := STATE_Initial xor "111";
     --Snapshot of External Variables
     signal north: std_logic;
     signal east: std_logic;
