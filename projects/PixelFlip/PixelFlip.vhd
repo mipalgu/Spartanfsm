@@ -1,5 +1,6 @@
 library IEEE;
 use IEEE.std_logic_1164.All;
+use IEEE.numeric_std.all;
 
 entity PixelFlip is
     port (
@@ -32,7 +33,7 @@ architecture LLFSM of PixelFlip is
     --Machine Variables
     signal pastRed: std_logic_vector(7 downto 0) := "00000000";
     signal pastGreen: std_logic_vector(7 downto 0) := "00000000";
-    signal i: integer := 0;
+    signal i: unsigned(25 downto 0);
 begin
 process (clk)
     begin
@@ -100,10 +101,10 @@ process (clk)
                 when STATE_Wait =>
                     case internalState is
                         when OnEntry =>
-                            i <= 0;
+                            i <= "00000000000000000000000000";
                             internalState <= CheckTransition;
                         when Internal =>
-                            i <= i + 1;
+                            i <= i + "00000000000000000000000001";
                             internalState <= WriteFromSnapshot;
                         when OnExit =>
                             internalState <= WriteFromSnapshot;
@@ -149,7 +150,7 @@ process (clk)
                                 internalState <= Internal;
                             end if;
                         when STATE_Wait =>
-                            if (i >= 50000000) then
+                            if (i >= "10111110101111000010000000") then
                                 targetState <= STATE_Compare;
                                 internalState <= OnExit;
                             else
