@@ -351,8 +351,10 @@ createTargetState :: Int -> String
 createTargetState bits = "signal targetState: std_logic_vector(" ++ (show (bits - 1)) ++ " downto 0) := currentState;\n"
 
 --Code to create previousRinglet signal.
-createPreviousRinglet :: Int -> String
-createPreviousRinglet bits = "signal previousRinglet: std_logic_vector(" ++ (show (bits - 1)) ++ " downto 0);\n"
+createPreviousRinglet :: Int -> String -> String
+createPreviousRinglet bits initialState
+  = "signal previousRinglet: std_logic_vector(" ++ (show (bits - 1)) ++ " downto 0) := "
+    ++ initialState ++ " xor \"" ++ (ones bits) ++ "\";\n"
 
 -- VHDL Binary representation of a state
 createState :: Int -> String -> String -> String
@@ -380,7 +382,7 @@ createArchitectureVariables size states vars = internalStateVhdl
     ++ createAllStates (numberOfBits $ length states) (getBins states) states
     ++ (createCurrentState (states!!0) (numberOfBits (length states)))
     ++ createTargetState (numberOfBits $ length states)
-    ++ createPreviousRinglet (numberOfBits $ length states)
+    ++ createPreviousRinglet (numberOfBits $ length states) (states!!0)
     ++ createArchitectureSnapshots (getExternalVars vars)
     ++ createVariables (getMachineVars vars)
 
@@ -587,5 +589,13 @@ decToBin size num = sanitiseBin size $ calcBin size num ""
 sanitiseBin :: Int -> String -> String
 sanitiseBin size bin | length bin > size && head bin == '0' = sanitiseBin size (tail bin)
                      | otherwise                            = bin
+
+--Returns a string of n number of 1's 
+ones :: Int -> String
+ones n = onesCarry n ""
+    where
+        onesCarry :: Int -> String -> String
+        onesCarry m str | m <= 0    = str
+                        | otherwise = onesCarry (m-1) ("1" ++ str)
 
 --END CONVENIENCE CODE
