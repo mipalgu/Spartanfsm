@@ -31,8 +31,8 @@ architecture Behavioral of vga_gen is
    constant v_max        : natural := 768+1+3+42;
    signal   v_count      : unsigned(11 downto 0) := (others => '0');
 	
-	constant width: integer := 8;
-	constant height: integer := 8;
+	constant width: integer := 15;
+	constant height: integer := 15;
 	
 	type column is array (0 to (height - 1)) of std_logic;
 	type screen is array (0 to (width - 1)) of column;
@@ -42,28 +42,39 @@ architecture Behavioral of vga_gen is
 	--	('0','0','1','0','0','1','0','0','0'), ('0','0','1','0','0','0','1','0','0'),
 	--	('0','0','0','1','0','0','1','0','0'), ('0','0','0','0','1','1','1','0','0'),
 	--	(others => '0'), (others =>'0'));
---	signal outs: screen := ((others => '0'), (others => '0'), (others => '0'),
+--L-shape
+--	constant defaults: screen := ((others => '0'), (others => '0'), (others => '0'),
 --		('0', '0', '0', '1', '1', others => '0'), ('0', '0', '0', '1', others => '0'),
 --		('0','0', '0', '1', others => '0'), others => (others => '0'));
---	signal outs: screen := ((others => '0'),
+--Static-O
+--	constant defaults: screen := ((others => '0'),
 --		('0','1','1','1', others => '0'),
 --		('0','1','0','0','1', others => '0'), ('0','1', others => '0'),
 --		('0','1', others => '0'), ('0','0', '1','0','1', others => '0'),
 --		others => (others => '0'));
 -- Blinker
-	constant defaults: screen := ((others => '0'), (others => '0'), (others => '0'),
-		('0','0','0','1', others => '0'), ('0','0','0','1', others => '0'),
-		('0','0','0','1', others => '0'), others => (others => '0'));
+--	constant defaults: screen := ((others => '0'), (others => '0'), (others => '0'),
+--		('0','0','0','1', others => '0'), ('0','0','0','1', others => '0'),
+--		('0','0','0','1', others => '0'), others => (others => '0'));
 --Block
 --	constant defaults: screen := ((others => '0'), (others => '0'), (others => '0'),
 --		('0','0','0','1','1', others => '0'), ('0','0','0','1','1', others => '0'),
 --		others => (others => '0'));
 	signal outs: screen;
 	--signal outs: screen := (others => (others => '0'));
-	--signal outs: screen := ((others => '0'),(others => '0'),
-	--	('0','0','1','1','1','0','0','0','0'), ('0','0','1','0','0','1','0','0','0'),
-	--	('0','0','1','0','0','0','1','0','0'), ('0','0','0','1','0','0','1','0','0'),
-	--	('0','0','0','0','1','1','1','0','0'), (others => '0'), (others => '0'));
+--Replicator
+--	constant defaults: screen := ((others => '0'),(others => '0'),
+--		('0','0','1','1','1','0','0','0','0', others => '0'),
+--		('0','0','1','0','0','1','0','0','0', others => '0'),
+--		('0','0','1','0','0','0','1','0','0', others => '0'),
+--		('0','0','0','1','0','0','1','0','0', others => '0'),
+--		('0','0','0','0','1','1','1','0','0', others => '0'),
+--		others => (others => '0'));
+--Oscillator
+	constant defaults: screen := ((others => '0'), ('0','0','0','1','0','1', others => '0'),
+		('0','0','0','0','0','0','1', others => '0'), ('0','0','1','0','0','1', others => '0'),
+		('0','1','0','1','0','1', others => '0'),('0','1','0','0','1', others => '0'),
+		('0','0','1','1', others => '0'), others => (others => '0'));
 	--outs(0) := (others => '1');
 	--signal currentStatus: std_logic;
 	
