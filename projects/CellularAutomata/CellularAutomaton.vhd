@@ -52,7 +52,6 @@ architecture LLFSM of CellularAutomaton is
     --Machine Variables
     signal count: unsigned(3 downto 0) := "0000";
     signal i: unsigned(22 downto 0);
-    signal j: unsigned(3 downto 0) := "0000";
 begin
 process (clk)
     begin
@@ -62,10 +61,8 @@ process (clk)
                     case internalState is
                         when OnEntry =>
                             statusOut <= defaultStatus;
-                            j <= "0000";
                             internalState <= CheckTransition;
                         when Internal =>
-                            j <= j + "0001";
                             internalState <= WriteFromSnapshot;
                         when OnExit =>
                             internalState <= WriteFromSnapshot;
@@ -157,7 +154,7 @@ process (clk)
                 when CheckTransition =>
                     case currentState is
                         when STATE_Initial =>
-                            if (j >= "1010") then
+                            if (true) then
                                 targetState <= STATE_CountNeighbours;
                                 internalState <= OnExit;
                             else
