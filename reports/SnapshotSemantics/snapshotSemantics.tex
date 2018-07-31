@@ -26,7 +26,7 @@
 \begin{document}
 	\title{Progress Report - Snapshot Semantics, Cellular Automata}
 	\author{Morgan McColl \\s2981832}
-	\date{\today}
+	\date{June 26, 2018}
 	\maketitle
 	\section{Creating Variables in MiPalCase}
 		Since VHDL has external variables declared in the entity declaration and machine variables declared in the architecture declaration, this poses a problem for defining these in MiPalCase. I have made it so the user must place a \#extern or \#machine in the type field of the variable in MiPalCase. This will place the variables into the correct places in the vhdl code automatically. It should also be noted that I can't see a viable way to do state variables. The variables cannot persist between OnEntry, Internal, OnExit etc. without becoming machine variables available to every state.
