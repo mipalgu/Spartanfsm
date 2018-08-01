@@ -46,7 +46,7 @@ architecture Behavioral of vga_gen is
 --	constant defaults: screen := ((others => '0'), (others => '0'), (others => '0'),
 --		('0', '0', '0', '1', '1', others => '0'), ('0', '0', '0', '1', others => '0'),
 --		('0','0', '0', '1', others => '0'), others => (others => '0'));
---Static-O
+--Beehive
 --	constant defaults: screen := ((others => '0'),
 --		('0','1','1','1', others => '0'),
 --		('0','1','0','0','1', others => '0'), ('0','1', others => '0'),
@@ -63,18 +63,18 @@ architecture Behavioral of vga_gen is
 	signal outs: screen;
 	--signal outs: screen := (others => (others => '0'));
 --Replicator
---	constant defaults: screen := ((others => '0'),(others => '0'),
---		('0','0','1','1','1','0','0','0','0', others => '0'),
---		('0','0','1','0','0','1','0','0','0', others => '0'),
---		('0','0','1','0','0','0','1','0','0', others => '0'),
---		('0','0','0','1','0','0','1','0','0', others => '0'),
---		('0','0','0','0','1','1','1','0','0', others => '0'),
---		others => (others => '0'));
+	constant defaults: screen := ((others => '0'),(others => '0'),
+		('0','0','1','1','1','0','0','0','0', others => '0'),
+		('0','0','1','0','0','1','0','0','0', others => '0'),
+		('0','0','1','0','0','0','1','0','0', others => '0'),
+		('0','0','0','1','0','0','1','0','0', others => '0'),
+		('0','0','0','0','1','1','1','0','0', others => '0'),
+		others => (others => '0'));
 --Oscillator
-	constant defaults: screen := ((others => '0'), ('0','0','0','1','0','1', others => '0'),
-		('0','0','0','0','0','0','1', others => '0'), ('0','0','1','0','0','1', others => '0'),
-		('0','1','0','1','0','1', others => '0'),('0','1','0','0','1', others => '0'),
-		('0','0','1','1', others => '0'), others => (others => '0'));
+--	constant defaults: screen := ((others => '0'), ('0','0','0','1','0','1', others => '0'),
+--		('0','0','0','0','0','0','1', others => '0'), ('0','0','1','0','0','1', others => '0'),
+--		('0','1','0','1','0','1', others => '0'),('0','1','0','0','1', others => '0'),
+--		('0','0','1','1', others => '0'), others => (others => '0'));
 	--outs(0) := (others => '1');
 	--signal currentStatus: std_logic;
 	
