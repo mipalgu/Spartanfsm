@@ -74,7 +74,7 @@ ARCHITECTURE behavior OF tb IS
    signal EXTERNAL_statusOut : std_logic;
 
    -- Clock period definitions
-   constant clk_period : time := 10 ns;
+   constant clk_period : time := 20 ns;
  
 BEGIN
  
@@ -106,7 +106,11 @@ BEGIN
 
    -- Stimulus process
    stim_proc: process
-   begin		
+   begin
+		wait for 70 ns;
+		EXTERNAL_north <= '1';
+		EXTERNAL_east <= '1';
+		EXTERNAL_south <= '1';
       -- hold reset state for 100 ns.
 
       -- insert stimulus here 
