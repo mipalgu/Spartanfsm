@@ -31,6 +31,7 @@ infixl 2 +\>
 str1 +\> str2 | str1 == "" = str2
               | otherwise  = str1 ++ "\n" ++ str2
 
+--Operator to concatenate strings with a space in between them
 infixl 2 ++>
 (++>) :: String -> String -> String
 str1 ++> str2 | str1 == ""                                       = str2
@@ -181,6 +182,7 @@ openAllTrans dir ts = sequence (map (\x -> openTrans dir x) ts)
 getVariables :: String -> String -> IO String
 getVariables dir name = getFileContents (dir ++ "/" ++ name ++ "_Variables.h")
 
+-- Gets the includes (libaries) for the machine
 getIncludes :: String -> String -> IO String
 getIncludes dir name = getFileContents(dir ++ "/" ++ name ++ "_Includes.h")
 
@@ -394,30 +396,38 @@ createArchitectureVariables size states vars = internalStateVhdl
 createStateCode :: String -> String -> String -> String
 createStateCode state code appendedCode = "when " ++ state ++ " =>" ++ (beautify 1 (code +\> appendedCode));
 
+-- Creates the code for a single var that reads the external variables into snapshot variables
 createReadLine :: String -> String
 createReadLine varName = varName ++ " <= " ++ toExternalName varName ++ ";"
 
+-- Creates the code for all var that reads the external variables into snapshot variables
 createReadCode :: String -> String
 createReadCode vars
   = foldl (+\>) "" $ map (\s -> createReadLine (getExternalVarName s)) $ getInputExternalVars vars
 
+-- Creates the logic surrounding whether the OnEntry or CheckTransition should run
 createReadToTransition :: String
 createReadToTransition
   = "if (previousRinglet = currentState) then\n    internalState <= CheckTransition;\nelse\n    internalState <= OnEntry;\nend if;"
 
+-- Creates the ReadToSnapshot section of the VHDL source file
 createReadToSnapshot :: String -> String
 createReadToSnapshot vars = createStateCode "ReadToSnapshot" (createReadCode vars) createReadToTransition
 
+--Creates the code for writing a single snapshot variable to an external variable
 createWriteLine :: String -> String
 createWriteLine varName = toExternalName varName ++ " <= " ++ varName ++ ";"
 
+-- Creates all the code for writing the snapshot variables to their respective external variables
 createWriteCode :: String -> String
 createWriteCode vars
   = foldl (+\>) "" $ map (\s -> createWriteLine (getExternalVarName s)) $ getOutputExternalVars vars
 
+-- Creates the transition code for the WriteFromSnapshot section
 createWriteFromTransition :: String
 createWriteFromTransition  = "internalState <= ReadToSnapshot;\npreviousRinglet <= currentState;\ncurrentState <= targetState;"
 
+-- Creates the WriteFromSnapshot section
 createWriteFromSnapshot :: String -> String
 createWriteFromSnapshot vars = createStateCode "WriteFromSnapshot" (createWriteCode vars) createWriteFromTransition
 
@@ -507,6 +517,7 @@ getExternalVariableCode :: String -> String
 getExternalVariableCode code
     = convertCodeToExternalName (splitOn ": " ((splitOn "\t" code)!!1))
 
+-- Converts a line to have the EXTERNAL_ prefix on the var
 convertCodeToExternalName :: [String] -> String
 convertCodeToExternalName xs = toExternalName (xs!!0) ++ ": " ++ xs!!1
 
@@ -554,25 +565,31 @@ createEntity includes name vars = "library IEEE;\nuse IEEE.std_logic_1164.All;\n
     ++ beautify 1 (createPortDeclaration $ getExternals $ removeAllTrailingComments $ filterOutComments vars)
     ++ "end " ++ name ++ ";"
 
-
+-- Checks mode for input
 isExternalModeInput :: String -> Bool
 isExternalModeInput str = str == "in" || str == "inout"
 
+-- Checks mode for output
 isExternalModeOutput :: String -> Bool
 isExternalModeOutput str = str == "out" || str == "inout"
 
+-- Checks line for input mode
 isExternalInput :: String -> Bool
 isExternalInput str = isExternalModeInput ((splitOn " " ((splitOn ": " ((splitOn "\t" str)!!1))!!1))!!0)
 
+-- Checks line for output mode
 isExternalOutput :: String -> Bool
 isExternalOutput str = isExternalModeOutput ((splitOn " "((splitOn ": " ((splitOn "\t" str)!!1))!!1))!!0)
 
+-- Filters the external variables to input variables
 getInputExternalVars :: String -> [String]
 getInputExternalVars vars = filter isExternalInput $ filter isExternal (lines vars)
 
+-- Filters the external variables to output variables
 getOutputExternalVars :: String -> [String]
 getOutputExternalVars vars = filter isExternalOutput $ filter isExternal (lines vars)
 
+-- Get the var name of an external variable
 getExternalVarName :: String -> String
 getExternalVarName varCode = (splitOn ": " ((splitOn "\t" varCode)!!1))!!0
 
