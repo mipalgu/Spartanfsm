@@ -298,23 +298,24 @@ createTransitionCode trans states
                 | otherwise = createCode ts ss (n+1) m (carry ++ (transitionToVhdl n m ts (ss!!n)))
 
 -- Create the case statement for the transitions for a given state
-createSingleTransitionCode :: String -> [String] -> [String] -> String
-createSingleTransitionCode state transitions targetStates =
-    removeFirstNewLine (beautify 1 ("when " ++ state ++ " =>" ++ (beautify 1 (createTransitionCode transitions targetStates))))
+createSingleTransitionCode :: [String] -> [String] -> String
+createSingleTransitionCode transitions targetStates =
+    "when CheckTransition =>" ++ (beautify 1 (createTransitionCode transitions targetStates))
 
--- Merges the transitions to a single case statement
+{- Merges the transitions to a single case statement
 joinTransitionBlocks :: [String] -> [[String]] -> [[String]] -> String
 joinTransitionBlocks states trans targets =
     "    case currentState is"
     ++ beautify 1 (foldl (++) "" $ map (\x -> createSingleTransitionCode (states!!x) (trans!!x) (targets!!x)) [0..((length states) - 1)])
     ++ removeFirstNewLine (beautify 2 othersNullBlock)
     ++ "    end case;"
-
+-}
 -- Code for InitialPseudoState
 pseudoStateCode :: String -> String
 pseudoStateCode state = "    case currentState is"
     ++ beautify 2 ("When InitialPseudoState =>" ++ beautify 1 ("targetState <= " ++ state ++ ";\ninternalState <= OnExit;"))
 
+{-
 --Add InitialPseudoStateCode to transitions
 joinTransitionBlocksWithPseudoState :: [String] -> [[String]] -> [[String]] -> String
 joinTransitionBlocksWithPseudoState states trans targets
@@ -324,12 +325,12 @@ joinTransitionBlocksWithPseudoState states trans targets
         ++ removeFirstNewLine (beautify 2 othersNullBlock)
         ++ "    end case;"
     | otherwise                           = joinTransitionBlocks states trans targets
-
+-}
 --Creates all of the transition code for all states
-createAllTransitionsCode :: [String] -> [[String]] -> [[String]] -> String
+{-createAllTransitionsCode :: [String] -> [[String]] -> [[String]] -> String
 createAllTransitionsCode states trans targets = "case internalState is\n    when CheckTransition =>"
     ++ beautify 1 (joinTransitionBlocksWithPseudoState states trans targets)
-
+-}
 
 -- Internal state representation
 internalStateVhdl :: String
@@ -444,42 +445,58 @@ createOnExit :: String -> String
 createOnExit code = createStateCode "OnExit" code "internalState <= WriteFromSnapshot;"
 
 --creates internalStates code for a single state.
-createSingleState :: String -> [String] -> String -> String
-createSingleState state code vars = "    when " ++ state ++ " =>\n        case internalState is"
-    ++ (beautify 3 (createOnEntry (code!!0) ++ createInternal (code!!1) ++ createOnExit (code!!2) ++ (createWriteFromSnapshot vars) ++ othersNullBlock))
+createRisingSingleState :: String -> [String] -> String -> String
+createRisingSingleState state code vars = "    when " ++ state ++ " =>\n        case internalState is"
+    ++ (beautify 3 (createOnEntry (code!!0) ++ (createWriteFromSnapshot vars) ++ othersNullBlock))
     ++ "        end case;\n" 
 
 --Create internalStates code for all states.
-createAllStateCode :: [String] -> [[String]] -> String -> String
-createAllStateCode states codes vars = 
+createAllRisingStateCode :: [String] -> [[String]] -> String -> String
+createAllRisingStateCode states codes vars = 
     beautify 1 (
         (foldl (++) ""
             $ map 
-                (\x -> createSingleState (states!!x) (codes!!x) vars)
+                (\x -> createRisingSingleState (states!!x) (codes!!x) vars)
                 [0..((length states) - 1)]
         ) ++ (removeFirstNewLine (beautify 1 othersNullBlock))
     )
+
+createFallingSingleState :: String -> [String] -> [String] -> [String] -> String -> String
+createFallingSingleState state code trans targets vars = "when " ++ state ++ " =>\n    case internalState is"
+    ++ beautify 2 (createInternal (code!!1) ++ (createOnExit (code!!2)) ++ (createSingleTransitionCode trans targets) ++ (othersNullBlock))
+
+createAllFallingStateCode :: [String] -> [[String]] -> [[String]] -> [[String]] -> String -> String
+createAllFallingStateCode states codes trans targets vars =
+    removeFirstNewLine (beautify 1 (
+        (foldl (++) ""
+            $ map (\x -> createFallingSingleState (states!!x) (codes!!x) (trans!!x) (targets!!x) vars)
+                [0..((length states) - 1)]
+        ) ++ (removeFirstNewLine (beautify 1 othersNullBlock))
+    ))
 
 -- Create Rising edge code
 createRisingEdge :: [String] -> [[String]] -> String -> String
 createRisingEdge states codes vars = "if (rising_edge(clk)) then"
     ++ beautify 1 "case currentState is"
-    ++ removeFirstNewLine (createAllStateCode states codes vars)
+    ++ removeFirstNewLine (createAllRisingStateCode states codes vars)
     ++ "    end case;\nend if;"
 
 --Create Falling edge code
-createFallingEdge :: [String] -> [[String]] -> [[String]] -> String -> String
-createFallingEdge states trans targets vars = "if (falling_edge(clk)) then"
-    ++ beautify 1 (createAllTransitionsCode states trans targets)
-    ++ removeFirstNewLine (beautify 2 (createReadToSnapshot vars))
-    ++ removeFirstNewLine (beautify 1 (removeFirstNewLine (beautify 1 othersNullBlock)))
+createFallingEdge :: [String] -> [[String]] -> [[String]] -> [[String]] -> String -> String
+createFallingEdge states codes trans targets vars = "if (falling_edge(clk)) then"
+    ++ beautify 1 "case currentState is"
+    ++ removeFirstNewLine (beautify 1 (createAllFallingStateCode states codes trans targets vars))
     ++ "    end case;\nend if;"
+--    ++ beautify 1 (createAllTransitionsCode states trans targets)
+--   ++ removeFirstNewLine (beautify 2 (createReadToSnapshot vars))
+--    ++ removeFirstNewLine (beautify 1 (removeFirstNewLine (beautify 1 othersNullBlock)))
+--    ++ "    end case;\nend if;"
 
 --create process block
 createProcessBlock :: [String] -> [[String]] -> [[String]] -> [[String]] -> String -> String
-createProcessBlock states risingEdge transitions targets vars = "process (clk)\n    begin"
-    ++ beautify 2 (createRisingEdge states risingEdge vars)
-    ++ removeFirstNewLine (beautify 2 (createFallingEdge states transitions targets vars))
+createProcessBlock states codes transitions targets vars = "process (clk)\n    begin"
+    ++ beautify 2 (createRisingEdge states codes vars)
+    ++ removeFirstNewLine (beautify 2 (createFallingEdge states codes transitions targets vars))
     ++ "    end process;"
 
 --Create entire architecture block
