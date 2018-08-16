@@ -463,7 +463,9 @@ createAllRisingStateCode states codes vars =
 
 createFallingSingleState :: String -> [String] -> [String] -> [String] -> String -> String
 createFallingSingleState state code trans targets vars = "when " ++ state ++ " =>\n    case internalState is"
-    ++ beautify 2 (createInternal (code!!1) ++ (createOnExit (code!!2)) ++ (createSingleTransitionCode trans targets) ++ (othersNullBlock))
+    ++ beautify 2 (createInternal (code!!1) ++ (createOnExit (code!!2)) ++ (createSingleTransitionCode trans targets)
+        ++ (createReadToSnapshot vars) ++(othersNullBlock)
+    )
 
 createAllFallingStateCode :: [String] -> [[String]] -> [[String]] -> [[String]] -> String -> String
 createAllFallingStateCode states codes trans targets vars =
