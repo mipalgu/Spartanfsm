@@ -471,7 +471,7 @@ createAllFallingStateCode states codes trans targets vars =
         (foldl (++) ""
             $ map (\x -> (createFallingSingleState (states!!x) (codes!!x) (trans!!x) (targets!!x) vars) ++ removeFirstNewLine (beautify 1 "end case;"))
                 [0..((length states) - 1)]
-        ) ++ (removeFirstNewLine (beautify 1 othersNullBlock))
+        ) ++ (othersNullBlock)
     ))
 
 -- Create Rising edge code
