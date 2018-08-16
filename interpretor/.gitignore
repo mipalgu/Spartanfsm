@@ -3,4 +3,5 @@
 *.o
 main
 bin
-src
+!src
+src/*
