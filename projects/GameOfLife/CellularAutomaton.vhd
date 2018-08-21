@@ -62,10 +62,6 @@ process (clk)
                         when OnEntry =>
                             statusOut <= defaultStatus;
                             internalState <= CheckTransition;
-                        when Internal =>
-                            internalState <= WriteFromSnapshot;
-                        when OnExit =>
-                            internalState <= WriteFromSnapshot;
                         when WriteFromSnapshot =>
                             EXTERNAL_statusOut <= statusOut;
                             internalState <= ReadToSnapshot;
@@ -79,10 +75,6 @@ process (clk)
                         when OnEntry =>
                             statusOut <= '1';
                             internalState <= CheckTransition;
-                        when Internal =>
-                            internalState <= WriteFromSnapshot;
-                        when OnExit =>
-                            internalState <= WriteFromSnapshot;
                         when WriteFromSnapshot =>
                             EXTERNAL_statusOut <= statusOut;
                             internalState <= ReadToSnapshot;
@@ -96,11 +88,6 @@ process (clk)
                         when OnEntry =>
                             i <= (others => '0');
                             internalState <= CheckTransition;
-                        when Internal =>
-                            i <= i + "00000000000000000000001";
-                            internalState <= WriteFromSnapshot;
-                        when OnExit =>
-                            internalState <= WriteFromSnapshot;
                         when WriteFromSnapshot =>
                             EXTERNAL_statusOut <= statusOut;
                             internalState <= ReadToSnapshot;
@@ -114,10 +101,6 @@ process (clk)
                         when OnEntry =>
                             statusOut <= '0';
                             internalState <= CheckTransition;
-                        when Internal =>
-                            internalState <= WriteFromSnapshot;
-                        when OnExit =>
-                            internalState <= WriteFromSnapshot;
                         when WriteFromSnapshot =>
                             EXTERNAL_statusOut <= statusOut;
                             internalState <= ReadToSnapshot;
@@ -133,10 +116,6 @@ process (clk)
                             	+ ("000" & southEast) + ("000" & south) + ("000" & southWest)
                             	+ ("000" & west) + ("000" & northWest);
                             internalState <= CheckTransition;
-                        when Internal =>
-                            internalState <= WriteFromSnapshot;
-                        when OnExit =>
-                            internalState <= WriteFromSnapshot;
                         when WriteFromSnapshot =>
                             EXTERNAL_statusOut <= statusOut;
                             internalState <= ReadToSnapshot;
@@ -150,38 +129,143 @@ process (clk)
             end case;
         end if;
         if (falling_edge(clk)) then
-            case internalState is
-                when CheckTransition =>
-                    case currentState is
-                        when STATE_Initial =>
+            case currentState is
+                when STATE_Initial =>
+                    case internalState is
+                        when Internal =>
+                            internalState <= WriteFromSnapshot;
+                        when OnExit =>
+                            internalState <= WriteFromSnapshot;
+                        when CheckTransition =>
                             if (true) then
                                 targetState <= STATE_CountNeighbours;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
                             end if;
-                        when STATE_TurnOn =>
+                        when ReadToSnapshot =>
+                            north <= EXTERNAL_north;
+                            east <= EXTERNAL_east;
+                            south <= EXTERNAL_south;
+                            west <= EXTERNAL_west;
+                            statusIn <= EXTERNAL_statusIn;
+                            northEast <= EXTERNAL_northEast;
+                            southEast <= EXTERNAL_southEast;
+                            southWest <= EXTERNAL_southWest;
+                            northWest <= EXTERNAL_northWest;
+                            defaultStatus <= EXTERNAL_defaultStatus;
+                            if (previousRinglet = currentState) then
+                                internalState <= CheckTransition;
+                            else
+                                internalState <= OnEntry;
+                            end if;
+                        when others =>
+                            null;
+                    end case;
+                when STATE_TurnOn =>
+                    case internalState is
+                        when Internal =>
+                            internalState <= WriteFromSnapshot;
+                        when OnExit =>
+                            internalState <= WriteFromSnapshot;
+                        when CheckTransition =>
                             if (true) then
                                 targetState <= STATE_Wait;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
                             end if;
-                        when STATE_Wait =>
+                        when ReadToSnapshot =>
+                            north <= EXTERNAL_north;
+                            east <= EXTERNAL_east;
+                            south <= EXTERNAL_south;
+                            west <= EXTERNAL_west;
+                            statusIn <= EXTERNAL_statusIn;
+                            northEast <= EXTERNAL_northEast;
+                            southEast <= EXTERNAL_southEast;
+                            southWest <= EXTERNAL_southWest;
+                            northWest <= EXTERNAL_northWest;
+                            defaultStatus <= EXTERNAL_defaultStatus;
+                            if (previousRinglet = currentState) then
+                                internalState <= CheckTransition;
+                            else
+                                internalState <= OnEntry;
+                            end if;
+                        when others =>
+                            null;
+                    end case;
+                when STATE_Wait =>
+                    case internalState is
+                        when Internal =>
+                            i <= i + "00000000000000000000001";
+                            internalState <= WriteFromSnapshot;
+                        when OnExit =>
+                            internalState <= WriteFromSnapshot;
+                        when CheckTransition =>
                             if (i >= "10000000000000000000000") then
                                 targetState <= STATE_CountNeighbours;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
                             end if;
-                        when STATE_TurnOff =>
+                        when ReadToSnapshot =>
+                            north <= EXTERNAL_north;
+                            east <= EXTERNAL_east;
+                            south <= EXTERNAL_south;
+                            west <= EXTERNAL_west;
+                            statusIn <= EXTERNAL_statusIn;
+                            northEast <= EXTERNAL_northEast;
+                            southEast <= EXTERNAL_southEast;
+                            southWest <= EXTERNAL_southWest;
+                            northWest <= EXTERNAL_northWest;
+                            defaultStatus <= EXTERNAL_defaultStatus;
+                            if (previousRinglet = currentState) then
+                                internalState <= CheckTransition;
+                            else
+                                internalState <= OnEntry;
+                            end if;
+                        when others =>
+                            null;
+                    end case;
+                when STATE_TurnOff =>
+                    case internalState is
+                        when Internal =>
+                            internalState <= WriteFromSnapshot;
+                        when OnExit =>
+                            internalState <= WriteFromSnapshot;
+                        when CheckTransition =>
                             if (true) then
                                 targetState <= STATE_Wait;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
                             end if;
-                        when STATE_CountNeighbours =>
+                        when ReadToSnapshot =>
+                            north <= EXTERNAL_north;
+                            east <= EXTERNAL_east;
+                            south <= EXTERNAL_south;
+                            west <= EXTERNAL_west;
+                            statusIn <= EXTERNAL_statusIn;
+                            northEast <= EXTERNAL_northEast;
+                            southEast <= EXTERNAL_southEast;
+                            southWest <= EXTERNAL_southWest;
+                            northWest <= EXTERNAL_northWest;
+                            defaultStatus <= EXTERNAL_defaultStatus;
+                            if (previousRinglet = currentState) then
+                                internalState <= CheckTransition;
+                            else
+                                internalState <= OnEntry;
+                            end if;
+                        when others =>
+                            null;
+                    end case;
+                when STATE_CountNeighbours =>
+                    case internalState is
+                        when Internal =>
+                            internalState <= WriteFromSnapshot;
+                        when OnExit =>
+                            internalState <= WriteFromSnapshot;
+                        when CheckTransition =>
                             if (count = "0011") then
                                 targetState <= STATE_TurnOn;
                                 internalState <= OnExit;
@@ -194,25 +278,25 @@ process (clk)
                             else
                                 internalState <= Internal;
                             end if;
+                        when ReadToSnapshot =>
+                            north <= EXTERNAL_north;
+                            east <= EXTERNAL_east;
+                            south <= EXTERNAL_south;
+                            west <= EXTERNAL_west;
+                            statusIn <= EXTERNAL_statusIn;
+                            northEast <= EXTERNAL_northEast;
+                            southEast <= EXTERNAL_southEast;
+                            southWest <= EXTERNAL_southWest;
+                            northWest <= EXTERNAL_northWest;
+                            defaultStatus <= EXTERNAL_defaultStatus;
+                            if (previousRinglet = currentState) then
+                                internalState <= CheckTransition;
+                            else
+                                internalState <= OnEntry;
+                            end if;
                         when others =>
                             null;
                     end case;
-                when ReadToSnapshot =>
-                    north <= EXTERNAL_north;
-                    east <= EXTERNAL_east;
-                    south <= EXTERNAL_south;
-                    west <= EXTERNAL_west;
-                    statusIn <= EXTERNAL_statusIn;
-                    northEast <= EXTERNAL_northEast;
-                    southEast <= EXTERNAL_southEast;
-                    southWest <= EXTERNAL_southWest;
-                    northWest <= EXTERNAL_northWest;
-                    defaultStatus <= EXTERNAL_defaultStatus;
-                    if (previousRinglet = currentState) then
-                        internalState <= CheckTransition;
-                    else
-                        internalState <= OnEntry;
-                    end if;
                 when others =>
                     null;
             end case;
