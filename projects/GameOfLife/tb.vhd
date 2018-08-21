@@ -63,7 +63,7 @@ ARCHITECTURE behavior OF tb IS
    signal EXTERNAL_east : std_logic := '0';
    signal EXTERNAL_south : std_logic := '0';
    signal EXTERNAL_west : std_logic := '0';
-   signal EXTERNAL_northEast : std_logic := '0';
+   signal EXTERNAL_northEast : std_logic := '1';
    signal EXTERNAL_southEast : std_logic := '0';
    signal EXTERNAL_southWest : std_logic := '0';
    signal EXTERNAL_northWest : std_logic := '0';
@@ -106,10 +106,6 @@ BEGIN
    -- Stimulus process
    stim_proc: process
    begin
-		wait for 70 ns;
-		EXTERNAL_north <= '1';
-		EXTERNAL_east <= '1';
-		EXTERNAL_south <= '1';
       -- hold reset state for 100 ns.
 
       -- insert stimulus here 
