@@ -340,9 +340,9 @@ internalStateVhdl =
     ++ "constant CheckTransition: std_logic_vector(2 downto 0) := \"001\";\n"
     ++ "constant OnExit: std_logic_vector(2 downto 0) := \"010\";\n"
     ++ "constant Internal: std_logic_vector(2 downto 0) := \"011\";\n"
-    ++ "constant ReadToSnapshot: std_logic_vector(2 downto 0) := \"100\";\n"
-    ++ "constant WriteFromSnapshot: std_logic_vector(2 downto 0) := \"101\";\n"
-    ++ "signal internalState: std_logic_vector(2 downto 0) := ReadToSnapshot;\n"
+    ++ "constant ReadSnapshot: std_logic_vector(2 downto 0) := \"100\";\n"
+    ++ "constant WriteSnapshot: std_logic_vector(2 downto 0) := \"101\";\n"
+    ++ "signal internalState: std_logic_vector(2 downto 0) := ReadSnapshot;\n"
 
 -- Get number of bits to represent the states in dir
 getNumberOfBits :: String -> IO Int
@@ -407,13 +407,13 @@ createReadCode vars
   = foldl (+\>) "" $ map (\s -> createReadLine (getExternalVarName s)) $ getInputExternalVars vars
 
 -- Creates the logic surrounding whether the OnEntry or CheckTransition should run
-createReadToTransition :: String
-createReadToTransition
+createReadTransition :: String
+createReadTransition
   = "if (previousRinglet = currentState) then\n    internalState <= CheckTransition;\nelse\n    internalState <= OnEntry;\nend if;"
 
--- Creates the ReadToSnapshot section of the VHDL source file
-createReadToSnapshot :: String -> String
-createReadToSnapshot vars = createStateCode "ReadToSnapshot" (createReadCode vars) createReadToTransition
+-- Creates the ReadSnapshot section of the VHDL source file
+createReadSnapshot :: String -> String
+createReadSnapshot vars = createStateCode "ReadSnapshot" (createReadCode vars) createReadTransition
 
 --Creates the code for writing a single snapshot variable to an external variable
 createWriteLine :: String -> String
@@ -424,13 +424,13 @@ createWriteCode :: String -> String
 createWriteCode vars
   = foldl (+\>) "" $ map (\s -> createWriteLine (getExternalVarName s)) $ getOutputExternalVars vars
 
--- Creates the transition code for the WriteFromSnapshot section
-createWriteFromTransition :: String
-createWriteFromTransition  = "internalState <= ReadToSnapshot;\npreviousRinglet <= currentState;\ncurrentState <= targetState;"
+-- Creates the transition code for the WriteSnapshot section
+createWriteTransition :: String
+createWriteTransition  = "internalState <= ReadSnapshot;\npreviousRinglet <= currentState;\ncurrentState <= targetState;"
 
--- Creates the WriteFromSnapshot section
-createWriteFromSnapshot :: String -> String
-createWriteFromSnapshot vars = createStateCode "WriteFromSnapshot" (createWriteCode vars) createWriteFromTransition
+-- Creates the WriteSnapshot section
+createWriteSnapshot :: String -> String
+createWriteSnapshot vars = createStateCode "WriteSnapshot" (createWriteCode vars) createWriteTransition
 
 -- Create onEntry code
 createOnEntry :: String -> String
@@ -438,16 +438,16 @@ createOnEntry code = createStateCode "OnEntry" code "internalState <= CheckTrans
 
 -- Create Internal code
 createInternal :: String -> String
-createInternal code = createStateCode "Internal" code "internalState <= WriteFromSnapshot;"
+createInternal code = createStateCode "Internal" code "internalState <= WriteSnapshot;"
 
 -- Create onExit code
 createOnExit :: String -> String
-createOnExit code = createStateCode "OnExit" code "internalState <= WriteFromSnapshot;"
+createOnExit code = createStateCode "OnExit" code "internalState <= WriteSnapshot;"
 
 --creates internalStates code for a single state.
 createRisingSingleState :: String -> [String] -> String -> String
 createRisingSingleState state code vars = "    when " ++ state ++ " =>\n        case internalState is"
-    ++ (beautify 3 (createOnEntry (code!!0) ++ (createWriteFromSnapshot vars) ++ othersNullBlock))
+    ++ (beautify 3 (createOnEntry (code!!0) ++ (createWriteSnapshot vars) ++ othersNullBlock))
     ++ "        end case;\n" 
 
 --Create internalStates code for all states.
@@ -464,7 +464,7 @@ createAllRisingStateCode states codes vars =
 createFallingSingleState :: String -> [String] -> [String] -> [String] -> String -> String
 createFallingSingleState state code trans targets vars = "when " ++ state ++ " =>\n    case internalState is"
     ++ beautify 2 (createInternal (code!!1) ++ (createOnExit (code!!2)) ++ (createSingleTransitionCode trans targets)
-        ++ (createReadToSnapshot vars) ++(othersNullBlock)
+        ++ (createReadSnapshot vars) ++(othersNullBlock)
     )
 
 createAllFallingStateCode :: [String] -> [[String]] -> [[String]] -> [[String]] -> String -> String
@@ -490,7 +490,7 @@ createFallingEdge states codes trans targets vars = "if (falling_edge(clk)) then
     ++ removeFirstNewLine (beautify 1 (createAllFallingStateCode states codes trans targets vars))
     ++ "    end case;\nend if;"
 --    ++ beautify 1 (createAllTransitionsCode states trans targets)
---   ++ removeFirstNewLine (beautify 2 (createReadToSnapshot vars))
+--   ++ removeFirstNewLine (beautify 2 (createReadSnapshot vars))
 --    ++ removeFirstNewLine (beautify 1 (removeFirstNewLine (beautify 1 othersNullBlock)))
 --    ++ "    end case;\nend if;"
 
