@@ -63,7 +63,6 @@ ARCHITECTURE behavior OF tb IS
    signal EXTERNAL_east : std_logic := '0';
    signal EXTERNAL_south : std_logic := '0';
    signal EXTERNAL_west : std_logic := '0';
-   signal EXTERNAL_statusIn : std_logic := '0';
    signal EXTERNAL_northEast : std_logic := '0';
    signal EXTERNAL_southEast : std_logic := '0';
    signal EXTERNAL_southWest : std_logic := '0';
@@ -86,7 +85,7 @@ BEGIN
           EXTERNAL_south => EXTERNAL_south,
           EXTERNAL_west => EXTERNAL_west,
           EXTERNAL_statusOut => EXTERNAL_statusOut,
-          EXTERNAL_statusIn => EXTERNAL_statusIn,
+          EXTERNAL_statusIn => EXTERNAL_statusOut,
           EXTERNAL_northEast => EXTERNAL_northEast,
           EXTERNAL_southEast => EXTERNAL_southEast,
           EXTERNAL_southWest => EXTERNAL_southWest,

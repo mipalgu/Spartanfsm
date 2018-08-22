@@ -63,18 +63,18 @@ architecture Behavioral of vga_gen is
 	signal outs: screen;
 	--signal outs: screen := (others => (others => '0'));
 --Replicator
-	constant defaults: screen := ((others => '0'),(others => '0'),
-		('0','0','1','1','1','0','0','0','0', others => '0'),
-		('0','0','1','0','0','1','0','0','0', others => '0'),
-		('0','0','1','0','0','0','1','0','0', others => '0'),
-		('0','0','0','1','0','0','1','0','0', others => '0'),
-		('0','0','0','0','1','1','1','0','0', others => '0'),
-		others => (others => '0'));
---Oscillator
---	constant defaults: screen := ((others => '0'), ('0','0','0','1','0','1', others => '0'),
---		('0','0','0','0','0','0','1', others => '0'), ('0','0','1','0','0','1', others => '0'),
---		('0','1','0','1','0','1', others => '0'),('0','1','0','0','1', others => '0'),
---		('0','0','1','1', others => '0'), others => (others => '0'));
+--	constant defaults: screen := ((others => '0'),(others => '0'),
+--		('0','0','1','1','1','0','0','0','0', others => '0'),
+--		('0','0','1','0','0','1','0','0','0', others => '0'),
+--		('0','0','1','0','0','0','1','0','0', others => '0'),
+--		('0','0','0','1','0','0','1','0','0', others => '0'),
+--		('0','0','0','0','1','1','1','0','0', others => '0'),
+--		others => (others => '0'));
+--Mold
+	constant defaults: screen := ((others => '0'), ('0','0','0','1','0','1', others => '0'),
+		('0','0','0','0','0','0','1', others => '0'), ('0','0','1','0','0','1', others => '0'),
+		('0','1','0','1','0','1', others => '0'),('0','1','0','0','1', others => '0'),
+		('0','0','1','1', others => '0'), others => (others => '0'));
 	--outs(0) := (others => '1');
 	--signal currentStatus: std_logic;
 	
@@ -95,13 +95,6 @@ architecture Behavioral of vga_gen is
 		);
 	end component;
 	
-	--component PixelFlip
-	--	Port(
-	--		clk: in std_logic;
-   --     EXTERNAL_redOut: out std_logic_vector(7 downto 0);
-   --      EXTERNAL_greenOut: out std_logic_vector(7 downto 0)
-	--	);
-	--end component;
 begin
 
 	PixelX: for I in 1 to (width - 2) generate
