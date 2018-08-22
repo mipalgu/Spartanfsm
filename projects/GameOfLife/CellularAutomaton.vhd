@@ -25,9 +25,9 @@ architecture LLFSM of CellularAutomaton is
     constant CheckTransition: std_logic_vector(2 downto 0) := "001";
     constant OnExit: std_logic_vector(2 downto 0) := "010";
     constant Internal: std_logic_vector(2 downto 0) := "011";
-    constant ReadToSnapshot: std_logic_vector(2 downto 0) := "100";
-    constant WriteFromSnapshot: std_logic_vector(2 downto 0) := "101";
-    signal internalState: std_logic_vector(2 downto 0) := ReadToSnapshot;
+    constant ReadSnapshot: std_logic_vector(2 downto 0) := "100";
+    constant WriteSnapshot: std_logic_vector(2 downto 0) := "101";
+    signal internalState: std_logic_vector(2 downto 0) := ReadSnapshot;
     --State Representation Bits
     constant STATE_Initial: std_logic_vector(2 downto 0) := "000";
     constant STATE_TurnOn: std_logic_vector(2 downto 0) := "001";
@@ -62,9 +62,9 @@ process (clk)
                         when OnEntry =>
                             statusOut <= defaultStatus;
                             internalState <= CheckTransition;
-                        when WriteFromSnapshot =>
+                        when WriteSnapshot =>
                             EXTERNAL_statusOut <= statusOut;
-                            internalState <= ReadToSnapshot;
+                            internalState <= ReadSnapshot;
                             previousRinglet <= currentState;
                             currentState <= targetState;
                         when others =>
@@ -75,9 +75,9 @@ process (clk)
                         when OnEntry =>
                             statusOut <= '1';
                             internalState <= CheckTransition;
-                        when WriteFromSnapshot =>
+                        when WriteSnapshot =>
                             EXTERNAL_statusOut <= statusOut;
-                            internalState <= ReadToSnapshot;
+                            internalState <= ReadSnapshot;
                             previousRinglet <= currentState;
                             currentState <= targetState;
                         when others =>
@@ -88,9 +88,9 @@ process (clk)
                         when OnEntry =>
                             i <= (others => '0');
                             internalState <= CheckTransition;
-                        when WriteFromSnapshot =>
+                        when WriteSnapshot =>
                             EXTERNAL_statusOut <= statusOut;
-                            internalState <= ReadToSnapshot;
+                            internalState <= ReadSnapshot;
                             previousRinglet <= currentState;
                             currentState <= targetState;
                         when others =>
@@ -101,9 +101,9 @@ process (clk)
                         when OnEntry =>
                             statusOut <= '0';
                             internalState <= CheckTransition;
-                        when WriteFromSnapshot =>
+                        when WriteSnapshot =>
                             EXTERNAL_statusOut <= statusOut;
-                            internalState <= ReadToSnapshot;
+                            internalState <= ReadSnapshot;
                             previousRinglet <= currentState;
                             currentState <= targetState;
                         when others =>
@@ -116,9 +116,9 @@ process (clk)
                             	+ ("000" & southEast) + ("000" & south) + ("000" & southWest)
                             	+ ("000" & west) + ("000" & northWest);
                             internalState <= CheckTransition;
-                        when WriteFromSnapshot =>
+                        when WriteSnapshot =>
                             EXTERNAL_statusOut <= statusOut;
-                            internalState <= ReadToSnapshot;
+                            internalState <= ReadSnapshot;
                             previousRinglet <= currentState;
                             currentState <= targetState;
                         when others =>
@@ -133,9 +133,9 @@ process (clk)
                 when STATE_Initial =>
                     case internalState is
                         when Internal =>
-                            internalState <= WriteFromSnapshot;
+                            internalState <= WriteSnapshot;
                         when OnExit =>
-                            internalState <= WriteFromSnapshot;
+                            internalState <= WriteSnapshot;
                         when CheckTransition =>
                             if (true) then
                                 targetState <= STATE_CountNeighbours;
@@ -143,7 +143,7 @@ process (clk)
                             else
                                 internalState <= Internal;
                             end if;
-                        when ReadToSnapshot =>
+                        when ReadSnapshot =>
                             north <= EXTERNAL_north;
                             east <= EXTERNAL_east;
                             south <= EXTERNAL_south;
@@ -165,9 +165,9 @@ process (clk)
                 when STATE_TurnOn =>
                     case internalState is
                         when Internal =>
-                            internalState <= WriteFromSnapshot;
+                            internalState <= WriteSnapshot;
                         when OnExit =>
-                            internalState <= WriteFromSnapshot;
+                            internalState <= WriteSnapshot;
                         when CheckTransition =>
                             if (true) then
                                 targetState <= STATE_Wait;
@@ -175,7 +175,7 @@ process (clk)
                             else
                                 internalState <= Internal;
                             end if;
-                        when ReadToSnapshot =>
+                        when ReadSnapshot =>
                             north <= EXTERNAL_north;
                             east <= EXTERNAL_east;
                             south <= EXTERNAL_south;
@@ -198,9 +198,9 @@ process (clk)
                     case internalState is
                         when Internal =>
                             i <= i + "00000000000000000000001";
-                            internalState <= WriteFromSnapshot;
+                            internalState <= WriteSnapshot;
                         when OnExit =>
-                            internalState <= WriteFromSnapshot;
+                            internalState <= WriteSnapshot;
                         when CheckTransition =>
                             if (i >= "10000000000000000000000") then
                                 targetState <= STATE_CountNeighbours;
@@ -208,7 +208,7 @@ process (clk)
                             else
                                 internalState <= Internal;
                             end if;
-                        when ReadToSnapshot =>
+                        when ReadSnapshot =>
                             north <= EXTERNAL_north;
                             east <= EXTERNAL_east;
                             south <= EXTERNAL_south;
@@ -230,9 +230,9 @@ process (clk)
                 when STATE_TurnOff =>
                     case internalState is
                         when Internal =>
-                            internalState <= WriteFromSnapshot;
+                            internalState <= WriteSnapshot;
                         when OnExit =>
-                            internalState <= WriteFromSnapshot;
+                            internalState <= WriteSnapshot;
                         when CheckTransition =>
                             if (true) then
                                 targetState <= STATE_Wait;
@@ -240,7 +240,7 @@ process (clk)
                             else
                                 internalState <= Internal;
                             end if;
-                        when ReadToSnapshot =>
+                        when ReadSnapshot =>
                             north <= EXTERNAL_north;
                             east <= EXTERNAL_east;
                             south <= EXTERNAL_south;
@@ -262,9 +262,9 @@ process (clk)
                 when STATE_CountNeighbours =>
                     case internalState is
                         when Internal =>
-                            internalState <= WriteFromSnapshot;
+                            internalState <= WriteSnapshot;
                         when OnExit =>
-                            internalState <= WriteFromSnapshot;
+                            internalState <= WriteSnapshot;
                         when CheckTransition =>
                             if (count = "0011") then
                                 targetState <= STATE_TurnOn;
@@ -278,7 +278,7 @@ process (clk)
                             else
                                 internalState <= Internal;
                             end if;
-                        when ReadToSnapshot =>
+                        when ReadSnapshot =>
                             north <= EXTERNAL_north;
                             east <= EXTERNAL_east;
                             south <= EXTERNAL_south;
