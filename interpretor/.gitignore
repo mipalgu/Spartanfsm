@@ -3,4 +3,3 @@
 *.o
 main
 bin
-!src/.gitignore
