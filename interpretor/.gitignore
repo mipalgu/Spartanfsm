@@ -1,5 +1,5 @@
 *.vhd
 *.hi
 *.o
-main
 bin
+spartanllfsm
