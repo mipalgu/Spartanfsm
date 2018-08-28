@@ -3,6 +3,7 @@ import Data.List.Split
 import Data.List
 import Data.Char
 import System.Environment
+import System.Directory
 
 main :: IO ()
 main = do
@@ -20,7 +21,8 @@ main = do
     architecture <- return $ createArchitecture states internals transitions targetStates stateBitSize projectName variables
     includes <- getIncludes dir projectName
     entity <- return $ createEntity includes projectName variables
-    writeFile ("src/" ++ projectName ++ ".vhd") (entity ++ "\n\n" ++ architecture)
+    homeDir <- getHomeDirectory
+    writeFile (homeDir ++ "/spartanllfsm/" ++ projectName ++ ".vhd") (entity ++ "\n\n" ++ architecture)
 
 
 --STRING FORMATING

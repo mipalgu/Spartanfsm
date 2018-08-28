@@ -1,6 +1,13 @@
-SRCS!= ls *.hs
+SRCS?= main.hs
+E?=@
 
-all:
-	ghc $(SRCS) -odir bin -hidir bin
+build:
+	$Eghc ${SRCS} -odir bin -hidir bin
+	$Emv main spartanllfsm
+
 clean:
-	rm bin/*
+	$Erm -f bin/* spartanllfsm
+
+install:
+	$Emkdir -p ~/spartanllfsm
+	$Emv spartanllfsm /usr/local/bin
