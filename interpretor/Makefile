@@ -1,4 +1,4 @@
-SRCS?= main.hs
+SRCS?=main.hs
 E?=@
 
 build:
