@@ -11,3 +11,7 @@ clean:
 install:
 	$Emkdir -p ~/spartanllfsm
 	$Emv spartanllfsm /usr/local/bin
+
+uninstall:
+	$Erm -f /usr/local/bin/spartanllfsm
+	$Erm -rf ~/spartanllfsm
