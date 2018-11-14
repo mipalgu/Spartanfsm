@@ -22,7 +22,7 @@ main = do
     includes <- getIncludes dir projectName
     entity <- return $ createEntity includes projectName variables
     homeDir <- getHomeDirectory
-    writeFile (homeDir ++ "/spartanllfsm/" ++ projectName ++ ".vhd") (entity ++ "\n\n" ++ architecture)
+    writeFile (projectName ++ ".vhd") (entity ++ "\n\n" ++ architecture)
 
 
 --STRING FORMATING
