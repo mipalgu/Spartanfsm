@@ -1,7 +1,7 @@
 //
 // State_Initial.h
 //
-// Automatically created through MiPalCASE -- do not change manually!
+// Automatically created through MiCASE -- do not change manually!
 //
 #ifndef clfsm_CellularAutomaton_State_Initial_h
 #define clfsm_CellularAutomaton_State_Initial_h

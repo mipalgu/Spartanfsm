@@ -1,7 +1,7 @@
 //
 // State_CountNeighbours.mm
 //
-// Automatically created through MiPalCASE -- do not change manually!
+// Automatically created through MiCASE -- do not change manually!
 //
 #include "CellularAutomaton_Includes.h"
 #include "CellularAutomaton.h"
@@ -71,6 +71,7 @@ bool CountNeighbours::Transition_0::check(CLMachine *_machine, CLState *_state) 
 #		include "State_CountNeighbours_Transition_0.expr"
 	);
 }
+
 bool CountNeighbours::Transition_1::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "CellularAutomaton_VarRefs.mm"
@@ -83,6 +84,7 @@ bool CountNeighbours::Transition_1::check(CLMachine *_machine, CLState *_state) 
 #		include "State_CountNeighbours_Transition_1.expr"
 	);
 }
+
 bool CountNeighbours::Transition_2::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "CellularAutomaton_VarRefs.mm"
