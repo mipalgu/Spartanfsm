@@ -1,0 +1,66 @@
+\documentclass{article}
+\usepackage{hyperref}
+\include{macros}
+\begin{document}
+    \title{Spartan \LLFSM}
+    \date{\today}
+    \author{Morgan McColl}
+    \maketitle
+    \tableofcontents
+    \newpage
+    \section{Introduction}
+        The purpose of this paper is to give some documentation of the \textit{Spartan \LLFSM} project. I have originally designed this project to allow users to implement \LLFSMs\/ on the \textit{minispartan6+} evaluation board. The board utilises a \textit{Xilinx Spartan-6 XL25} \FPGA.
+    \section{Setup}
+        Before you can start building machines in \VHDL, you will need to install a number of dependencies. The following steps are for an ubuntu machine.
+        \subsection{\ISE}
+            \ISE\/ is the \IDE\/ used for the \textit{Spartan-6} \FPGA.
+            \begin{enumerate}
+                \item Create a Xilinx account at \href{url}{https://www.xilinx.com/}.
+                \item Download and install the Xilinx \ISE\/ webpack found at \href{URL}{\url{https://www.xilinx.com/support/download/index.html/content/xilinx/en/downloadNav/design-tools/v2012_4---14_7.html}}.
+                \item Create a license by navigating to \href{URL}{\url{https://www.xilinx.com/member/forms/license-form.html}}
+                \item Download and place the license file in \texttt{~/.Xilinx}. Optionally you can run the Xilinx license manager which is installed with \ISE.
+            \end{enumerate}
+            \subsection{xc3sprog}
+                \textit{xc3sprog} is used to transfer the bit file from your computer to the board.
+                \exampleBlock{
+                    \eitem svn checkout https://svn.code.sf.net/p/xc3sprog/code/trunk xc3sprog-code
+                    \eitem cd xc3sprog-code
+                    \eitem cmake .
+                    \eitem make
+                    \eitem make install
+                }
+                You might also require additional libraries:
+                \begin{itemize}
+                    \item \textit{libftdi}
+                    \exampleBlock{
+                        \eitem{sudo apt-get install libftdi1}
+                    }
+                    \item \textit{libftd2xx} located at \href{URL}{\url{http://www.ftdichip.com/Drivers/D2XX.htm}}.
+                \end{itemize}
+            \subsection{miniSProg (optional)}
+                This program provides a \GUI\/ for xc3sprog. It requires qt4/5 and \textit{qtcreator} to install.
+                \exampleBlock{
+                    \eitem{sudo apt-get install build-essential}
+                    \eitem{sudo apt-get install qtcreator}
+                    \eitem{sudo apt-get install qt5-default}
+                    \eitem{git clone https://github.com/scarabhardware/miniSProg}
+                    \item[] Open the project using \textit{qtcreator} (the project file is located at \texttt{./miniSProg/miniSProg/miniSProg.pro}).
+                    \item[] Build the project.
+                }
+            \subsection{Haskell}
+                You also need \ghc.
+                \exampleBlock{
+                    \eitem{sudo apt-get install haskell-platform}
+                }
+            \subsection{Additional \MiPal\/ Software}
+                You will need an \IDE\/ to create the machine format (MiCase, MiPalCase, MiEdit (not tested)).
+            \subsection{Installing Spartan \LLFSM}
+                \begin{enumerate}
+                    \item Navigate to the interpretor folder in the root directory of this repository.
+                    \exampleBlock{
+                        \eitem{make}
+                        \eitem{make install}
+                    }
+                    \item This command will create a binary called spartanllfsm in \texttt{/usr/local/bin}
+                \end{enumerate}
+\end{document}
