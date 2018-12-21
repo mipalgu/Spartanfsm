@@ -1,10 +1,10 @@
 //
-// State_Wait.h
+// State_InitialPseudoState.h
 //
 // Automatically created through MiCASE -- do not change manually!
 //
-#ifndef clfsm_CellularAutomaton_State_Wait_h
-#define clfsm_CellularAutomaton_State_Wait_h
+#ifndef clfsm_CellularAutomaton_State_InitialPseudoState_h
+#define clfsm_CellularAutomaton_State_InitialPseudoState_h
 
 #include "CLState.h"
 #include "CLAction.h"
@@ -18,7 +18,7 @@ namespace FSM
       {
         namespace State
         {
-            class Wait: public CLState
+            class InitialPseudoState: public CLState
             {
                 class OnEntry: public CLAction
                 {
@@ -38,7 +38,7 @@ namespace FSM
                 class Transition_0: public CLTransition
                 {
                 public:
-                    Transition_0(int toState = 5): CLTransition(toState) {}
+                    Transition_0(int toState = 1): CLTransition(toState) {}
 
                     virtual bool check(CLMachine *, CLState *) const;
                 };
@@ -46,14 +46,14 @@ namespace FSM
                 CLTransition *_transitions[1];
 
                 public:
-                    Wait(const char *name = "Wait");
-                    virtual ~Wait();
+                    InitialPseudoState(const char *name = "InitialPseudoState");
+                    virtual ~InitialPseudoState();
 
                     virtual CLTransition * const *transitions() const { return _transitions; }
                     virtual int numberOfTransitions() const { return 1; }
 
-#                   include "State_Wait_Variables.h"
-#                   include "State_Wait_Methods.h"
+#                   include "State_InitialPseudoState_Variables.h"
+#                   include "State_InitialPseudoState_Methods.h"
             };
         }
       }

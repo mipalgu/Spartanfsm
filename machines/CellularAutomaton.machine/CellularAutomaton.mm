@@ -6,6 +6,7 @@
 #include "CellularAutomaton_Includes.h"
 #include "CellularAutomaton.h"
 
+#include "State_InitialPseudoState.h"
 #include "State_Initial.h"
 #include "State_TurnOn.h"
 #include "State_Wait.h"
@@ -25,11 +26,12 @@ extern "C"
 
 CellularAutomaton::CellularAutomaton(int mid, const char *name): CLMachine(mid, name)
 {
-	_states[0] = new FSMCellularAutomaton::State::Initial;
-	_states[1] = new FSMCellularAutomaton::State::TurnOn;
-	_states[2] = new FSMCellularAutomaton::State::Wait;
-	_states[3] = new FSMCellularAutomaton::State::TurnOff;
-	_states[4] = new FSMCellularAutomaton::State::CountNeighbours;
+	_states[0] = new FSMCellularAutomaton::State::InitialPseudoState;
+	_states[1] = new FSMCellularAutomaton::State::Initial;
+	_states[2] = new FSMCellularAutomaton::State::TurnOn;
+	_states[3] = new FSMCellularAutomaton::State::Wait;
+	_states[4] = new FSMCellularAutomaton::State::TurnOff;
+	_states[5] = new FSMCellularAutomaton::State::CountNeighbours;
 
 	setInitialState(_states[0]);            // set initial state
 }
@@ -41,4 +43,5 @@ CellularAutomaton::~CellularAutomaton()
 	delete _states[2];
 	delete _states[3];
 	delete _states[4];
+	delete _states[5];
 }
