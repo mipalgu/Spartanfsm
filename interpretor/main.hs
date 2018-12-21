@@ -135,7 +135,7 @@ getStateNameFromTransition str = head (splitOn "_Transition" $ foldl (++) "" (sp
 
 -- Checks if a str contains a state
 hasState :: String -> String -> Bool
-hasState str state = state == getStateNameFromTransition str
+hasState str state = isInfixOf ("State_" ++ state ++ "_Transition") str
 
 -- Reads States file and returns an IO[String] which contains the states.
 getAllStates :: String -> IO [String]
