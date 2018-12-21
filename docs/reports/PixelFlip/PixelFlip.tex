@@ -1,0 +1,94 @@
+\documentclass{article}
+\usepackage{minted}
+\begin{document}
+	\title{Pixel Flip Report}
+	\author{Morgan McColl}
+	\date{\today}
+	\maketitle
+	\section{Introduction}
+		The aim of this report is to summarise the Pixel Flip project. The Pixel Flip project is used to show that LLFSMs can be run in parallel to achieve a result. The machines are responsible for flipping a pixel from red to green and green to red. The pixels are then sent out through a hdmi port to a tv where it can be visually displayed.
+	\section{The LLFSM}
+		The machine has 3 external variables: The clock (input), redOut (output) and greenOut(output) and 2 internal variables: pastRed and pastGreen. The machine had 4 states: red, green, compare and wait. The red and green states set the redOut/greenOut variables to x'FF while setting the greenOut/redOut variables to x'00 respectively. The onExit of these states set the past internal variables to their respective values. They then transition to a wait state which simply increments a variable till it reaches 50million (the clock frequency) i.e. enough clock ticks to last 1 second. The wait state then transitions to the compare state. The compare state checks the pastVariables and transitions accordingly: if the pastRed variable is set then it transitions to the green state, if the pastGreen variable is set then it transitions to the red state. The cycle then continues indefinitely.
+	\section{Generating An Image}
+		An array was used to store the output from the machines. These were declared in the architecture sections which can be seen below:
+		
+		\begin{minted}{vhdl}
+constant h_rez        : natural := 1280;
+constant h_sync_start : natural := 1280+72;
+constant h_sync_end   : natural := 1280+80;
+constant h_max        : natural := 1647;
+signal   h_count      : unsigned(11 downto 0) := (others => '0');
+
+constant v_rez        : natural :=720;
+constant v_sync_start : natural := 720+3;
+constant v_sync_end   : natural := 720+3+5;
+constant v_max        : natural := 720+29;
+signal   v_count      : unsigned(11 downto 0) := (others => '0');
+constant width: integer := 50;
+constant height: integer := 50;
+type column is array ((height - 1) downto 0) of std_logic_vector(7 downto 0);
+type screen is array ((width - 1) downto 0) of column;
+
+signal greenOut: screen;
+signal redOut: screen;
+		\end{minted}
+			
+		The component is also declared:
+		
+		\begin{minted}{vhdl}
+component PixelFlip
+ Port(
+     clk50: in std_logic;
+     redOut: out std_logic_vector(7 downto 0);
+     greenOut: out std_logic_vector(7 downto 0)
+ );
+end component;
+		\end{minted}
+		
+		The LLFSMs are generated for a height and width:
+		
+		\begin{minted}{vhdl}
+PixelY: for I in 0 to (width - 1) generate
+    PixelX: for J in 0 to (height - 1) generate
+        PixelFlipGen: PixelFlip port map(
+            clk50 => clk75,
+            redOut => redOut(i)(j),
+            greenOut => greenOut(i)(j)
+        );			
+    end generate PixelX;
+end generate PixelY;
+		\end{minted}
+		
+		In a process statement, an if-statement is used to decide whether to take output from the array or out a blue pixel:
+		
+		\begin{minted}{vhdl}
+if h_count < width and v_count < height then
+    red <= redOut(to_integer(h_count))(to_integer(v_count));
+    green <= greenOut(to_integer(h_count))(to_integer(v_count));
+    blue <= (others => '0');
+    blank <= '0';
+else
+    red <= (others => '0');
+    green <= (others => '0');
+    blue <= (others => '1');
+    blank <= '0';
+end if;
+		\end{minted}
+	\section{Problems with the Optimiser}
+		Basically since the encoders take a single input at every clock cycle, the LLFSMs are getting optimised away. To get around this, I disabled an option in the compilation settings and the LLFSMs are correctly being created. I tried using a draw area of 50x50 but this took up the entire space on the FPGA. I have got it working with a 2x2 space but I am confident that it can do at least a 10x10. It does legitimately run these LLFSMs in parallel with this flag disabled so this project has achieved its aim.
+	\section{Code}
+		Top Module:
+		\inputminted{vhdl}{../../projects/PixelFlip/dvid_serdes.vhd}
+		clocking:
+		\inputminted{vhdl}{../../projects/PixelFlip/clocking.vhd}
+		dvid\_out:
+		\inputminted{vhdl}{../../projects/PixelFlip/dvid_out.vhd}
+		tmds\_encoder:
+		\inputminted{vhdl}{../../projects/PixelFlip/tmds_encoder.vhd}
+		output\_serialiser:
+		\inputminted{vhdl}{../../projects/PixelFlip/output_serialiser.vhd}
+		Pixel Flip LLFSM:
+		\inputminted{vhdl}{../../projects/PixelFlip/PixelFlip.vhd}		
+		Image generation:
+		\inputminted{vhdl}{../../projects/PixelFlip/vga_gen.vhd}		
+\end{document}

@@ -1,0 +1,321 @@
+\documentclass{article}
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+	language=VHDL,
+	aboveskip=3mm,
+	belowskip=3mm,
+	showstringspaces=false,
+	columns=flexible,
+	basicstyle={\small\ttfamily},
+	numbers=none,
+	numberstyle=\tiny\color{gray},
+	keywordstyle=\color{blue},
+	commentstyle=\color{dkgreen},
+	stringstyle=\color{mauve},
+	breaklines=true,
+	breakatwhitespace=true,
+	tabsize=3
+}
+\begin{document}
+	\title{LLFSM Implementation Report}
+	\author{Morgan McColl \\s2981832}
+	\date{March 03, 2018}
+	\maketitle
+	
+	The aim of this program is to create a toggle between two different states using a dip switch and LEDs to express the output. The two different states are: highFour and lowFour. The highFour state is represented by the four leftmost LED's being turned on. Vice versa, the lowFour state is represented by the four rightmost LED's being turned on. An additional exit state is used to reset the program if any unrecognisable state is encountered. The entry state in the program is the highFour state.
+	
+	The program works by using a 2-bit status signal and a 2-bit state signal to distinguish the different state and substates being encountered. The status bits are:
+	\begin{itemize}
+		\item onEntry: 00
+		\item checkTransition: 01
+		\item onExit: 10
+		\item internal: 11
+	\end{itemize}
+	
+	The different states are:
+	\begin{itemize}
+		\item highFour: 01
+		\item lowFour: 10
+		\item exitState: 11
+	\end{itemize}
+	
+	A process statement is used to define how the program is executed when these values change. The sensitivity list of the process block only includes the clock signal so the values of the state and status signals can only be changed when the clock changes (the clock is driving the program). The onEntry, onExit and internal states are executed on the clocks rising edge. The checkTransition state is executed on the clocks falling edge. The transition condition for the highFour state to the lowFour state require the dip switch to be logic high. The transition condition for the lowFour state to the highFour state require the dip switch to be logic low. The sw variable represents the dip switch, the leds variable represent the LEDS and the clk50 variable represents the clock. Let us now examine the process code for the highFour machine:
+	
+	\begin{lstlisting}
+	process (clk50)
+	begin
+		if (rising_edge(clk50)) then
+			case currentState is
+				when highFour =>
+					--Define highFour State with rising edge
+					case status is
+						when onEntry =>
+							--do nothing in onEntry then transition to checkTransition substate
+							status <= checkTransition;
+						when internal =>
+							--set LEDS then transition to checkTransition substate
+							if (leds /= ledsHighFour) then
+								leds <= ledsHighFour;
+							end if;
+							status <= checkTransition;
+						when onExit =>
+							--set to new state then transition to new LLFSM
+							currentState <= nextState;
+							status <= onEntry;
+						when others =>
+							--Redundent Case throws errors if removed
+							null;
+					end case;
+			end case;
+		end if;
+		
+		if (falling_edge(clk50)) then
+			case currentState is
+				when highFour =>
+					--Define highFour state with falling edge
+					case status is
+						when checkTransition =>
+							--Check transition conditions
+							case sw is
+								when swON =>
+									--If dip switch is on then set target to lowFour LLFSM and transition to onExit substate
+									nextState <= lowFour;
+									status <= onExit;
+								when swOFF =>
+									--if dip switch is off then transition to internal substate
+									status <= internal;
+								when others =>
+									--Redundent Case
+								null;
+							end case;
+						when others =>
+							--Redundent Case
+							null;
+					end case;
+			end case;
+		end if;
+	end process;
+	\end{lstlisting}
+	
+	The code is broken up into two sections: code for the rising edge of the clock and code for the falling edge of the clock. Inside these if statements, the state and status signals are examined and the relavent code executed depending on these values. The code executes in this manner:
+	\begin{enumerate}
+		\item Clock changes to rising edge
+		\item Program enters with highFour state and onEntry status
+		\item The onEntry code updates the status to checkTransition
+		\item The clock changes to a falling edge
+		\item Program enters with a highFour state and a checkTransition status
+		\item The checkTransition code reads the value of the dip switch and does one of two things:
+		\begin{itemize}
+			\item if the switch was logic low than the status is updated to internal
+			\item If the switch was logic high than the target state is set to the lowFour state and the status is set to onExit
+		\end{itemize}
+		We will assume that the dip switch was off
+		\item The clock changes to a rising edge
+		\item The program enters with a highFour state and an internal status
+		\item The internal code turns the left four LEDS on and sets the status to checkTransition.
+		\item The clock changes to a falling edge
+		\item The program enters with a highFour state and a checkTransition status
+		\item The checkTransition is run again this time with the dip switch turned on (the target state is set to lowFour and the status bits are set to onExit)
+		\item The clock changes to a rising edge
+		\item The program enters with a state of highFour and a status of onExit
+		\item The onExit code sets the currentState to the target state and the status to onEntry.
+		\item The clock changes to a falling edge
+		\item The program enters with a state of lowFour and a status of onEntry
+		\item Nothing happens because the clock is a falling edge and the onEntry status is only used on rising edges
+		\item The clock changes to a rising edge
+		\item The program enters with a state of lowFour and a status of onEntry
+		\item The program continues executing the lowFour state...
+	\end{enumerate}
+	
+	A similar process is executed for the other states and I can verify that this works on the board. There is room in this program to insert code in onEntry, internal, OnExit and checkTransitions. I have just left these blank because additional code was not needed for this example. This code merely works as a template for LLFSMS and hopefully I have emulated the semantics that they specify.
+	
+	In addition, I know that this code is a bit messy and I plan on learning how I can use different aspects of the language to make this a lot shorter (and reuseable). The full program can be seen below:
+	
+	\begin{lstlisting}
+	library IEEE;
+	use IEEE.STD_LOGIC_1164.ALL;
+	
+	entity lightShowFSM is
+		port(
+			clk50: in std_logic; --clock
+			sw: in std_logic_vector(0 downto 0); --dip switch 1
+			leds: inout std_logic_vector(7 downto 0) --LEDS
+		);
+	end lightShowFSM;
+	
+	architecture Behavioral of lightShowFSM is
+		--Set constant values for status bits
+		constant onEntry: std_logic_vector(1 downto 0) := "00";
+		constant checkTransition: std_logic_vector(1 downto 0) := "01";
+		constant onExit: std_logic_vector(1 downto 0) := "10";
+		constant internal: std_logic_vector(1 downto 0) := "11";
+	
+		--initial status
+		signal status: std_logic_vector(1 downto 0) := onEntry;
+		
+		--Set constant values for state bits
+		constant highFour: std_logic_vector(1 downto 0) := "01";
+		constant lowFour: std_logic_vector(1 downto 0) := "10";
+		constant exitState: std_logic_vector(1 downto 0) := "11";
+		
+		--initial state bits: leds 7 -> 4 are logic high
+		signal currentState: std_logic_vector(1 downto 0) := highFour;
+		
+		--Set constant values for switch bit
+		constant swON: std_logic_vector(0 downto 0) := "1";
+		constant swOFF: std_logic_vector(0 downto 0) := "0";
+		
+		--Constant LED Values for states
+		constant ledsError: std_logic_vector(7 downto 0) := "10101010";
+		constant ledsHighFour: std_logic_vector(7 downto 0) := "11110000";
+		constant ledsLowFour: std_logic_vector(7 downto 0) := "00001111";
+		
+		--initial next state
+		signal nextState: std_logic_vector(1 downto 0);
+		begin
+		
+		process (clk50)
+		
+			begin
+			
+			if (rising_edge(clk50)) then
+				case currentState is
+					when highFour =>
+						--Define highFour State with rising edge
+						case status is
+							when onEntry =>
+								--do nothing in onEntry then transition to checkTransition substate
+								status <= checkTransition;
+							when internal =>
+								--set LEDS then transition to checkTransition substate
+								if (leds /= ledsHighFour) then
+									leds <= ledsHighFour;
+								end if;
+								status <= checkTransition;
+							when onExit =>
+								--set to new state then transition to new LLFSM
+								currentState <= nextState;
+								status <= onEntry;
+							when others =>
+								--Redundent Case throws errors if removed
+								null;
+						end case;
+					when lowFour =>
+						--Define lowFour state with rising edge
+						case status is
+							when onEntry =>
+								--do nothing then transition to checkTransition ssubstate
+								status <= checkTransition;
+							when internal =>
+								--Set LEDS then transition to checkTransition substate
+								if (leds /= ledsLowFour) then
+									leds <= ledsLowFour;
+								end if;
+								status <= checkTransition;
+							when onExit =>
+								--Transition to new LLFSM
+								currentState <= nextState;
+								status <= onEntry;
+							when others =>
+								--Redundent Case
+								null;
+						end case;
+					when exitState =>
+						--Define exitState with rising edge
+						case status is
+							when onEntry =>
+								--Do nothing then transition to checkTransition substate.
+								status <= checkTransition;
+							when internal =>
+								--set LEDS then transition to checkTransition substate.
+								if (leds /= ledsError) then
+									leds <= ledsError;
+								end if;
+								status <= checkTransition;
+							when onExit =>
+								--Transition to new LLFSM
+								currentState <= nextState;
+								status <= onEntry;
+							when others =>
+								--Redundent Case
+								null;
+						end case;
+					when others =>
+						--Invalid States default to the exitState
+						currentState <= exitState;
+						status <= onEntry;
+				end case;
+			end if;
+			if (falling_edge(clk50)) then
+				case currentState is
+					when highFour =>
+						--Define highFour state with falling edge
+						case status is
+							when checkTransition =>
+								--Check transition conditions
+								case sw is
+									when swON =>
+										--If dip switch is on then set target to lowFour LLFSM and transition to onExit substate
+										nextState <= lowFour;
+										status <= onExit;
+									when swOFF =>
+										--if dip switch is off then transition to internal substate
+										status <= internal;
+									when others =>
+										--Redundent Case
+										null;
+								end case;
+							when others =>
+								--Redundent Case
+								null;
+						end case;
+					when lowFour =>
+						--Define lowFour state with falling edge
+						case status is
+							when checkTransition =>
+								--Check transition conditions
+								case sw is
+									when swOFF =>
+										--if dip switch is off then set target to highFour LLFSM and transition to onExit substate.
+										nextState <= highFour;
+										status <= onExit;
+									when swON =>
+										--if dip switch is on then transition to internal substate
+										status <= internal;
+									when others =>
+										--Redundent Case
+										null;
+								end case;
+							when others =>
+								--Redundent Case
+								null;
+						end case;
+					when exitState =>
+						--Define exitState with falling edge
+						case status is
+							when checkTransition =>
+								--exitState resets the program by setting the target to the highFour LLFSM then transitioning to onExit substate.
+								nextState <= highFour;
+								status <= onExit;
+							when others =>
+								--Redundent Case
+								null;
+						end case;
+					when others =>
+						--Invalid States default to the exitState
+						currentState <= exitState;
+						status <= onEntry;
+				end case;
+			end if;
+			
+		end process;
+	
+	end Behavioral;
+	\end{lstlisting}
+\end{document}
