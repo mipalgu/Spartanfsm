@@ -10,6 +10,7 @@ main = do
     args <- getArgs
     dir <- return $ if last (head args) == '/' then init (head args) else head args
     states <- getAllStates dir
+    hasInitialPsuedostate states
     internals <- getAllInternals dir states
     transitions <- getAllTransCodeForAllStates dir states
     numberOfTargets <- return $ getNumberOfTargets states transitions
@@ -26,6 +27,10 @@ main = do
 
 
 --STRING FORMATING
+
+hasInitialPsuedostate :: [String] -> IO Bool
+hasInitialPsuedostate states | length (filter (\x -> x == initialPseudostate) states) /= 1 = error ("No " ++ initialPseudostate)
+                             | otherwise = return True
 
 --Operator to concatenate strings with a new line in between them
 infixl 2 +\>
@@ -83,6 +88,9 @@ beautify n str = foldl (\x y -> x ++ "\n" ++ y)  "" (map (\x -> beautifyLine n x
 tab :: String
 tab = "    "
 
+initialPseudostate :: String
+initialPseudostate = "InitialPseudoState"
+
 --Gets project name by inspecting the folder structure
 getProjectName :: String -> String
 getProjectName dir = head (splitOn ".machine" (last (filter (\x -> x /= "") (splitOn "/" dir))))
@@ -105,6 +113,7 @@ othersNullBlock = "when others =>" ++ beautify 1 "null;"
 toStateName :: String -> String
 toStateName str = "STATE_" ++ str
 
+--Namespace External Variable
 toExternalName :: String -> String
 toExternalName str = "EXTERNAL_" ++ str
 
