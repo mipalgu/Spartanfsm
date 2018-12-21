@@ -129,10 +129,6 @@ getStates str = filter (\x -> not $ isWhitespace x) (map removeWhitespace (lines
 ioGetStates :: String -> IO [String]
 ioGetStates str = return (getStates str)
 
---Get State names from file names which contain "Transition"
-getStateNameFromTransition :: String -> String
-getStateNameFromTransition str = head (splitOn "_Transition" $ foldl (++) "" (splitOn "State_" str))
-
 -- Checks if a str contains a state
 hasState :: String -> String -> Bool
 hasState str state = isInfixOf ("State_" ++ state ++ "_Transition") str
