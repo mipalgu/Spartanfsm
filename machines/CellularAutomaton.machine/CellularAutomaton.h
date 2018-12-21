@@ -16,12 +16,12 @@ namespace FSM
     {
         class CellularAutomaton: public CLMachine
         {
-            CLState *_states[5];
+            CLState *_states[6];
         public:
             CellularAutomaton(int mid  = 0, const char *name = "CellularAutomaton");
             virtual ~CellularAutomaton();
             virtual CLState * const * states() const { return _states; }
-            virtual int numberOfStates() const { return 5; }
+            virtual int numberOfStates() const { return 6; }
 #           include "CellularAutomaton_Variables.h"
 #           include "CellularAutomaton_Methods.h"
         };
