@@ -10,7 +10,7 @@ main = do
     args <- getArgs
     dir <- return $ if last (head args) == '/' then init (head args) else head args
     states <- getAllStates dir
-    hasInitialPsuedostate states
+    hasInitialPseudostate states
     internals <- getAllInternals dir states
     transitions <- getAllTransCodeForAllStates dir states
     numberOfTargets <- return $ getNumberOfTargets states transitions
@@ -28,8 +28,8 @@ main = do
 
 --STRING FORMATING
 
-hasInitialPsuedostate :: [String] -> IO Bool
-hasInitialPsuedostate states | length (filter (\x -> x == initialPseudostate) states) /= 1 = error ("No " ++ initialPseudostate)
+hasInitialPseudostate :: [String] -> IO Bool
+hasInitialPseudostate states | length (filter (\x -> x == initialPseudostate) states) /= 1 = error ("No " ++ initialPseudostate)
                              | otherwise = return True
 
 --Operator to concatenate strings with a new line in between them
