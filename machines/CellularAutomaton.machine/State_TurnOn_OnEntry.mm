@@ -1,1 +1,0 @@
-statusOut <= '1';
