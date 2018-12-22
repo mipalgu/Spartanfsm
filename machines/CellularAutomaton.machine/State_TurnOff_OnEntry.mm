@@ -1,0 +1,1 @@
+statusOut <= '0';
