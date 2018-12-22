@@ -1,0 +1,13 @@
+$GUNAO_DIR/Common
+
+$GUNAO_DIR/uc/ucfsm
+
+
+$HOME/src/MiPal/GUNao/Common
+
+
+
+$MACHINE_DIR
+$MACHINE_DIR/${BUILD_SUBDIR}
+.
+..

@@ -1,7 +1,7 @@
 //
 // State_Compare.mm
 //
-// Automatically created through MiPalCASE -- do not change manually!
+// Automatically created through MiCASE -- do not change manually!
 //
 #include "PixelFlip_Includes.h"
 #include "PixelFlip.h"
@@ -69,6 +69,7 @@ bool Compare::Transition_0::check(CLMachine *_machine, CLState *_state) const
 #		include "State_Compare_Transition_0.expr"
 	);
 }
+
 bool Compare::Transition_1::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "PixelFlip_VarRefs.mm"

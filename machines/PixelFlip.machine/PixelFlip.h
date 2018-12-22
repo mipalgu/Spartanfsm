@@ -1,7 +1,7 @@
 //
 // PixelFlip.h
 //
-// Automatically created through MiPalCASE -- do not change manually!
+// Automatically created through MiCASE -- do not change manually!
 //
 #ifndef clfsm_machine_PixelFlip_
 #define clfsm_machine_PixelFlip_
@@ -16,12 +16,12 @@ namespace FSM
     {
         class PixelFlip: public CLMachine
         {
-            CLState *_states[4];
+            CLState *_states[5];
         public:
             PixelFlip(int mid  = 0, const char *name = "PixelFlip");
             virtual ~PixelFlip();
             virtual CLState * const * states() const { return _states; }
-            virtual int numberOfStates() const { return 4; }
+            virtual int numberOfStates() const { return 5; }
 #           include "PixelFlip_Variables.h"
 #           include "PixelFlip_Methods.h"
         };

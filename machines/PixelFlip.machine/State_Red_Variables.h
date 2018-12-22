@@ -1,5 +1,5 @@
 //
 // State_Red_Variables.h
 //
-// Automatically created through MiPalCASE -- do not change manually!
+// Automatically created through MiCASE -- do not change manually!
 //

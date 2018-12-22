@@ -1,7 +1,7 @@
 //
 // State_Green.mm
 //
-// Automatically created through MiPalCASE -- do not change manually!
+// Automatically created through MiCASE -- do not change manually!
 //
 #include "PixelFlip_Includes.h"
 #include "PixelFlip.h"
