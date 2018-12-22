@@ -1,6 +1,6 @@
 # Clocks
 NET "CLK50" PERIOD = 20 ns | LOC = "K3";
-#NET "CLK32" PERIOD = 31.25 ns | LOC = "J4";
+NET "CLK32" PERIOD = 31.25 ns | LOC = "J4";
 
 # LEDs
 NET "LEDS<0>" LOC="P11" | IOSTANDARD=LVTTL | DRIVE=8 | SLEW=SLOW;
