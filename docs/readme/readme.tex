@@ -72,6 +72,7 @@
             \end{enumerate}
             We will go through this process by following an example of using a \DIP\/ switch to toggle an \LED\/ on or off.
             \subsection{Creating the Machine}
+                I have created the machine called \textit{LightToggle.machine} in the machines folder of this repository. The machine contains three states: \textsf{Compare}, \textsf{On} and \textsf{Off} where the \textsf{Compare} state is the initial state. The machine has two external variables: \textit{leds} and \textit{dip}. You will notice that the external variables are declared with a type of \textit{\#extern}. This is a macro interpreted by the code generated to distinguish external variables. A similar type \textit{\#machine} is used to distinguish machine variables. The \textit{\#extern} macro is required on external variables to place them in the appropriate location in the \VHDL\/ source file. The machine simply turns the \LEDs\/ on or off depending on the state of the \DIP\/ switch.
             \subsection{Creating the ISE Project}
             \subsection{Integrating the Machine Source File into the ISE Project}
 \end{document}
