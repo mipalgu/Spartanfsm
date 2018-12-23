@@ -393,6 +393,12 @@ createPreviousRinglet bits initialState
   = "signal previousRinglet: std_logic_vector(" ++ (show (bits - 1)) ++ " downto 0) := "
     ++ initialState ++ " xor \"" ++ (ones bits) ++ "\";\n"
 
+createSuspendedFrom :: Int -> String
+createSuspendedFrom bits = "signal suspendedFrom: std_logic_vector(" ++ (show (bits - 1)) ++> "downto 0);\n"
+
+createPreviousInternal :: String
+createPreviousInternal = "signal previousInternal: std_logic_vector(2 downto 0);\n"
+
 -- VHDL Binary representation of a state
 createState :: Int -> String -> String -> String
 createState size bin state = "constant " ++ state ++ ": std_logic_vector(" ++ (show (size - 1)) ++ " downto 0) := \"" ++ bin ++ "\";\n"
@@ -420,6 +426,8 @@ createArchitectureVariables size states vars = internalStateVhdl
     ++ (createCurrentState (states!!0) (numberOfBits (length states)))
     ++ createTargetState (numberOfBits $ length states)
     ++ createPreviousRinglet (numberOfBits $ length states) (states!!0)
+    ++ createSuspendedFrom (numberOfBits $ length states)
+    ++ createPreviousInternal
     ++ createArchitectureSnapshots (getExternalVars vars)
     ++ createVariables (getMachineVars vars)
 
@@ -527,9 +535,10 @@ createFallingEdge states codes trans targets vars = "if (falling_edge(clk)) then
 --create process block
 createProcessBlock :: [String] -> [[String]] -> [[String]] -> [[String]] -> String -> String
 createProcessBlock states codes transitions targets vars = "process (clk)\n    begin"
-    ++ beautify 2 (createRisingEdge states codes vars)
+    ++ beautify 2 (createSuspendedLogic)
+    ++ removeFirstNewLine (beautify 2 (createRisingEdge states codes vars))
     ++ removeFirstNewLine (beautify 2 (createFallingEdge states codes transitions targets vars))
-    ++ "    end process;"
+    ++ "\n    end process;"
 
 --Create entire architecture block
 createArchitecture :: [String] -> [[String]] -> [[String]] -> [[String]] -> Int -> String -> String -> String
@@ -537,7 +546,7 @@ createArchitecture states risingEdgeCode transitions targets size name vars =
     "architecture LLFSM of " ++ name ++ " is"
     ++ beautify 1 (createArchitectureVariables size (map toStateName states) vars)
     ++ "begin\n"
-    ++ createProcessBlock (map toStateName states) risingEdgeCode transitions targets vars
+    +\> createProcessBlock (map toStateName states) risingEdgeCode transitions targets vars
     ++ "\nend LLFSM;"
 
 --Checks if code is a comment
@@ -606,7 +615,7 @@ getMachineVars str = map getMachineVariableCode $ filter isMachineVar (lines str
 
 --Create the port delcaration in the entity statement
 createPortDeclaration :: [String] -> String
-createPortDeclaration xs = init (foldl (\x y -> x +\->  y) ("port (" +\-> "clk: in std_logic;" +\-> "suspended: inout std_logic;") xs) ++ "\n);"
+createPortDeclaration xs = init (foldl (\x y -> x +\->  y) ("port (" +\-> "clk: in std_logic;" +\-> "suspended: inout std_logic;" +\-> "restart: inout std_logic;") xs) ++ "\n);"
 
 --Create entity block
 createEntity :: String -> String -> String -> String
@@ -669,3 +678,15 @@ ones n = onesCarry n ""
                         | otherwise = onesCarry (m-1) ("1" ++ str)
 
 --END CONVENIENCE CODE
+
+createSuspendedLogic :: String
+createSuspendedLogic =
+    "if (suspended = '1' and restart /= '1' and currentState /= " ++ toStateName suspended ++ ") then"
+    +\-> "suspendedFrom <= currentState;" +\-> "currentState <= " ++ toStateName suspended ++ ";"
+    +\-> "previousInternal <= internalState;" +\-> "internalState <= OnEntry;"
+    +\> "elsif (suspended = '0' and currentState = " ++ toStateName suspended ++ ") then"
+    +\-> "internalState <= previousInternal;" +\-> "currentState <= suspendedFrom;"
+    +\> "elsif (suspended = '1' and restart = '1') then"
+    +\-> "restart = '0';" +\-> "suspended = '0'" +\-> "currentState <= " ++ toStateName initialPseudostate ++ ";"
+    +\-> "internalState <= OnEntry"
+    +\> "end if;"
