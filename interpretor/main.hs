@@ -45,6 +45,16 @@ str1 ++> str2 | str1 == ""                                       = str2
               | length str1 == 1 && isCharWhitespace (head str1) = str1 ++ str2
               | otherwise                                        = str1 ++ " " ++ str2
 
+infixl 2 +->
+(+->) :: String -> String -> String
+str1 +-> str2 = str1 ++ tab ++ str2
+
+infixl 2 +\->
+(+\->) :: String -> String -> String
+str1 +\-> str2 | str1 == "" = str2
+               | str2 == "" = str1
+               | otherwise  = str1 +\> "" +-> str2
+
 --Determins if a character is whitespace
 isCharWhitespace :: Char -> Bool
 isCharWhitespace c = case c of
@@ -583,7 +593,7 @@ getMachineVars str = map getMachineVariableCode $ filter isMachineVar (lines str
 
 --Create the port delcaration in the entity statement
 createPortDeclaration :: [String] -> String
-createPortDeclaration xs = init (foldl (\x y -> x ++ "\n    " ++ y) "port (\n    clk: in std_logic;" xs) ++ "\n);"
+createPortDeclaration xs = init (foldl (\x y -> x +\->  y) ("port (" +\-> "clk: in std_logic;") xs) ++ "\n);"
 
 --Create entity block
 createEntity :: String -> String -> String -> String
