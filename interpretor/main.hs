@@ -11,6 +11,7 @@ main = do
     dir <- return $ if last (head args) == '/' then init (head args) else head args
     states <- getAllStates dir
     hasInitialPseudostate states
+    hasSuspended states
     internals <- getAllInternals dir states
     transitions <- getAllTransCodeForAllStates dir states
     numberOfTargets <- return $ getNumberOfTargets states transitions
@@ -29,8 +30,15 @@ main = do
 --STRING FORMATING
 
 hasInitialPseudostate :: [String] -> IO Bool
-hasInitialPseudostate states | length (filter (\x -> x == initialPseudostate) states) /= 1 = error ("No " ++ initialPseudostate)
-                             | otherwise = return True
+hasInitialPseudostate states | hasString initialPseudostate states = return True
+                             | otherwise                           = error ("No " ++ initialPseudostate ++ " State")
+
+hasSuspended :: [String] -> IO Bool
+hasSuspended states | hasString suspended states = return True
+                    | otherwise                  = error ("No " ++ suspended ++ " State")
+
+hasString :: String -> [String] -> Bool
+hasString str ss = length (filter (\x -> x == str) ss) /= 0
 
 --Operator to concatenate strings with a new line in between them
 infixl 2 +\>
@@ -45,10 +53,12 @@ str1 ++> str2 | str1 == ""                                       = str2
               | length str1 == 1 && isCharWhitespace (head str1) = str1 ++ str2
               | otherwise                                        = str1 ++ " " ++ str2
 
+--Operator to concatenate strings with a tab in between them
 infixl 2 +->
 (+->) :: String -> String -> String
 str1 +-> str2 = str1 ++ tab ++ str2
 
+--Operator to concatenate strings with a new line and a tab in between them
 infixl 2 +\->
 (+\->) :: String -> String -> String
 str1 +\-> str2 | str1 == "" = str2
@@ -100,6 +110,9 @@ tab = "    "
 
 initialPseudostate :: String
 initialPseudostate = "InitialPseudoState"
+
+suspended :: String
+suspended = "SUSPENDED"
 
 --Gets project name by inspecting the folder structure
 getProjectName :: String -> String
