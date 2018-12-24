@@ -24,7 +24,7 @@ main = do
     includes <- getIncludes dir projectName
     entity <- return $ createEntity includes projectName variables
     homeDir <- getHomeDirectory
-    writeFile (projectName ++ ".vhd") (entity ++ "\n\n" ++ architecture)
+    writeFile (projectName ++ ".vhd") (createMachineComment projectName ++ "\n\n" ++ entity ++ "\n\n" ++ architecture)
 
 
 --STRING FORMATING
@@ -538,14 +538,14 @@ createProcessBlock states codes transitions targets vars = "process (clk)\n    b
     ++ beautify 2 (createSuspendedLogic)
     ++ removeFirstNewLine (beautify 2 (createRisingEdge states codes vars))
     ++ removeFirstNewLine (beautify 2 (createFallingEdge states codes transitions targets vars))
-    ++ "\n    end process;"
+    ++ "    end process;"
 
 --Create entire architecture block
 createArchitecture :: [String] -> [[String]] -> [[String]] -> [[String]] -> Int -> String -> String -> String
 createArchitecture states risingEdgeCode transitions targets size name vars = 
     "architecture LLFSM of " ++ name ++ " is"
     ++ beautify 1 (createArchitectureVariables size (map toStateName states) vars)
-    ++ "begin\n"
+    ++ "begin"
     +\> createProcessBlock (map toStateName states) risingEdgeCode transitions targets vars
     ++ "\nend LLFSM;"
 
@@ -687,6 +687,9 @@ createSuspendedLogic =
     +\> "elsif (suspended = '0' and currentState = " ++ toStateName suspended ++ ") then"
     +\-> "internalState <= previousInternal;" +\-> "currentState <= suspendedFrom;"
     +\> "elsif (suspended = '1' and restart = '1') then"
-    +\-> "restart = '0';" +\-> "suspended = '0'" +\-> "currentState <= " ++ toStateName initialPseudostate ++ ";"
-    +\-> "internalState <= OnEntry"
+    +\-> "restart = '0';" +\-> "suspended = '0';" +\-> "currentState <= " ++ toStateName initialPseudostate ++ ";"
+    +\-> "internalState <= OnEntry;"
     +\> "end if;"
+
+createMachineComment :: String -> String
+createMachineComment name = "--" ++ name ++ ".vhd" +\> "--\n--This is a generated file - DO NOT ALTER." +\> "--Please use an LLFSM editor to change this file.\n--"
