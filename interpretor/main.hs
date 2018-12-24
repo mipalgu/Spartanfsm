@@ -4,6 +4,7 @@ import Data.List
 import Data.Char
 import System.Environment
 import System.Directory
+import Data.Time
 
 main :: IO ()
 main = do
@@ -23,11 +24,16 @@ main = do
     architecture <- return $ createArchitecture states internals transitions targetStates stateBitSize projectName variables
     includes <- getIncludes dir projectName
     entity <- return $ createEntity includes projectName variables
-    homeDir <- getHomeDirectory
-    writeFile (projectName ++ ".vhd") (createMachineComment projectName ++ "\n\n" ++ entity ++ "\n\n" ++ architecture)
+    timeString <- getLocalTimeString
+    writeFile (projectName ++ ".vhd") (createMachineComment projectName timeString ++ "\n\n" ++ entity ++ "\n\n" ++ architecture)
 
 
 --STRING FORMATING
+
+getLocalTimeString :: IO String
+getLocalTimeString = do
+    ZonedTime (LocalTime day (TimeOfDay hour min sec)) (TimeZone mins isSummer name) <- getZonedTime 
+    return $ (showGregorian day) ++> (show hour) ++ ":" ++ (show min) ++> name
 
 hasInitialPseudostate :: [String] -> IO Bool
 hasInitialPseudostate states | hasString initialPseudostate states = return True
@@ -691,5 +697,7 @@ createSuspendedLogic =
     +\-> "internalState <= OnEntry;"
     +\> "end if;"
 
-createMachineComment :: String -> String
-createMachineComment name = "--" ++ name ++ ".vhd" +\> "--\n--This is a generated file - DO NOT ALTER." +\> "--Please use an LLFSM editor to change this file.\n--"
+createMachineComment :: String -> String -> String
+createMachineComment name time =
+    "--" ++ name ++ ".vhd" +\> "--\n--This is a generated file - DO NOT ALTER." +\> "--Please use an LLFSM editor to change this file."
+    +\> "--Date Generated:" ++> time +\> "--"
