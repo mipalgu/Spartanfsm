@@ -33,18 +33,22 @@ main = do
 getLocalTimeString :: IO String
 getLocalTimeString = do
     ZonedTime (LocalTime day (TimeOfDay hour min sec)) (TimeZone mins isSummer name) <- getZonedTime 
-    return $ (showGregorian day) ++> (show hour) ++ ":" ++ (show min) ++> name
+    return $ (showGregorian day) ++> (to24hrTime hour) ++ ":" ++ (to24hrTime min) ++> name
+
+to24hrTime :: Int -> String
+to24hrTime time | time < 10 = "0" ++ (show time)
+                | otherwise = show time
 
 hasInitialPseudostate :: [String] -> IO Bool
-hasInitialPseudostate states | hasString initialPseudostate states = return True
-                             | otherwise                           = error ("No " ++ initialPseudostate ++ " State")
+hasInitialPseudostate states | contains initialPseudostate states = return True
+                             | otherwise                          = error ("No " ++ initialPseudostate ++ " State")
 
 hasSuspended :: [String] -> IO Bool
-hasSuspended states | hasString suspended states = return True
-                    | otherwise                  = error ("No " ++ suspended ++ " State")
+hasSuspended states | contains suspended states = return True
+                    | otherwise                 = error ("No " ++ suspended ++ " State")
 
-hasString :: String -> [String] -> Bool
-hasString str ss = length (filter (\x -> x == str) ss) /= 0
+contains :: Eq a => a -> [a] -> Bool
+contains x xs = length (filter (\i -> i == x) xs) /= 0
 
 --Operator to concatenate strings with a new line in between them
 infixl 2 +\>
