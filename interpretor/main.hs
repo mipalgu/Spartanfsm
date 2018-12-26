@@ -699,6 +699,8 @@ createSuspendedLogic =
     +\> "elsif (suspended = '1' and restart = '1') then"
     +\-> "restart = '0';" +\-> "suspended = '0';" +\-> "currentState <= " ++ toStateName initialPseudostate ++ ";"
     +\-> "internalState <= OnEntry;"
+    +\> "elsif (restart = '1') then"
+    +\-> "restart <= '0';"
     +\> "end if;"
 
 createMachineComment :: String -> String -> String
