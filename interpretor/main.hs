@@ -697,9 +697,9 @@ createSuspendedLogic =
     +\> "elsif (suspended = '0' and currentState = " ++ toStateName suspended ++ ") then"
     +\-> "internalState <= previousInternal;" +\-> "currentState <= suspendedFrom;"
     +\> "elsif (suspended = '1' and restart = '1') then"
-    +\-> "restart = '0';" +\-> "suspended = '0';" +\-> "currentState <= " ++ toStateName initialPseudostate ++ ";"
+    +\-> "restart <= '0';" +\-> "suspended <= '0';" +\-> "currentState <= " ++ toStateName initialPseudostate ++ ";"
     +\-> "internalState <= OnEntry;"
-    +\> "elsif (restart = '1') then"
+    +\> "elsif (restart = '1' and suspended = '0') then"
     +\-> "restart <= '0';"
     +\> "end if;"
 
