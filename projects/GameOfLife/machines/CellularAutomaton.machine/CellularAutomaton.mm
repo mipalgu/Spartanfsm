@@ -12,6 +12,7 @@
 #include "State_Wait.h"
 #include "State_TurnOff.h"
 #include "State_CountNeighbours.h"
+#include "State_SUSPENDED.h"
 
 using namespace FSM;
 using namespace CLM;
@@ -32,7 +33,9 @@ CellularAutomaton::CellularAutomaton(int mid, const char *name): CLMachine(mid, 
 	_states[3] = new FSMCellularAutomaton::State::Wait;
 	_states[4] = new FSMCellularAutomaton::State::TurnOff;
 	_states[5] = new FSMCellularAutomaton::State::CountNeighbours;
+	_states[6] = new FSMCellularAutomaton::State::SUSPENDED;
 
+	setSuspendState(_states[6]);            // set suspend state
 	setInitialState(_states[0]);            // set initial state
 }
 
@@ -44,4 +47,5 @@ CellularAutomaton::~CellularAutomaton()
 	delete _states[3];
 	delete _states[4];
 	delete _states[5];
+	delete _states[6];
 }

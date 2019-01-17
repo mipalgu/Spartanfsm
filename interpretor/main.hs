@@ -4,6 +4,7 @@ import Data.List
 import Data.Char
 import System.Environment
 import System.Directory
+import Data.Time
 
 main :: IO ()
 main = do
@@ -11,6 +12,7 @@ main = do
     dir <- return $ if last (head args) == '/' then init (head args) else head args
     states <- getAllStates dir
     hasInitialPseudostate states
+    hasSuspended states
     internals <- getAllInternals dir states
     transitions <- getAllTransCodeForAllStates dir states
     numberOfTargets <- return $ getNumberOfTargets states transitions
@@ -22,15 +24,36 @@ main = do
     architecture <- return $ createArchitecture states internals transitions targetStates stateBitSize projectName variables
     includes <- getIncludes dir projectName
     entity <- return $ createEntity includes projectName variables
-    homeDir <- getHomeDirectory
-    writeFile (projectName ++ ".vhd") (entity ++ "\n\n" ++ architecture)
+    timeString <- getLocalTimeString
+    writeFile (projectName ++ ".vhd") (createMachineComment projectName timeString ++ "\n\n" ++ entity ++ "\n\n" ++ architecture)
 
 
 --STRING FORMATING
 
+--Returns a formatted string containing the local time and timezone.
+getLocalTimeString :: IO String
+getLocalTimeString = do
+    ZonedTime (LocalTime day (TimeOfDay hour min sec)) (TimeZone mins isSummer name) <- getZonedTime 
+    return $ (showGregorian day) ++> (to24hrTime hour) ++ ":" ++ (to24hrTime min) ++> name
+
+--Converts an Int to a String suitable for 24 hour time. This includes the leading 0 for single digit values.
+to24hrTime :: Int -> String
+to24hrTime time | time < 10 = "0" ++ (show time)
+                | otherwise = show time
+
+--Checks the states for the initial pseudostate. If the pseudostate is not present, the program errors out.
 hasInitialPseudostate :: [String] -> IO Bool
-hasInitialPseudostate states | length (filter (\x -> x == initialPseudostate) states) /= 1 = error ("No " ++ initialPseudostate)
-                             | otherwise = return True
+hasInitialPseudostate states | contains initialPseudostate states = return True
+                             | otherwise                          = error ("No " ++ initialPseudostate ++ " State")
+
+--Checks the states for the suspended state. If this state is not present, then the program will error out.
+hasSuspended :: [String] -> IO Bool
+hasSuspended states | contains suspended states = return True
+                    | otherwise                 = error ("No " ++ suspended ++ " State")
+
+--Checks a list contains an element.
+contains :: Eq a => a -> [a] -> Bool
+contains x xs = length (filter (\i -> i == x) xs) /= 0
 
 --Operator to concatenate strings with a new line in between them
 infixl 2 +\>
@@ -45,10 +68,12 @@ str1 ++> str2 | str1 == ""                                       = str2
               | length str1 == 1 && isCharWhitespace (head str1) = str1 ++ str2
               | otherwise                                        = str1 ++ " " ++ str2
 
+--Operator to concatenate strings with a tab in between them
 infixl 2 +->
 (+->) :: String -> String -> String
 str1 +-> str2 = str1 ++ tab ++ str2
 
+--Operator to concatenate strings with a new line and a tab in between them
 infixl 2 +\->
 (+\->) :: String -> String -> String
 str1 +\-> str2 | str1 == "" = str2
@@ -98,8 +123,13 @@ beautify n str = foldl (\x y -> x ++ "\n" ++ y)  "" (map (\x -> beautifyLine n x
 tab :: String
 tab = "    "
 
+--Initial Pseudostate name.
 initialPseudostate :: String
 initialPseudostate = "InitialPseudoState"
+
+--Suspended state name.
+suspended :: String
+suspended = "SUSPENDED"
 
 --Gets project name by inspecting the folder structure
 getProjectName :: String -> String
@@ -319,35 +349,10 @@ createSingleTransitionCode :: [String] -> [String] -> String
 createSingleTransitionCode transitions targetStates =
     "when CheckTransition =>" ++ (beautify 1 (createTransitionCode transitions targetStates))
 
-{- Merges the transitions to a single case statement
-joinTransitionBlocks :: [String] -> [[String]] -> [[String]] -> String
-joinTransitionBlocks states trans targets =
-    "    case currentState is"
-    ++ beautify 1 (foldl (++) "" $ map (\x -> createSingleTransitionCode (states!!x) (trans!!x) (targets!!x)) [0..((length states) - 1)])
-    ++ removeFirstNewLine (beautify 2 othersNullBlock)
-    ++ "    end case;"
--}
 -- Code for InitialPseudoState
 pseudoStateCode :: String -> String
 pseudoStateCode state = "    case currentState is"
     ++ beautify 2 ("When InitialPseudoState =>" ++ beautify 1 ("targetState <= " ++ state ++ ";\ninternalState <= OnExit;"))
-
-{-
---Add InitialPseudoStateCode to transitions
-joinTransitionBlocksWithPseudoState :: [String] -> [[String]] -> [[String]] -> String
-joinTransitionBlocksWithPseudoState states trans targets
-    | head states == "InitialPseudoState" = 
-        pseudoStateCode (states!!1)
-        ++ removeFirstNewLine (beautify 1 (foldl (++) "" $ map (\x -> createSingleTransitionCode ((tail states)!!x) ((tail trans)!!x) ((tail targets)!!x)) [0..((length (tail states)) - 1)]))
-        ++ removeFirstNewLine (beautify 2 othersNullBlock)
-        ++ "    end case;"
-    | otherwise                           = joinTransitionBlocks states trans targets
--}
---Creates all of the transition code for all states
-{-createAllTransitionsCode :: [String] -> [[String]] -> [[String]] -> String
-createAllTransitionsCode states trans targets = "case internalState is\n    when CheckTransition =>"
-    ++ beautify 1 (joinTransitionBlocksWithPseudoState states trans targets)
--}
 
 -- Internal state representation
 internalStateVhdl :: String
@@ -380,6 +385,14 @@ createPreviousRinglet bits initialState
   = "signal previousRinglet: std_logic_vector(" ++ (show (bits - 1)) ++ " downto 0) := "
     ++ initialState ++ " xor \"" ++ (ones bits) ++ "\";\n"
 
+--Creates the suspendedFrom architecture signal.
+createSuspendedFrom :: Int -> String
+createSuspendedFrom bits = "signal suspendedFrom: std_logic_vector(" ++ (show (bits - 1)) ++> "downto 0);\n"
+
+--Creates the previousInternal signal.
+createPreviousInternal :: String
+createPreviousInternal = "signal previousInternal: std_logic_vector(2 downto 0);\n"
+
 -- VHDL Binary representation of a state
 createState :: Int -> String -> String -> String
 createState size bin state = "constant " ++ state ++ ": std_logic_vector(" ++ (show (size - 1)) ++ " downto 0) := \"" ++ bin ++ "\";\n"
@@ -407,6 +420,8 @@ createArchitectureVariables size states vars = internalStateVhdl
     ++ (createCurrentState (states!!0) (numberOfBits (length states)))
     ++ createTargetState (numberOfBits $ length states)
     ++ createPreviousRinglet (numberOfBits $ length states) (states!!0)
+    ++ createSuspendedFrom (numberOfBits $ length states)
+    ++ createPreviousInternal
     ++ createArchitectureSnapshots (getExternalVars vars)
     ++ createVariables (getMachineVars vars)
 
@@ -478,12 +493,14 @@ createAllRisingStateCode states codes vars =
         ) ++ (removeFirstNewLine (beautify 1 othersNullBlock))
     )
 
+--Creates the code for a states falling edge.
 createFallingSingleState :: String -> [String] -> [String] -> [String] -> String -> String
 createFallingSingleState state code trans targets vars = "when " ++ state ++ " =>\n    case internalState is"
     ++ beautify 2 (createInternal (code!!1) ++ (createOnExit (code!!2)) ++ (createSingleTransitionCode trans targets)
         ++ (createReadSnapshot vars) ++(othersNullBlock)
     )
 
+--Creates the code for all states falling edge.
 createAllFallingStateCode :: [String] -> [[String]] -> [[String]] -> [[String]] -> String -> String
 createAllFallingStateCode states codes trans targets vars =
     removeFirstNewLine (beautify 1 (
@@ -514,7 +531,8 @@ createFallingEdge states codes trans targets vars = "if (falling_edge(clk)) then
 --create process block
 createProcessBlock :: [String] -> [[String]] -> [[String]] -> [[String]] -> String -> String
 createProcessBlock states codes transitions targets vars = "process (clk)\n    begin"
-    ++ beautify 2 (createRisingEdge states codes vars)
+--  ++ beautify 2 (createSuspendedLogic)
+    ++ beautify 2 (createRisingEdge states codes vars) -- add removeFirstNewLine when adding suspend logic
     ++ removeFirstNewLine (beautify 2 (createFallingEdge states codes transitions targets vars))
     ++ "    end process;"
 
@@ -523,8 +541,8 @@ createArchitecture :: [String] -> [[String]] -> [[String]] -> [[String]] -> Int 
 createArchitecture states risingEdgeCode transitions targets size name vars = 
     "architecture LLFSM of " ++ name ++ " is"
     ++ beautify 1 (createArchitectureVariables size (map toStateName states) vars)
-    ++ "begin\n"
-    ++ createProcessBlock (map toStateName states) risingEdgeCode transitions targets vars
+    ++ "begin"
+    +\> createProcessBlock (map toStateName states) risingEdgeCode transitions targets vars
     ++ "\nend LLFSM;"
 
 --Checks if code is a comment
@@ -593,7 +611,7 @@ getMachineVars str = map getMachineVariableCode $ filter isMachineVar (lines str
 
 --Create the port delcaration in the entity statement
 createPortDeclaration :: [String] -> String
-createPortDeclaration xs = init (foldl (\x y -> x +\->  y) ("port (" +\-> "clk: in std_logic;") xs) ++ "\n);"
+createPortDeclaration xs = init (foldl (\x y -> x +\->  y) ("port (" +\-> "clk: in std_logic;" +\-> "suspended: inout std_logic;" +\-> "restart: inout std_logic;") xs) ++ "\n);"
 
 --Create entity block
 createEntity :: String -> String -> String -> String
@@ -656,3 +674,24 @@ ones n = onesCarry n ""
                         | otherwise = onesCarry (m-1) ("1" ++ str)
 
 --END CONVENIENCE CODE
+
+--Creates the VHDL code to check whether a machine has been suspended or not.
+createSuspendedLogic :: String
+createSuspendedLogic =
+    "if (suspended = '1' and restart /= '1' and currentState /= " ++ toStateName suspended ++ ") then"
+    +\-> "suspendedFrom <= currentState;" +\-> "currentState <= " ++ toStateName suspended ++ ";"
+    +\-> "previousInternal <= internalState;" +\-> "internalState <= OnEntry;"
+    +\> "elsif (suspended = '0' and currentState = " ++ toStateName suspended ++ ") then"
+    +\-> "internalState <= previousInternal;" +\-> "currentState <= suspendedFrom;"
+    +\> "elsif (suspended = '1' and restart = '1') then"
+    +\-> "restart <= '0';" +\-> "suspended <= '0';" +\-> "currentState <= " ++ toStateName initialPseudostate ++ ";"
+    +\-> "internalState <= OnEntry;"
+    +\> "elsif (restart = '1' and suspended = '0') then"
+    +\-> "restart <= '0';"
+    +\> "end if;"
+
+--The default comment located at the top of a generated machine .vhd file.
+createMachineComment :: String -> String -> String
+createMachineComment name time =
+    "--" ++ name ++ ".vhd" +\> "--\n--This is a generated file - DO NOT ALTER." +\> "--Please use an LLFSM editor to change this file."
+    +\> "--Date Generated:" ++> time +\> "--"
