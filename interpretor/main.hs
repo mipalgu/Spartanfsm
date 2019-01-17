@@ -531,8 +531,8 @@ createFallingEdge states codes trans targets vars = "if (falling_edge(clk)) then
 --create process block
 createProcessBlock :: [String] -> [[String]] -> [[String]] -> [[String]] -> String -> String
 createProcessBlock states codes transitions targets vars = "process (clk)\n    begin"
-    ++ beautify 2 (createSuspendedLogic)
-    ++ removeFirstNewLine (beautify 2 (createRisingEdge states codes vars))
+--  ++ beautify 2 (createSuspendedLogic)
+    ++ beautify 2 (createRisingEdge states codes vars) -- add removeFirstNewLine when adding suspend logic
     ++ removeFirstNewLine (beautify 2 (createFallingEdge states codes transitions targets vars))
     ++ "    end process;"
 
