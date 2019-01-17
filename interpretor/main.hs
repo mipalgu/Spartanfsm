@@ -30,23 +30,28 @@ main = do
 
 --STRING FORMATING
 
+--Returns a formatted string containing the local time and timezone.
 getLocalTimeString :: IO String
 getLocalTimeString = do
     ZonedTime (LocalTime day (TimeOfDay hour min sec)) (TimeZone mins isSummer name) <- getZonedTime 
     return $ (showGregorian day) ++> (to24hrTime hour) ++ ":" ++ (to24hrTime min) ++> name
 
+--Converts an Int to a String suitable for 24 hour time. This includes the leading 0 for single digit values.
 to24hrTime :: Int -> String
 to24hrTime time | time < 10 = "0" ++ (show time)
                 | otherwise = show time
 
+--Checks the states for the initial pseudostate. If the pseudostate is not present, the program errors out.
 hasInitialPseudostate :: [String] -> IO Bool
 hasInitialPseudostate states | contains initialPseudostate states = return True
                              | otherwise                          = error ("No " ++ initialPseudostate ++ " State")
 
+--Checks the states for the suspended state. If this state is not present, then the program will error out.
 hasSuspended :: [String] -> IO Bool
 hasSuspended states | contains suspended states = return True
                     | otherwise                 = error ("No " ++ suspended ++ " State")
 
+--Checks a list contains an element.
 contains :: Eq a => a -> [a] -> Bool
 contains x xs = length (filter (\i -> i == x) xs) /= 0
 
@@ -118,9 +123,11 @@ beautify n str = foldl (\x y -> x ++ "\n" ++ y)  "" (map (\x -> beautifyLine n x
 tab :: String
 tab = "    "
 
+--Initial Pseudostate name.
 initialPseudostate :: String
 initialPseudostate = "InitialPseudoState"
 
+--Suspended state name.
 suspended :: String
 suspended = "SUSPENDED"
 
@@ -342,35 +349,10 @@ createSingleTransitionCode :: [String] -> [String] -> String
 createSingleTransitionCode transitions targetStates =
     "when CheckTransition =>" ++ (beautify 1 (createTransitionCode transitions targetStates))
 
-{- Merges the transitions to a single case statement
-joinTransitionBlocks :: [String] -> [[String]] -> [[String]] -> String
-joinTransitionBlocks states trans targets =
-    "    case currentState is"
-    ++ beautify 1 (foldl (++) "" $ map (\x -> createSingleTransitionCode (states!!x) (trans!!x) (targets!!x)) [0..((length states) - 1)])
-    ++ removeFirstNewLine (beautify 2 othersNullBlock)
-    ++ "    end case;"
--}
 -- Code for InitialPseudoState
 pseudoStateCode :: String -> String
 pseudoStateCode state = "    case currentState is"
     ++ beautify 2 ("When InitialPseudoState =>" ++ beautify 1 ("targetState <= " ++ state ++ ";\ninternalState <= OnExit;"))
-
-{-
---Add InitialPseudoStateCode to transitions
-joinTransitionBlocksWithPseudoState :: [String] -> [[String]] -> [[String]] -> String
-joinTransitionBlocksWithPseudoState states trans targets
-    | head states == "InitialPseudoState" = 
-        pseudoStateCode (states!!1)
-        ++ removeFirstNewLine (beautify 1 (foldl (++) "" $ map (\x -> createSingleTransitionCode ((tail states)!!x) ((tail trans)!!x) ((tail targets)!!x)) [0..((length (tail states)) - 1)]))
-        ++ removeFirstNewLine (beautify 2 othersNullBlock)
-        ++ "    end case;"
-    | otherwise                           = joinTransitionBlocks states trans targets
--}
---Creates all of the transition code for all states
-{-createAllTransitionsCode :: [String] -> [[String]] -> [[String]] -> String
-createAllTransitionsCode states trans targets = "case internalState is\n    when CheckTransition =>"
-    ++ beautify 1 (joinTransitionBlocksWithPseudoState states trans targets)
--}
 
 -- Internal state representation
 internalStateVhdl :: String
@@ -403,9 +385,11 @@ createPreviousRinglet bits initialState
   = "signal previousRinglet: std_logic_vector(" ++ (show (bits - 1)) ++ " downto 0) := "
     ++ initialState ++ " xor \"" ++ (ones bits) ++ "\";\n"
 
+--Creates the suspendedFrom architecture signal.
 createSuspendedFrom :: Int -> String
 createSuspendedFrom bits = "signal suspendedFrom: std_logic_vector(" ++ (show (bits - 1)) ++> "downto 0);\n"
 
+--Creates the previousInternal signal.
 createPreviousInternal :: String
 createPreviousInternal = "signal previousInternal: std_logic_vector(2 downto 0);\n"
 
@@ -509,12 +493,14 @@ createAllRisingStateCode states codes vars =
         ) ++ (removeFirstNewLine (beautify 1 othersNullBlock))
     )
 
+--Creates the code for a states falling edge.
 createFallingSingleState :: String -> [String] -> [String] -> [String] -> String -> String
 createFallingSingleState state code trans targets vars = "when " ++ state ++ " =>\n    case internalState is"
     ++ beautify 2 (createInternal (code!!1) ++ (createOnExit (code!!2)) ++ (createSingleTransitionCode trans targets)
         ++ (createReadSnapshot vars) ++(othersNullBlock)
     )
 
+--Creates the code for all states falling edge.
 createAllFallingStateCode :: [String] -> [[String]] -> [[String]] -> [[String]] -> String -> String
 createAllFallingStateCode states codes trans targets vars =
     removeFirstNewLine (beautify 1 (
@@ -689,6 +675,7 @@ ones n = onesCarry n ""
 
 --END CONVENIENCE CODE
 
+--Creates the VHDL code to check whether a machine has been suspended or not.
 createSuspendedLogic :: String
 createSuspendedLogic =
     "if (suspended = '1' and restart /= '1' and currentState /= " ++ toStateName suspended ++ ") then"
@@ -703,6 +690,7 @@ createSuspendedLogic =
     +\-> "restart <= '0';"
     +\> "end if;"
 
+--The default comment located at the top of a generated machine .vhd file.
 createMachineComment :: String -> String -> String
 createMachineComment name time =
     "--" ++ name ++ ".vhd" +\> "--\n--This is a generated file - DO NOT ALTER." +\> "--Please use an LLFSM editor to change this file."
