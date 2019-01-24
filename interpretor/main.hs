@@ -611,7 +611,7 @@ getMachineVars str = map getMachineVariableCode $ filter isMachineVar (lines str
 
 --Create the port delcaration in the entity statement
 createPortDeclaration :: [String] -> String
-createPortDeclaration xs = init (foldl (\x y -> x +\->  y) ("port (" +\-> "clk: in std_logic;" +\-> "suspended: inout std_logic;" +\-> "restart: inout std_logic;") xs) ++ "\n);"
+createPortDeclaration xs = init (foldl (\x y -> x +\->  y) ("port (" +\-> "clk: in std_logic;") xs) +\> ");"
 
 --Create entity block
 createEntity :: String -> String -> String -> String
