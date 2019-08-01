@@ -13,6 +13,25 @@ Folder structure:
 * reports
     - This folder contains relevant documents.
 
+## Installation
+1. Make sure you have cabal and haskell installed
+```
+sudo add-apt-repository -y ppa:hvr/ghc
+sudo apt-get update
+sudo apt-get install -y cabal-install ghc
+```
+2. Install the cabal packages
+```
+cabal update
+cabal install split
+```
+3. Install the interpretor
+```
+cd interpretor
+make
+make install
+```
+
 ## Compilation method
 Before running this process, you should have compiled the haskell program by running make in the interpretor directory.
 
