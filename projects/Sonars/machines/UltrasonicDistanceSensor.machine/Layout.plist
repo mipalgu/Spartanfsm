@@ -39,7 +39,7 @@
 				<real>0.92000000000000004</real>
 			</dict>
 			<key>editingMode</key>
-			<true/>
+			<false/>
 			<key>expanded</key>
 			<false/>
 			<key>h</key>
@@ -51,7 +51,7 @@
 			<key>onExitHeight</key>
 			<real>0.0</real>
 			<key>stateSelected</key>
-			<true/>
+			<false/>
 			<key>strokeColour</key>
 			<dict>
 				<key>alpha</key>
@@ -244,13 +244,13 @@
 			<array>
 				<dict>
 					<key>controlPoint1X</key>
-					<real>104.10125953209929</real>
+					<real>101.56919237567716</real>
 					<key>controlPoint1Y</key>
-					<real>144.15319195138736</real>
+					<real>164.84190812180825</real>
 					<key>controlPoint2X</key>
-					<real>105.05062976604965</real>
+					<real>106.98071958443917</real>
 					<key>controlPoint2Y</key>
-					<real>125.57659597569368</real>
+					<real>137.96488522811075</real>
 					<key>dstPointX</key>
 					<real>109.6864831888202</real>
 					<key>dstPointY</key>
