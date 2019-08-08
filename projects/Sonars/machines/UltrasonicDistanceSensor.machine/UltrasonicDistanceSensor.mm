@@ -7,11 +7,12 @@
 #include "UltrasonicDistanceSensor.h"
 
 #include "State_Initial.h"
-#include "State_Suspend.h"
+#include "State_SUSPENDED.h"
 #include "State_CountTime.h"
 #include "State_CalculateDistance.h"
 #include "State_Wait.h"
 #include "State_TriggerSignal.h"
+#include "State_InitialPseudoState.h"
 
 using namespace FSM;
 using namespace CLM;
@@ -27,11 +28,12 @@ extern "C"
 UltrasonicDistanceSensor::UltrasonicDistanceSensor(int mid, const char *name): CLMachine(mid, name)
 {
 	_states[0] = new FSMUltrasonicDistanceSensor::State::Initial;
-	_states[1] = new FSMUltrasonicDistanceSensor::State::Suspend;
+	_states[1] = new FSMUltrasonicDistanceSensor::State::SUSPENDED;
 	_states[2] = new FSMUltrasonicDistanceSensor::State::CountTime;
 	_states[3] = new FSMUltrasonicDistanceSensor::State::CalculateDistance;
 	_states[4] = new FSMUltrasonicDistanceSensor::State::Wait;
 	_states[5] = new FSMUltrasonicDistanceSensor::State::TriggerSignal;
+	_states[6] = new FSMUltrasonicDistanceSensor::State::InitialPseudoState;
 
 	setSuspendState(_states[1]);            // set suspend state
 	setInitialState(_states[0]);            // set initial state
@@ -45,4 +47,5 @@ UltrasonicDistanceSensor::~UltrasonicDistanceSensor()
 	delete _states[3];
 	delete _states[4];
 	delete _states[5];
+	delete _states[6];
 }

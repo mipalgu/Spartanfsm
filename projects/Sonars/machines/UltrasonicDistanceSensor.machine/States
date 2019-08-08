@@ -1,6 +1,7 @@
 Initial
-Suspend
+SUSPENDED
 CountTime
 CalculateDistance
 Wait
 TriggerSignal
+InitialPseudoState

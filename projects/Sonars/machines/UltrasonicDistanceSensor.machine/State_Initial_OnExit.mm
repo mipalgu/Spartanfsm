@@ -1,1 +1,1 @@
-distanceCalculation <= 0;
+distance <= 0;

@@ -1,5 +1,5 @@
 //
-// State_Suspend_VarRefs.mm
+// State_SUSPENDED_VarRefs.mm
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
@@ -7,7 +7,7 @@
 #pragma clang diagnostic ignored "-Wunused-variable"
 #pragma clang diagnostic ignored "-Wshadow"
 
-Suspend *_s = static_cast<Suspend *>(_state);
+SUSPENDED *_s = static_cast<SUSPENDED *>(_state);
 
 
 #pragma clang diagnostic pop

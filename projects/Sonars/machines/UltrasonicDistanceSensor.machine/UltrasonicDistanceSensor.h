@@ -16,12 +16,12 @@ namespace FSM
     {
         class UltrasonicDistanceSensor: public CLMachine
         {
-            CLState *_states[6];
+            CLState *_states[7];
         public:
             UltrasonicDistanceSensor(int mid  = 0, const char *name = "UltrasonicDistanceSensor");
             virtual ~UltrasonicDistanceSensor();
             virtual CLState * const * states() const { return _states; }
-            virtual int numberOfStates() const { return 6; }
+            virtual int numberOfStates() const { return 7; }
 #           include "UltrasonicDistanceSensor_Variables.h"
 #           include "UltrasonicDistanceSensor_Methods.h"
         };

@@ -1,10 +1,10 @@
 //
-// State_Suspend.h
+// State_InitialPseudoState.h
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
-#ifndef clfsm_UltrasonicDistanceSensor_State_Suspend_h
-#define clfsm_UltrasonicDistanceSensor_State_Suspend_h
+#ifndef clfsm_UltrasonicDistanceSensor_State_InitialPseudoState_h
+#define clfsm_UltrasonicDistanceSensor_State_InitialPseudoState_h
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wc++98-compat"
@@ -21,7 +21,7 @@ namespace FSM
     {
       namespace State
       {
-        class Suspend: public CLState
+        class InitialPseudoState: public CLState
         {
           class OnEntry: public CLAction
           {
@@ -47,21 +47,25 @@ namespace FSM
           {
             virtual void perform(CLMachine *, CLState *) const;
           };
-          #pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wzero-length-array"
-                CLTransition *_transitions[0];
-#pragma clang diagnostic pop
+                          class Transition_0: public CLTransition
+                {
+                public:
+                    Transition_0(int toState = 0): CLTransition(toState) {}
 
+                    virtual bool check(CLMachine *, CLState *) const;
+                };
+
+                CLTransition *_transitions[1];
 
                 public:
-                    Suspend(const char *name = "Suspend");
-                    virtual ~Suspend();
+                    InitialPseudoState(const char *name = "InitialPseudoState");
+                    virtual ~InitialPseudoState();
 
                     virtual CLTransition * const *transitions() const { return _transitions; }
-                    virtual int numberOfTransitions() const { return 0; }
+                    virtual int numberOfTransitions() const { return 1; }
 
-#                   include "State_Suspend_Variables.h"
-#                   include "State_Suspend_Methods.h"
+#                   include "State_InitialPseudoState_Variables.h"
+#                   include "State_InitialPseudoState_Methods.h"
             };
         }
       }
