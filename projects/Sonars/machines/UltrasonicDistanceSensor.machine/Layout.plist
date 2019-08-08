@@ -457,6 +457,24 @@
 					<key>srcPointY</key>
 					<real>281.2125091681275</real>
 				</dict>
+				<dict>
+					<key>controlPoint1X</key>
+					<real>191</real>
+					<key>controlPoint1Y</key>
+					<real>265</real>
+					<key>controlPoint2X</key>
+					<real>165.99797971809053</real>
+					<key>controlPoint2Y</key>
+					<real>162.21793101627082</real>
+					<key>dstPointX</key>
+					<real>136.3818738329874</real>
+					<key>dstPointY</key>
+					<real>117.14904703183669</real>
+					<key>srcPointX</key>
+					<real>261.91352504177678</real>
+					<key>srcPointY</key>
+					<real>288.69561959293594</real>
+				</dict>
 			</array>
 			<key>bgColour</key>
 			<dict>
