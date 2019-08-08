@@ -1,10 +1,10 @@
 //
-// State_CountTime.h
+// State_LostSignal.h
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
-#ifndef clfsm_UltrasonicDistanceSensor_State_CountTime_h
-#define clfsm_UltrasonicDistanceSensor_State_CountTime_h
+#ifndef clfsm_UltrasonicDistanceSensor_State_LostSignal_h
+#define clfsm_UltrasonicDistanceSensor_State_LostSignal_h
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wc++98-compat"
@@ -21,7 +21,7 @@ namespace FSM
     {
       namespace State
       {
-        class CountTime: public CLState
+        class LostSignal: public CLState
         {
           class OnEntry: public CLAction
           {
@@ -50,30 +50,22 @@ namespace FSM
                           class Transition_0: public CLTransition
                 {
                 public:
-                    Transition_0(int toState = 3): CLTransition(toState) {}
+                    Transition_0(int toState = 4): CLTransition(toState) {}
 
                     virtual bool check(CLMachine *, CLState *) const;
                 };
 
-                class Transition_1: public CLTransition
-                {
-                public:
-                    Transition_1(int toState = 7): CLTransition(toState) {}
-
-                    virtual bool check(CLMachine *, CLState *) const;
-                };
-
-                CLTransition *_transitions[2];
+                CLTransition *_transitions[1];
 
                 public:
-                    CountTime(const char *name = "CountTime");
-                    virtual ~CountTime();
+                    LostSignal(const char *name = "LostSignal");
+                    virtual ~LostSignal();
 
                     virtual CLTransition * const *transitions() const { return _transitions; }
-                    virtual int numberOfTransitions() const { return 2; }
+                    virtual int numberOfTransitions() const { return 1; }
 
-#                   include "State_CountTime_Variables.h"
-#                   include "State_CountTime_Methods.h"
+#                   include "State_LostSignal_Variables.h"
+#                   include "State_LostSignal_Methods.h"
             };
         }
       }

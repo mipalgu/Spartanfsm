@@ -5,3 +5,4 @@ CalculateDistance
 Wait
 TriggerSignal
 InitialPseudoState
+LostSignal

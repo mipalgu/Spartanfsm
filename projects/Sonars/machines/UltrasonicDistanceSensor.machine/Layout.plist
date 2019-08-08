@@ -39,7 +39,7 @@
 				<real>0.92000000000000004</real>
 			</dict>
 			<key>editingMode</key>
-			<false/>
+			<true/>
 			<key>expanded</key>
 			<false/>
 			<key>h</key>
@@ -51,7 +51,7 @@
 			<key>onExitHeight</key>
 			<real>0.0</real>
 			<key>stateSelected</key>
-			<false/>
+			<true/>
 			<key>strokeColour</key>
 			<dict>
 				<key>alpha</key>
@@ -108,9 +108,9 @@
 					<key>controlPoint2Y</key>
 					<real>156.75263095676087</real>
 					<key>dstPointX</key>
-					<real>771.15929547426754</real>
+					<real>715.75586172332874</real>
 					<key>dstPointY</key>
-					<real>165.00599822099909</real>
+					<real>104.49110721447552</real>
 					<key>srcPointX</key>
 					<real>556.04789568421165</real>
 					<key>srcPointY</key>
@@ -303,6 +303,78 @@
 			<real>78</real>
 			<key>y</key>
 			<real>201</real>
+			<key>zoomedInternalHeight</key>
+			<real>0.0</real>
+			<key>zoomedOnEntryHeight</key>
+			<real>0.0</real>
+			<key>zoomedOnExitHeight</key>
+			<real>0.0</real>
+		</dict>
+		<key>LostSignal</key>
+		<dict>
+			<key>Transitions</key>
+			<array>
+				<dict>
+					<key>controlPoint1X</key>
+					<real>803.62059460221371</real>
+					<key>controlPoint1Y</key>
+					<real>126.36397456577326</real>
+					<key>controlPoint2X</key>
+					<real>812.31029730110686</real>
+					<key>controlPoint2Y</key>
+					<real>148.68198728288664</real>
+					<key>dstPointX</key>
+					<real>799.57000659806465</real>
+					<key>dstPointY</key>
+					<real>144.41263969167153</real>
+					<key>srcPointX</key>
+					<real>794.6455715725001</real>
+					<key>srcPointY</key>
+					<real>104.23342258563198</real>
+				</dict>
+			</array>
+			<key>bgColour</key>
+			<dict>
+				<key>alpha</key>
+				<real>1</real>
+				<key>blue</key>
+				<real>0.92000000000000004</real>
+				<key>green</key>
+				<real>0.92000000000000004</real>
+				<key>red</key>
+				<real>0.92000000000000004</real>
+			</dict>
+			<key>editingMode</key>
+			<false/>
+			<key>expanded</key>
+			<false/>
+			<key>h</key>
+			<real>50</real>
+			<key>internalHeight</key>
+			<real>0.0</real>
+			<key>onEntryHeight</key>
+			<real>0.0</real>
+			<key>onExitHeight</key>
+			<real>0.0</real>
+			<key>stateSelected</key>
+			<false/>
+			<key>strokeColour</key>
+			<dict>
+				<key>alpha</key>
+				<real>1</real>
+				<key>blue</key>
+				<real>0.0</real>
+				<key>green</key>
+				<real>0.0</real>
+				<key>red</key>
+				<real>0.0</real>
+			</dict>
+			<key>w</key>
+			<real>100</real>
+			<key>x</key>
+			<real>755</real>
+			<key>y</key>
+			<real>89</real>
 			<key>zoomedInternalHeight</key>
 			<real>0.0</real>
 			<key>zoomedOnEntryHeight</key>

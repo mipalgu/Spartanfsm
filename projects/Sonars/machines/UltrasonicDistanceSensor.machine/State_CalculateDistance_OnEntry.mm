@@ -1,1 +1,1 @@
-distance <= (i * 0.0000002 * 34000) / 2;
+distance <= (i * 0.00000002 * 34000) / 2; --[count * period (20ns) * speedOfSound (34000cm/s)]/2
