@@ -1,1 +1,1 @@
-distance <= 0;
+distance <= (others => '0');

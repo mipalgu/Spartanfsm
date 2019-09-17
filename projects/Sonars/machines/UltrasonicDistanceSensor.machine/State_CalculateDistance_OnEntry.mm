@@ -1,1 +1,1 @@
-distance <= (3 * i * 0.00000002 * 34000) / 2; --[periods (3/count) * count * period (20ns) * speedOfSound (34000cm/s)]/2
+distance <= to_unsigned(to_integer("11" * i * SPEED_OF_SOUND) / to_integer(DOUBLE_FREQ), distance'length); --[periods (3/count) * count * period (20ns) * speedOfSound (34000cm/s)]/2
