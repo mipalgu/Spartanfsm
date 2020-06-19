@@ -325,7 +325,7 @@ createFallingEdge states codes trans targets vars = "if (falling_edge(clk)) then
     ++ beautifyTrimmed 2 (createReadSnapshot vars)
     +\> beautifyTrimmed 2 (createAllInternalStateCode "Internal" states (getActions codes 1) "internalState <= WriteSnapshot;")
     +\> beautifyTrimmed 2 (createAllInternalStateCode "OnExit" states (getActions codes 2) "internalState <= WriteSnapshot;")
-
+    +\> beautifyTrimmed 2 (createAllInternalStateCode "CheckTransition" states (map (\(trans, trgs) -> createTransitionCode trans trgs) (zip trans targets)) "")
     +\> beautifyTrimmed 2 othersNullBlock
 --  ++ createAllInternalStateCode "CheckTransition" states 
 --    ++ removeFirstNewLine (beautify 1 (createAllFallingStateCode states codes trans targets vars))
