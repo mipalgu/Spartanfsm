@@ -64,7 +64,8 @@ module SpartanLLFSM_Strings(
     tab,
     beautify,
     removeFirstNewLine,
-    getLocalTimeString
+    getLocalTimeString,
+    beautifyTrimmed
 ) where
 
 import Data.Time
@@ -150,6 +151,10 @@ beautifyLine n str | n <= 0    = str
 beautify :: Int -> String -> String
 beautify n str = foldl (\x y -> x ++ "\n" ++ y)  "" (map (\x -> beautifyLine n x) (lines str)) ++ "\n"
 
+beautifyTrimmed :: Int -> String -> String
+beautifyTrimmed n str | n <= 0    = str
+                      | otherwise = removeAllTrailingNewLines (removeAllLeadingNewLines (beautify n str))
+
 --A tab is defined as 4 spaces
 tab :: String
 tab = "    "
@@ -160,4 +165,13 @@ removeFirstNewLine str | str == []        = str
                        | head str == '\n' = tail str
                        | otherwise        = str
 
+removeAllLeadingNewLines :: String -> String
+removeAllLeadingNewLines str | str == []        = str 
+                             | head str == '\n' = removeAllLeadingNewLines (tail str)
+                             | otherwise        = str
+
+removeAllTrailingNewLines :: String -> String
+removeAllTrailingNewLines str | str == []        = str
+                              | last str == '\n' = removeAllTrailingNewLines (init str)
+                              | otherwise        = str
 --END STRING FORMATTING
