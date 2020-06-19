@@ -65,7 +65,8 @@ module SpartanLLFSM_Strings(
     beautify,
     removeFirstNewLine,
     getLocalTimeString,
-    beautifyTrimmed
+    beautifyTrimmed,
+    trimNewLines
 ) where
 
 import Data.Time
@@ -174,4 +175,7 @@ removeAllTrailingNewLines :: String -> String
 removeAllTrailingNewLines str | str == []        = str
                               | last str == '\n' = removeAllTrailingNewLines (init str)
                               | otherwise        = str
+
+trimNewLines :: String -> String
+trimNewLines str = removeAllLeadingNewLines (removeAllTrailingNewLines str)
 --END STRING FORMATTING
