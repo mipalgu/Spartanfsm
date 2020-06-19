@@ -297,12 +297,17 @@ createRisingEdge states codes vars = "if (rising_edge(clk)) then"
     ++ "    end case;\nend if;"
 
 createCodeForState :: String -> String -> String
-createCodeForState state code = "when " ++ state ++ "=>" +\> tab ++ code +\> ""
+createCodeForState state code | code == "" = ""
+                              | otherwise  = "when " ++ state ++ "=>" +\> beautifyTrimmed 1 code
+
+onlyValidNewLine :: String -> String -> String
+onlyValidNewLine str1 str2 | str1 == "" && str2 == "" = ""
+                           | otherwise                = trimNewLines (str1 +\> str2)
 
 createAllInternalStateCode :: String -> [String] -> [String] -> String -> String
-createAllInternalStateCode internalState states codes trailer = "when " ++ internalState ++ " =>" +\-> "case currentState is" +\-> tab
-    ++ foldl (\x y -> x +\-> tab ++ y) "" (map (\(s,c) -> createCodeForState s c) $ zip states codes)
-    +\-> tab ++ othersNullBlock +\-> "end case;" +\-> trailer +\> ""
+createAllInternalStateCode internalState states codes trailer = "when " ++ internalState ++ " =>" +\> beautifyTrimmed 1 ("case currentState is"
+    +\> beautifyTrimmed 1 (trimNewLines (foldl onlyValidNewLine "" (map (\(s,c) -> createCodeForState s c) $ zip states codes))
+    +\> othersNullBlock) +\> "end case;" +\> trailer)
 
 getActions :: [[String]] -> Int -> [String]
 getActions codes index = map (\x -> x!!index) codes
@@ -317,12 +322,15 @@ emptyStringLists size = emptyStringListsCarry size []
 createFallingEdge :: [String] -> [[String]] -> [[String]] -> [[String]] -> String -> String
 createFallingEdge states codes trans targets vars = "if (falling_edge(clk)) then"
     ++ beautify 1 "case internalState is"
-    ++ createReadSnapshot vars
-    ++ createAllInternalStateCode "Internal" states (getActions codes 1) "internalState <= WriteSnapshot;"
-    ++ createAllInternalStateCode "OnExit" states (getActions codes 2) "internalState <= WriteSnapshot;"
+    ++ beautifyTrimmed 2 (createReadSnapshot vars)
+    +\> beautifyTrimmed 2 (createAllInternalStateCode "Internal" states (getActions codes 1) "internalState <= WriteSnapshot;")
+    +\> beautifyTrimmed 2 (createAllInternalStateCode "OnExit" states (getActions codes 2) "internalState <= WriteSnapshot;")
+
+    +\> beautifyTrimmed 2 othersNullBlock
 --  ++ createAllInternalStateCode "CheckTransition" states 
-    ++ removeFirstNewLine (beautify 1 (createAllFallingStateCode states codes trans targets vars))
-    ++ "    end case;\nend if;"
+--    ++ removeFirstNewLine (beautify 1 (createAllFallingStateCode states codes trans targets vars))
+    +\> beautifyTrimmed 1 "end case;"
+    +\> "end if;"
 --    ++ beautify 1 (createAllTransitionsCode states trans targets)
 --   ++ removeFirstNewLine (beautify 2 (createReadSnapshot vars))
 --    ++ removeFirstNewLine (beautify 1 (removeFirstNewLine (beautify 1 othersNullBlock)))
