@@ -54,6 +54,8 @@
 
 --CONVENIENCE CODE
 
+module SpartanLLFSM_Helpers(decToBin, ones) where
+
 --Converts decimal to a binary number
 decToBin :: Int -> Int -> String
 decToBin size num = sanitiseBin size $ calcBin size num ""

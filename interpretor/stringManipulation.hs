@@ -52,6 +52,22 @@
 -- or write to the Free Software Foundation, Inc., 51 Franklin Street,
 -- Fifth Floor, Boston, MA  02110-1301, USA.
 
+module SpartanLLFSM_Strings(
+    trim,
+    ioTrim,
+    contains,
+    isWhitespace,
+    removeWhitespace,
+    (+\>),
+    (+\->),
+    (++>),
+    tab,
+    beautify,
+    removeFirstNewLine
+) where
+
+import Data.Time
+
 --STRING FORMATING
 
 --Returns a formatted string containing the local time and timezone.
@@ -64,16 +80,6 @@ getLocalTimeString = do
 to24hrTime :: Int -> String
 to24hrTime time | time < 10 = "0" ++ (show time)
                 | otherwise = show time
-
---Checks the states for the initial pseudostate. If the pseudostate is not present, the program errors out.
-hasInitialPseudostate :: [String] -> IO Bool
-hasInitialPseudostate states | contains initialPseudostate states = return True
-                             | otherwise                          = error ("No " ++ initialPseudostate ++ " State")
-
---Checks the states for the suspended state. If this state is not present, then the program will error out.
-hasSuspended :: [String] -> IO Bool
-hasSuspended states | contains suspended states = return True
-                    | otherwise                 = error ("No " ++ suspended ++ " State")
 
 --Checks a list contains an element.
 contains :: Eq a => a -> [a] -> Bool

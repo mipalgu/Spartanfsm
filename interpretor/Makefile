@@ -1,4 +1,4 @@
-SRCS?=main.hs
+SRCS?=main.hs io.hs stringManipulation.hs LLFSMFormat.hs VHDLGeneration.hs helpers.hs
 E?=@
 
 build:

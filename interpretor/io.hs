@@ -52,6 +52,12 @@
 -- or write to the Free Software Foundation, Inc., 51 Franklin Street,
 -- Fifth Floor, Boston, MA  02110-1301, USA.
 
+
+module SpartanLLFSM_IO(getFileContents, callLs) where
+
+import SpartanLLFSM_Strings
+import System.Process
+
 --FILE IO AND SYSTEM CALLS
 
 --Get all of the contents of a file.
@@ -62,24 +68,5 @@ getFileContents path = readFile path >>= ioTrim
 callLs :: String -> IO String
 callLs dir = readProcess ("ls") [dir] ""
 
---Returns a list of transition files from a directory.
-getAllTransitionFiles :: String -> IO [String]
-getAllTransitionFiles dir = callLs dir >>= seperateTransitions 
-
---Gets the contents of a transition file
-openTrans :: String -> String -> IO String
-openTrans dir t = getFileContents (dir ++ "/" ++ t)
-
---Gets the contents of all transitions
-openAllTrans :: String -> [String] -> IO [String]
-openAllTrans dir ts = sequence (map (\x -> openTrans dir x) ts)
-
---Gets the variables
-getVariables :: String -> String -> IO String
-getVariables dir name = getFileContents (dir ++ "/" ++ name ++ "_Variables.h")
-
--- Gets the includes (libaries) for the machine
-getIncludes :: String -> String -> IO String
-getIncludes dir name = getFileContents(dir ++ "/" ++ name ++ "_Includes.h")
 
 --END FILE IO AND SYSTEM CALLS

@@ -52,6 +52,17 @@
 -- or write to the Free Software Foundation, Inc., 51 Franklin Street,
 -- Fifth Floor, Boston, MA  02110-1301, USA.
 
+module SpartanLLFSM_VHDLGeneration(
+    createEntity,
+    createArchitecture,
+    toStateName
+) where
+
+import SpartanLLFSM_Strings
+import Data.List.Split
+import SpartanLLFSM_Helpers
+import SpartanLLFSM_Format
+
 -- VHDL CODE
 
 -- Constant when others => null vhdl code

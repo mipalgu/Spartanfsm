@@ -52,6 +52,26 @@
 -- or write to the Free Software Foundation, Inc., 51 Franklin Street,
 -- Fifth Floor, Boston, MA  02110-1301, USA.
 
+module SpartanLLFSM_Format(
+    getAllStates,
+    hasInitialPseudostate,
+    hasSuspended,
+    getAllInternals,
+    getAllTransCodeForAllStates,
+    getAllTargets,
+    getNumberOfTargets,
+    getVariables,
+    getIncludes,
+    suspended
+) where
+
+import SpartanLLFSM_Strings
+import SpartanLLFSM_IO
+import Data.List
+import Data.List.Split
+import Data.Char
+import SpartanLLFSM_VHDLGeneration
+
 --Initial Pseudostate name.
 initialPseudostate :: String
 initialPseudostate = "InitialPseudoState"
@@ -59,6 +79,16 @@ initialPseudostate = "InitialPseudoState"
 --Suspended state name.
 suspended :: String
 suspended = "SUSPENDED"
+
+--Checks the states for the initial pseudostate. If the pseudostate is not present, the program errors out.
+hasInitialPseudostate :: [String] -> IO Bool
+hasInitialPseudostate states | contains initialPseudostate states = return True
+                             | otherwise                          = error ("No " ++ initialPseudostate ++ " State")
+
+--Checks the states for the suspended state. If this state is not present, then the program will error out.
+hasSuspended :: [String] -> IO Bool
+hasSuspended states | contains suspended states = return True
+                    | otherwise                 = error ("No " ++ suspended ++ " State")
 
 --STATE CODE
 
@@ -105,6 +135,27 @@ getAllInternals dir states = sequence $ map (getInternals dir) states
 --Checks if a file contains "Transition" in the file name
 hasTransitionInFileName :: String -> Bool
 hasTransitionInFileName file = length (filter (\x -> x == "Transition") (splitOn "_" file)) > 0
+
+--Returns a list of transition files from a directory.
+getAllTransitionFiles :: String -> IO [String]
+getAllTransitionFiles dir = callLs dir >>= seperateTransitions 
+
+--Gets the contents of a transition file
+openTrans :: String -> String -> IO String
+openTrans dir t = getFileContents (dir ++ "/" ++ t)
+
+--Gets the contents of all transitions
+openAllTrans :: String -> [String] -> IO [String]
+openAllTrans dir ts = sequence (map (\x -> openTrans dir x) ts)
+
+--Gets the variables
+getVariables :: String -> String -> IO String
+getVariables dir name = getFileContents (dir ++ "/" ++ name ++ "_Variables.h")
+
+-- Gets the includes (libaries) for the machine
+getIncludes :: String -> String -> IO String
+getIncludes dir name = getFileContents(dir ++ "/" ++ name ++ "_Includes.h")
+
 --END STATE CODE
 
 --TRANSITION CODE

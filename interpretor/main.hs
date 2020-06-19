@@ -4,7 +4,9 @@ import Data.List
 import Data.Char
 import System.Environment
 import System.Directory
-import Data.Time
+import SpartanLLFSM_IO
+import SpartanLLFSM_Strings
+import SpartanLLFSM_Format
 
 main :: IO ()
 main = do
