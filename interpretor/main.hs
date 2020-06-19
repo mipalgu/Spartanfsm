@@ -517,10 +517,31 @@ createRisingEdge states codes vars = "if (rising_edge(clk)) then"
     ++ removeFirstNewLine (createAllRisingStateCode states codes vars)
     ++ "    end case;\nend if;"
 
+createCodeForState :: String -> String -> String
+createCodeForState state code = "when " ++ state ++ "=>" +\> tab ++ code +\> ""
+
+createAllInternalStateCode :: String -> [String] -> [String] -> String -> String
+createAllInternalStateCode internalState states codes trailer = "when " ++ internalState ++ " =>" +\> tab ++ "case currentState is" +\> tab ++ tab
+    ++ foldl (\x y -> x +\> tab ++ tab ++ y) "" (map createCodeForState states codes)
+    +\> tab ++ tab ++ othersNullBlock +\> tab ++ "end case;" +\> tab ++ trailer +\> ""
+
+getActions :: [[String]] -> Int -> [String]
+getActions codes index = map (\x -> x!!index) codes
+
+emptyStringLists :: Int -> [String]
+emptyStringLists size = emptyStringListsCarry size []
+    where emptyStringListsCarry :: Int -> [String] -> [String]
+          emptyStringListsCarry size carry | size <= 0 = carry
+                                           | otherwise = emptyStringListCarry (size - 1) ("" : carry)
+
 --Create Falling edge code
 createFallingEdge :: [String] -> [[String]] -> [[String]] -> [[String]] -> String -> String
 createFallingEdge states codes trans targets vars = "if (falling_edge(clk)) then"
-    ++ beautify 1 "case currentState is"
+    ++ beautify 1 "case internalState is"
+    ++ createReadSnapshot vars
+    ++ createAllInternalStateCode "Internal" states (getActions codes 1) "internalState <= WriteSnapshot;"
+    ++ createAllInternalStateCode "OnExit" states (getActions codes 2) "internalState <= WriteSnapshot;"
+    ++ createAllInternalStateCode "CheckTransition" states 
     ++ removeFirstNewLine (beautify 1 (createAllFallingStateCode states codes trans targets vars))
     ++ "    end case;\nend if;"
 --    ++ beautify 1 (createAllTransitionsCode states trans targets)
