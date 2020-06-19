@@ -7,6 +7,7 @@ import System.Directory
 import SpartanLLFSM_IO
 import SpartanLLFSM_Strings
 import SpartanLLFSM_Format
+import SpartanLLFSM_VHDLGeneration
 
 main :: IO ()
 main = do

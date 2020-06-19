@@ -63,7 +63,8 @@ module SpartanLLFSM_Strings(
     (++>),
     tab,
     beautify,
-    removeFirstNewLine
+    removeFirstNewLine,
+    getLocalTimeString
 ) where
 
 import Data.Time

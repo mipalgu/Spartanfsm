@@ -62,7 +62,9 @@ module SpartanLLFSM_Format(
     getNumberOfTargets,
     getVariables,
     getIncludes,
-    suspended
+    suspended,
+    allTargetsToState,
+    initialPseudostate
 ) where
 
 import SpartanLLFSM_Strings
@@ -70,7 +72,6 @@ import SpartanLLFSM_IO
 import Data.List
 import Data.List.Split
 import Data.Char
-import SpartanLLFSM_VHDLGeneration
 
 --Initial Pseudostate name.
 initialPseudostate :: String
