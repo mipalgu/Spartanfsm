@@ -1,5 +1,5 @@
 //
-// State_Wait_FuncRefs.mm
+// State_ResetEcho_FuncRefs.mm
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //

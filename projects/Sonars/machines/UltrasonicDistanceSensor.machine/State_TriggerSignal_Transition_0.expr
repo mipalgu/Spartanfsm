@@ -1,1 +1,1 @@
-i >= x"0001F4" and echo = '0'
+i >= x"0000FA" and echo = '0'

@@ -1,10 +1,10 @@
 //
-// State_Wait.h
+// State_ResetEcho.h
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
-#ifndef clfsm_UltrasonicDistanceSensor_State_Wait_h
-#define clfsm_UltrasonicDistanceSensor_State_Wait_h
+#ifndef clfsm_UltrasonicDistanceSensor_State_ResetEcho_h
+#define clfsm_UltrasonicDistanceSensor_State_ResetEcho_h
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wc++98-compat"
@@ -21,7 +21,7 @@ namespace FSM
     {
       namespace State
       {
-        class Wait: public CLState
+        class ResetEcho: public CLState
         {
           class OnEntry: public CLAction
           {
@@ -50,7 +50,7 @@ namespace FSM
                           class Transition_0: public CLTransition
                 {
                 public:
-                    Transition_0(int toState = 5): CLTransition(toState) {}
+                    Transition_0(int toState = 4): CLTransition(toState) {}
 
                     virtual bool check(CLMachine *, CLState *) const;
                 };
@@ -58,14 +58,14 @@ namespace FSM
                 CLTransition *_transitions[1];
 
                 public:
-                    Wait(const char *name = "Wait");
-                    virtual ~Wait();
+                    ResetEcho(const char *name = "ResetEcho");
+                    virtual ~ResetEcho();
 
                     virtual CLTransition * const *transitions() const { return _transitions; }
                     virtual int numberOfTransitions() const { return 1; }
 
-#                   include "State_Wait_Variables.h"
-#                   include "State_Wait_Methods.h"
+#                   include "State_ResetEcho_Variables.h"
+#                   include "State_ResetEcho_Methods.h"
             };
         }
       }
