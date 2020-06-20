@@ -63,3 +63,7 @@
 *.sh
 *.bat
 *.drc
+*.debug
+*.jou
+*.edif
+*.xdl
