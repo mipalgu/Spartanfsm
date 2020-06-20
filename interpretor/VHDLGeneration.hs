@@ -336,12 +336,25 @@ createFallingEdge states codes trans targets vars = "if (falling_edge(clk)) then
 --    ++ removeFirstNewLine (beautify 1 (removeFirstNewLine (beautify 1 othersNullBlock)))
 --    ++ "    end case;\nend if;"
 
+createAllInRisingEdge :: [String] -> [[String]] -> [[String]] -> [[String]] -> String -> String
+createAllInRisingEdge states codes trans targets vars = "if (rising_edge(clk)) then"
+    ++ beautify 1 "case internalState is"
+    ++ beautifyTrimmed 2 (createReadSnapshot vars)
+    +\> beautifyTrimmed 2 (createAllInternalStateCode "OnEntry" states (getActions codes 0) "internalState <= CheckTransition;")
+    +\> beautifyTrimmed 2 (createAllInternalStateCode "CheckTransition" states (map (\(trans, trgs) -> createTransitionCode trans trgs) (zip trans targets)) "")
+    +\> beautifyTrimmed 2 (createAllInternalStateCode "Internal" states (getActions codes 1) "internalState <= WriteSnapshot;")
+    +\> beautifyTrimmed 2 (createAllInternalStateCode "OnExit" states (getActions codes 2) "internalState <= WriteSnapshot;")
+    +\> beautifyTrimmed 2 (createWriteSnapshot vars)
+    +\> beautifyTrimmed 2 othersNullBlock 
+    +\> beautifyTrimmed 1 "end case;"
+    +\> "end if;"
+
 --create process block
 createProcessBlock :: [String] -> [[String]] -> [[String]] -> [[String]] -> String -> String
 createProcessBlock states codes transitions targets vars = "process (clk)\n    begin"
 --  ++ beautify 2 (createSuspendedLogic)
-    ++ beautify 2 (createRisingEdge states codes vars) -- add removeFirstNewLine when adding suspend logic
-    ++ removeFirstNewLine (beautify 2 (createFallingEdge states codes transitions targets vars))
+    ++ beautify 2 (createAllInRisingEdge states codes transitions targets vars) -- add removeFirstNewLine when adding suspend logic
+--    ++ removeFirstNewLine (beautify 2 (createFallingEdge states codes transitions targets vars))
     ++ "    end process;"
 
 --Create entire architecture block
