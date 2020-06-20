@@ -199,8 +199,8 @@ createArchitectureVariables size states vars = internalStateVhdl
     ++ (createCurrentState (states!!0) (numberOfBits (length states)))
     ++ createTargetState (numberOfBits $ length states)
     ++ createPreviousRinglet (numberOfBits $ length states) (states!!0)
-    ++ createSuspendedFrom (numberOfBits $ length states)
-    ++ createPreviousInternal
+--    ++ createSuspendedFrom (numberOfBits $ length states)
+--    ++ createPreviousInternal
     ++ createArchitectureSnapshots (getExternalVars vars)
     ++ createVariables (getMachineVars vars)
 
