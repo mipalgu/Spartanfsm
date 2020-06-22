@@ -7,7 +7,7 @@
 #include "BinaryToSingleDigitBCDEncoder.h"
 
 #include "State_Initial.h"
-#include "State_Suspend.h"
+#include "State_SUSPENDED.h"
 #include "State_SetBusy.h"
 #include "State_WaitForNewInput.h"
 #include "State_CheckCarryBit.h"
@@ -17,6 +17,7 @@
 #include "State_EncodeWithoutCarry.h"
 #include "State_CountShifts.h"
 #include "State_CheckLastCarry.h"
+#include "State_InitialPseudoState.h"
 
 using namespace FSM;
 using namespace CLM;
@@ -32,7 +33,7 @@ extern "C"
 BinaryToSingleDigitBCDEncoder::BinaryToSingleDigitBCDEncoder(int mid, const char *name): CLMachine(mid, name)
 {
 	_states[0] = new FSMBinaryToSingleDigitBCDEncoder::State::Initial;
-	_states[1] = new FSMBinaryToSingleDigitBCDEncoder::State::Suspend;
+	_states[1] = new FSMBinaryToSingleDigitBCDEncoder::State::SUSPENDED;
 	_states[2] = new FSMBinaryToSingleDigitBCDEncoder::State::SetBusy;
 	_states[3] = new FSMBinaryToSingleDigitBCDEncoder::State::WaitForNewInput;
 	_states[4] = new FSMBinaryToSingleDigitBCDEncoder::State::CheckCarryBit;
@@ -42,6 +43,7 @@ BinaryToSingleDigitBCDEncoder::BinaryToSingleDigitBCDEncoder(int mid, const char
 	_states[8] = new FSMBinaryToSingleDigitBCDEncoder::State::EncodeWithoutCarry;
 	_states[9] = new FSMBinaryToSingleDigitBCDEncoder::State::CountShifts;
 	_states[10] = new FSMBinaryToSingleDigitBCDEncoder::State::CheckLastCarry;
+	_states[11] = new FSMBinaryToSingleDigitBCDEncoder::State::InitialPseudoState;
 
 	setSuspendState(_states[1]);            // set suspend state
 	setInitialState(_states[0]);            // set initial state
@@ -60,4 +62,5 @@ BinaryToSingleDigitBCDEncoder::~BinaryToSingleDigitBCDEncoder()
 	delete _states[8];
 	delete _states[9];
 	delete _states[10];
+	delete _states[11];
 }

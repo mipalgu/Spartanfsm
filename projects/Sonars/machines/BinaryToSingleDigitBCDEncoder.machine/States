@@ -1,5 +1,5 @@
 Initial
-Suspend
+SUSPENDED
 SetBusy
 WaitForNewInput
 CheckCarryBit
@@ -9,3 +9,4 @@ EncodeWithCarry
 EncodeWithoutCarry
 CountShifts
 CheckLastCarry
+InitialPseudoState

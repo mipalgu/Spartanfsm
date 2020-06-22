@@ -16,12 +16,12 @@ namespace FSM
     {
         class BinaryToSingleDigitBCDEncoder: public CLMachine
         {
-            CLState *_states[11];
+            CLState *_states[12];
         public:
             BinaryToSingleDigitBCDEncoder(int mid  = 0, const char *name = "BinaryToSingleDigitBCDEncoder");
             virtual ~BinaryToSingleDigitBCDEncoder();
             virtual CLState * const * states() const { return _states; }
-            virtual int numberOfStates() const { return 11; }
+            virtual int numberOfStates() const { return 12; }
 #           include "BinaryToSingleDigitBCDEncoder_Variables.h"
 #           include "BinaryToSingleDigitBCDEncoder_Methods.h"
         };
