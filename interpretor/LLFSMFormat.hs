@@ -184,13 +184,20 @@ getAllTransCodeForAllStates dir states = sequence $ map (getTransCodeForState di
 --Gets the line that has transition n
 getTargetTransitionLine :: Int -> String -> String
 getTargetTransitionLine n contents =
-    (lines (splitOn "}" (splitOn "{" ((splitOn ("class Transition_" ++ (show n)) contents)!!1)!!1)!!0))!!2
+    trim ((lines (splitOn "}" (splitOn "{" ((splitOn ("class Transition_" ++ (show n)) contents)!!1)!!1)!!0))!!2)
+
+getTransitionSegment :: String -> String
+getTransitionSegment transitionLine = (splitOn "= " ((splitOn ":"transitionLine)!!0))!!1
+
+getTargetStateFromTransitionLine :: String -> String
+getTargetStateFromTransitionLine transitionLine = trim ((splitOn ")" (getTransitionSegment transitionLine))!!0)
 
 --Gets transition n
 getTargetTransition :: Int -> String -> IO Int
-getTargetTransition n contents = case (trim ((splitOn ")" ((splitOn "= " (getTargetTransitionLine n contents))!!1))!!0)) of
-    x : [] -> return $ digitToInt x
-    _      -> error ("Failed to get target transition " ++ show n ++ " for:\n" ++ contents) 
+getTargetTransition n contents = return $ (read (getTargetStateFromTransitionLine (getTargetTransitionLine n contents))::Int)
+--    x : []-> return $ digitToInt x 
+--    _      -> error ("Failed to get target for transition " ++ show n ++ " in line " +\-> trim (getTargetTransitionLine n contents)
+--                +\> "Received:" +\-> getTargetStateFromTransitionLine (getTargetTransitionLine n contents) +\> "File:" +\> contents) 
 
 --Gets the transition number from a file
 readTargetTransition :: Int -> String -> IO Int
