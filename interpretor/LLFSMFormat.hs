@@ -190,7 +190,7 @@ getTargetTransitionLine n contents =
 getTargetTransition :: Int -> String -> IO Int
 getTargetTransition n contents = case (trim ((splitOn ")" ((splitOn "= " (getTargetTransitionLine n contents))!!1))!!0)) of
     x : [] -> return $ digitToInt x
-    _      -> error "Failed to get target transition"
+    _      -> error ("Failed to get target transition " ++ show n ++ " for:\n" ++ contents) 
 
 --Gets the transition number from a file
 readTargetTransition :: Int -> String -> IO Int
