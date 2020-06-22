@@ -7,6 +7,5 @@ SetHighCarryBit
 SetLowCarryBit
 EncodeWithCarry
 EncodeWithoutCarry
-CountShifts
 CheckLastCarry
 InitialPseudoState

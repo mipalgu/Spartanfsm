@@ -15,7 +15,6 @@
 #include "State_SetLowCarryBit.h"
 #include "State_EncodeWithCarry.h"
 #include "State_EncodeWithoutCarry.h"
-#include "State_CountShifts.h"
 #include "State_CheckLastCarry.h"
 #include "State_InitialPseudoState.h"
 
@@ -41,9 +40,8 @@ BinaryToSingleDigitBCDEncoder::BinaryToSingleDigitBCDEncoder(int mid, const char
 	_states[6] = new FSMBinaryToSingleDigitBCDEncoder::State::SetLowCarryBit;
 	_states[7] = new FSMBinaryToSingleDigitBCDEncoder::State::EncodeWithCarry;
 	_states[8] = new FSMBinaryToSingleDigitBCDEncoder::State::EncodeWithoutCarry;
-	_states[9] = new FSMBinaryToSingleDigitBCDEncoder::State::CountShifts;
-	_states[10] = new FSMBinaryToSingleDigitBCDEncoder::State::CheckLastCarry;
-	_states[11] = new FSMBinaryToSingleDigitBCDEncoder::State::InitialPseudoState;
+	_states[9] = new FSMBinaryToSingleDigitBCDEncoder::State::CheckLastCarry;
+	_states[10] = new FSMBinaryToSingleDigitBCDEncoder::State::InitialPseudoState;
 
 	setSuspendState(_states[1]);            // set suspend state
 	setInitialState(_states[0]);            // set initial state
@@ -62,5 +60,4 @@ BinaryToSingleDigitBCDEncoder::~BinaryToSingleDigitBCDEncoder()
 	delete _states[8];
 	delete _states[9];
 	delete _states[10];
-	delete _states[11];
 }

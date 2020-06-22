@@ -1,1 +1,0 @@
-bitsShifted <= bitsShifted + 1;
