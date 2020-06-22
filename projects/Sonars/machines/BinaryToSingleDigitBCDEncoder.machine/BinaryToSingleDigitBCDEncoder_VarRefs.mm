@@ -15,5 +15,6 @@ BinaryToSingleDigitBCDEncoder *_m = static_cast<BinaryToSingleDigitBCDEncoder *>
 #extern	&carry: out std_logic = _m->carry: out std_logic;	///<
 #machine	&signal oldBinary: std_logic_vector(3 downto 0) = _m->signal oldBinary: std_logic_vector(3 downto 0);	///<
 #machine	&signal bitsShifted: unsigned(2 downto 0) = _m->signal bitsShifted: unsigned(2 downto 0);	///<
+#machine	&signal oldBcd std_logic_vector(3 downto 0) = _m->signal oldBcd std_logic_vector(3 downto 0);	///<
 
 #pragma clang diagnostic pop
