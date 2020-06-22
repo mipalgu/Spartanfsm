@@ -9,4 +9,4 @@
 #extern	carry: out std_logic;	///<
 #machine	signal oldBinary: std_logic_vector(3 downto 0);	///<
 #machine	signal bitsShifted: unsigned(2 downto 0);	///<
-#machine	signal oldBcd std_logic_vector(3 downto 0);	///<
+#machine	signal oldBcd: std_logic_vector(3 downto 0);	///<
