@@ -1,2 +1,2 @@
 busy <= '1';
-bitsShifted <= 0;
+bitsShifted <= "000";
