@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-06-22 09:50 EDT
+--Date Generated: 2020-06-22 10:00 EDT
 --
 
 library IEEE;
@@ -82,12 +82,12 @@ process (clk)
                         when STATE_SetLowCarryBit=>
                             carry <= '0';
                         when STATE_EncodeWithCarry=>
-                            bcd(0) <= binary(3 - to_integer(bitsShifted));
+                            bcd(0) <= oldBinary(3 - to_integer(bitsShifted));
                             bcd(1) <= not oldBcd(0);
                             bcd(2) <= not (oldBcd(1) xor oldBcd(0));
                             bcd(3) <= oldBcd(3) and oldBcd(0);
                         when STATE_EncodeWithoutCarry=>
-                            bcd <= oldBcd(2 downto 0) & binary(3 - to_integer(bitsShifted));
+                            bcd <= oldBcd(2 downto 0) & oldBinary(3 - to_integer(bitsShifted));
                         when STATE_CountShifts=>
                             bitsShifted <= bitsShifted + 1;
                         when STATE_CheckLastCarry=>
