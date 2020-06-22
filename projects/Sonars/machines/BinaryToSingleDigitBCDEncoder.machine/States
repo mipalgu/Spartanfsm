@@ -1,0 +1,11 @@
+Initial
+Suspend
+SetBusy
+WaitForNewInput
+CheckCarryBit
+SetHighCarryBit
+SetLowCarryBit
+EncodeWithCarry
+EncodeWithoutCarry
+CountShifts
+CheckLastCarry

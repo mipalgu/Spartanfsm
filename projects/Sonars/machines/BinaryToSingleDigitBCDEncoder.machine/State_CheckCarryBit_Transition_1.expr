@@ -1,0 +1,1 @@
+bcd(2) AND (bcd(1) OR bcd(0))
