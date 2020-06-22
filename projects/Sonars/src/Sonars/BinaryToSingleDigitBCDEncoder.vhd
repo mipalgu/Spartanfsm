@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-06-22 10:00 EDT
+--Date Generated: 2020-06-22 10:43 EDT
 --
 
 library IEEE;
@@ -38,9 +38,8 @@ architecture LLFSM of BinaryToSingleDigitBCDEncoder is
     constant STATE_SetLowCarryBit: std_logic_vector(3 downto 0) := "0110";
     constant STATE_EncodeWithCarry: std_logic_vector(3 downto 0) := "0111";
     constant STATE_EncodeWithoutCarry: std_logic_vector(3 downto 0) := "1000";
-    constant STATE_CountShifts: std_logic_vector(3 downto 0) := "1001";
-    constant STATE_CheckLastCarry: std_logic_vector(3 downto 0) := "1010";
-    constant STATE_InitialPseudoState: std_logic_vector(3 downto 0) := "1011";
+    constant STATE_CheckLastCarry: std_logic_vector(3 downto 0) := "1001";
+    constant STATE_InitialPseudoState: std_logic_vector(3 downto 0) := "1010";
     signal currentState: std_logic_vector(3 downto 0) := STATE_Initial;
     signal targetState: std_logic_vector(3 downto 0) := currentState;
     signal previousRinglet: std_logic_vector(3 downto 0) := STATE_Initial xor "1111";
@@ -77,6 +76,8 @@ process (clk)
                             bitsShifted <= "000";
                         when STATE_WaitForNewInput=>
                             busy <= '0';
+                        when STATE_CheckCarryBit=>
+                            bitsShifted <= bitsShifted + 1;
                         when STATE_SetHighCarryBit=>
                             carry <= '1';
                         when STATE_SetLowCarryBit=>
@@ -88,8 +89,6 @@ process (clk)
                             bcd(3) <= oldBcd(3) and oldBcd(0);
                         when STATE_EncodeWithoutCarry=>
                             bcd <= oldBcd(2 downto 0) & oldBinary(3 - to_integer(bitsShifted));
-                        when STATE_CountShifts=>
-                            bitsShifted <= bitsShifted + 1;
                         when STATE_CheckLastCarry=>
                             oldBcd <= bcd;
                         when others =>
@@ -122,13 +121,16 @@ process (clk)
                                 internalState <= Internal;
                             end if;
                         when STATE_CheckCarryBit=>
-                            if (bcd(3) = '1') then
+                            if (bitsShifted = 4) then
+                                targetState <= STATE_WaitForNewInput;
+                                internalState <= OnExit;
+                            elsif (bcd(3) = '1') and (not (bitsShifted = 4)) then
                                 targetState <= STATE_SetHighCarryBit;
                                 internalState <= OnExit;
-                            elsif (bcd(2) = '1' AND (bcd(1) = '1' OR bcd(0) = '1')) and (not (bcd(3) = '1')) then
+                            elsif (bcd(2) = '1' AND (bcd(1) = '1' OR bcd(0) = '1')) and (not (bcd(3) = '1')) and (not (bitsShifted = 4)) then
                                 targetState <= STATE_SetHighCarryBit;
                                 internalState <= OnExit;
-                            elsif (true) and (not (bcd(2) = '1' AND (bcd(1) = '1' OR bcd(0) = '1'))) and (not (bcd(3) = '1')) then
+                            elsif (true) and (not (bcd(2) = '1' AND (bcd(1) = '1' OR bcd(0) = '1'))) and (not (bcd(3) = '1')) and (not (bitsShifted = 4)) then
                                 targetState <= STATE_SetLowCarryBit;
                                 internalState <= OnExit;
                             else
@@ -136,14 +138,14 @@ process (clk)
                             end if;
                         when STATE_SetHighCarryBit=>
                             if (true) then
-                                targetState <= STATE_CountShifts;
+                                targetState <= STATE_CheckLastCarry;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
                             end if;
                         when STATE_SetLowCarryBit=>
                             if (true) then
-                                targetState <= STATE_CountShifts;
+                                targetState <= STATE_CheckLastCarry;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
@@ -158,16 +160,6 @@ process (clk)
                         when STATE_EncodeWithoutCarry=>
                             if (true) then
                                 targetState <= STATE_CheckCarryBit;
-                                internalState <= OnExit;
-                            else
-                                internalState <= Internal;
-                            end if;
-                        when STATE_CountShifts=>
-                            if (bitsShifted < 4) then
-                                targetState <= STATE_CheckLastCarry;
-                                internalState <= OnExit;
-                            elsif (true) and (not (bitsShifted < 4)) then
-                                targetState <= STATE_WaitForNewInput;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
