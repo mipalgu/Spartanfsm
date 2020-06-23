@@ -3,8 +3,8 @@
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
-#ifndef clfsm_8BitBinaryToBCDEncoder_State_Reset_h
-#define clfsm_8BitBinaryToBCDEncoder_State_Reset_h
+#ifndef clfsm_EightBitBinaryToBCDEncoder_State_Reset_h
+#define clfsm_EightBitBinaryToBCDEncoder_State_Reset_h
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wc++98-compat"
@@ -17,7 +17,7 @@ namespace FSM
 {
   namespace CLM
   {
-    namespace FSM8BitBinaryToBCDEncoder
+    namespace FSMEightBitBinaryToBCDEncoder
     {
       namespace State
       {

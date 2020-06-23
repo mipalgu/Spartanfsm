@@ -1,5 +1,5 @@
 //
-// 8BitBinaryToBCDEncoder_FuncRefs.mm
+// EightBitBinaryToBCDEncoder_FuncRefs.mm
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //

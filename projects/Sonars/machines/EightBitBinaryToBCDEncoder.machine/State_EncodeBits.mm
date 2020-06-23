@@ -6,15 +6,15 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wc++98-compat"
 
-#include "8BitBinaryToBCDEncoder_Includes.h"
-#include "8BitBinaryToBCDEncoder.h"
+#include "EightBitBinaryToBCDEncoder_Includes.h"
+#include "EightBitBinaryToBCDEncoder.h"
 #include "State_EncodeBits.h"
 
 #include "State_EncodeBits_Includes.h"
 
 using namespace FSM;
 using namespace CLM;
-using namespace FSM8BitBinaryToBCDEncoder;
+using namespace FSMEightBitBinaryToBCDEncoder;
 using namespace State;
 
 EncodeBits::EncodeBits(const char *name): CLState(name, *new EncodeBits::OnEntry, *new EncodeBits::OnExit, *new EncodeBits::Internal, NULLPTR, new EncodeBits::OnSuspend, new EncodeBits::OnResume)
@@ -36,53 +36,53 @@ EncodeBits::~EncodeBits()
 
 void EncodeBits::OnEntry::perform(CLMachine *_machine, CLState *_state) const
 {
-#	include "8BitBinaryToBCDEncoder_VarRefs.mm"
+#	include "EightBitBinaryToBCDEncoder_VarRefs.mm"
 #	include "State_EncodeBits_VarRefs.mm"
-#	include "8BitBinaryToBCDEncoder_FuncRefs.mm"
+#	include "EightBitBinaryToBCDEncoder_FuncRefs.mm"
 #	include "State_EncodeBits_FuncRefs.mm"
 #	include "State_EncodeBits_OnEntry.mm"
 }
  
 void EncodeBits::OnExit::perform(CLMachine *_machine, CLState *_state) const
 {
-#	include "8BitBinaryToBCDEncoder_VarRefs.mm"
+#	include "EightBitBinaryToBCDEncoder_VarRefs.mm"
 #	include "State_EncodeBits_VarRefs.mm"
-#	include "8BitBinaryToBCDEncoder_FuncRefs.mm"
+#	include "EightBitBinaryToBCDEncoder_FuncRefs.mm"
 #	include "State_EncodeBits_FuncRefs.mm"
 #	include "State_EncodeBits_OnExit.mm"
 }
 
 void EncodeBits::Internal::perform(CLMachine *_machine, CLState *_state) const
 {
-#	include "8BitBinaryToBCDEncoder_VarRefs.mm"
+#	include "EightBitBinaryToBCDEncoder_VarRefs.mm"
 #	include "State_EncodeBits_VarRefs.mm"
-#	include "8BitBinaryToBCDEncoder_FuncRefs.mm"
+#	include "EightBitBinaryToBCDEncoder_FuncRefs.mm"
 #	include "State_EncodeBits_FuncRefs.mm"
 #	include "State_EncodeBits_Internal.mm"
 }
 
 void EncodeBits::OnSuspend::perform(CLMachine *_machine, CLState *_state) const
 {
-#	include "8BitBinaryToBCDEncoder_VarRefs.mm"
+#	include "EightBitBinaryToBCDEncoder_VarRefs.mm"
 #	include "State_EncodeBits_VarRefs.mm"
-#	include "8BitBinaryToBCDEncoder_FuncRefs.mm"
+#	include "EightBitBinaryToBCDEncoder_FuncRefs.mm"
 #	include "State_EncodeBits_FuncRefs.mm"
 #	include "State_EncodeBits_OnSuspend.mm"
 }
 
 void EncodeBits::OnResume::perform(CLMachine *_machine, CLState *_state) const
 {
-#	include "8BitBinaryToBCDEncoder_VarRefs.mm"
+#	include "EightBitBinaryToBCDEncoder_VarRefs.mm"
 #	include "State_EncodeBits_VarRefs.mm"
-#	include "8BitBinaryToBCDEncoder_FuncRefs.mm"
+#	include "EightBitBinaryToBCDEncoder_FuncRefs.mm"
 #	include "State_EncodeBits_FuncRefs.mm"
 #	include "State_EncodeBits_OnResume.mm"
 }
 bool EncodeBits::Transition_0::check(CLMachine *_machine, CLState *_state) const
 {
-#	include "8BitBinaryToBCDEncoder_VarRefs.mm"
+#	include "EightBitBinaryToBCDEncoder_VarRefs.mm"
 #	include "State_EncodeBits_VarRefs.mm"
-#	include "8BitBinaryToBCDEncoder_FuncRefs.mm"
+#	include "EightBitBinaryToBCDEncoder_FuncRefs.mm"
 #	include "State_EncodeBits_FuncRefs.mm"
 
 	return
@@ -92,9 +92,9 @@ bool EncodeBits::Transition_0::check(CLMachine *_machine, CLState *_state) const
 }
 bool EncodeBits::Transition_1::check(CLMachine *_machine, CLState *_state) const
 {
-#	include "8BitBinaryToBCDEncoder_VarRefs.mm"
+#	include "EightBitBinaryToBCDEncoder_VarRefs.mm"
 #	include "State_EncodeBits_VarRefs.mm"
-#	include "8BitBinaryToBCDEncoder_FuncRefs.mm"
+#	include "EightBitBinaryToBCDEncoder_FuncRefs.mm"
 #	include "State_EncodeBits_FuncRefs.mm"
 
 	return

@@ -6,15 +6,15 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wc++98-compat"
 
-#include "8BitBinaryToBCDEncoder_Includes.h"
-#include "8BitBinaryToBCDEncoder.h"
+#include "EightBitBinaryToBCDEncoder_Includes.h"
+#include "EightBitBinaryToBCDEncoder.h"
 #include "State_Initial.h"
 
 #include "State_Initial_Includes.h"
 
 using namespace FSM;
 using namespace CLM;
-using namespace FSM8BitBinaryToBCDEncoder;
+using namespace FSMEightBitBinaryToBCDEncoder;
 using namespace State;
 
 Initial::Initial(const char *name): CLState(name, *new Initial::OnEntry, *new Initial::OnExit, *new Initial::Internal, NULLPTR, new Initial::OnSuspend, new Initial::OnResume)
@@ -34,53 +34,53 @@ Initial::~Initial()
 
 void Initial::OnEntry::perform(CLMachine *_machine, CLState *_state) const
 {
-#	include "8BitBinaryToBCDEncoder_VarRefs.mm"
+#	include "EightBitBinaryToBCDEncoder_VarRefs.mm"
 #	include "State_Initial_VarRefs.mm"
-#	include "8BitBinaryToBCDEncoder_FuncRefs.mm"
+#	include "EightBitBinaryToBCDEncoder_FuncRefs.mm"
 #	include "State_Initial_FuncRefs.mm"
 #	include "State_Initial_OnEntry.mm"
 }
  
 void Initial::OnExit::perform(CLMachine *_machine, CLState *_state) const
 {
-#	include "8BitBinaryToBCDEncoder_VarRefs.mm"
+#	include "EightBitBinaryToBCDEncoder_VarRefs.mm"
 #	include "State_Initial_VarRefs.mm"
-#	include "8BitBinaryToBCDEncoder_FuncRefs.mm"
+#	include "EightBitBinaryToBCDEncoder_FuncRefs.mm"
 #	include "State_Initial_FuncRefs.mm"
 #	include "State_Initial_OnExit.mm"
 }
 
 void Initial::Internal::perform(CLMachine *_machine, CLState *_state) const
 {
-#	include "8BitBinaryToBCDEncoder_VarRefs.mm"
+#	include "EightBitBinaryToBCDEncoder_VarRefs.mm"
 #	include "State_Initial_VarRefs.mm"
-#	include "8BitBinaryToBCDEncoder_FuncRefs.mm"
+#	include "EightBitBinaryToBCDEncoder_FuncRefs.mm"
 #	include "State_Initial_FuncRefs.mm"
 #	include "State_Initial_Internal.mm"
 }
 
 void Initial::OnSuspend::perform(CLMachine *_machine, CLState *_state) const
 {
-#	include "8BitBinaryToBCDEncoder_VarRefs.mm"
+#	include "EightBitBinaryToBCDEncoder_VarRefs.mm"
 #	include "State_Initial_VarRefs.mm"
-#	include "8BitBinaryToBCDEncoder_FuncRefs.mm"
+#	include "EightBitBinaryToBCDEncoder_FuncRefs.mm"
 #	include "State_Initial_FuncRefs.mm"
 #	include "State_Initial_OnSuspend.mm"
 }
 
 void Initial::OnResume::perform(CLMachine *_machine, CLState *_state) const
 {
-#	include "8BitBinaryToBCDEncoder_VarRefs.mm"
+#	include "EightBitBinaryToBCDEncoder_VarRefs.mm"
 #	include "State_Initial_VarRefs.mm"
-#	include "8BitBinaryToBCDEncoder_FuncRefs.mm"
+#	include "EightBitBinaryToBCDEncoder_FuncRefs.mm"
 #	include "State_Initial_FuncRefs.mm"
 #	include "State_Initial_OnResume.mm"
 }
 bool Initial::Transition_0::check(CLMachine *_machine, CLState *_state) const
 {
-#	include "8BitBinaryToBCDEncoder_VarRefs.mm"
+#	include "EightBitBinaryToBCDEncoder_VarRefs.mm"
 #	include "State_Initial_VarRefs.mm"
-#	include "8BitBinaryToBCDEncoder_FuncRefs.mm"
+#	include "EightBitBinaryToBCDEncoder_FuncRefs.mm"
 #	include "State_Initial_FuncRefs.mm"
 
 	return

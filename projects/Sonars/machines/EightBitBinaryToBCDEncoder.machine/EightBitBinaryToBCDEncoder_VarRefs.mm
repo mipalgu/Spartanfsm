@@ -1,5 +1,5 @@
 //
-// 8BitBinaryToBCDEncoder_VarRefs.mm
+// EightBitBinaryToBCDEncoder_VarRefs.mm
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
@@ -7,7 +7,7 @@
 #pragma clang diagnostic ignored "-Wunused-variable"
 #pragma clang diagnostic ignored "-Wshadow"
 
-8BitBinaryToBCDEncoder *_m = static_cast<8BitBinaryToBCDEncoder *>(_machine);
+EightBitBinaryToBCDEncoder *_m = static_cast<EightBitBinaryToBCDEncoder *>(_machine);
 
 #extern	&data: in std_logic_vector(7 downto 0) = _m->data: in std_logic_vector(7 downto 0);	///<
 #extern	&busy: out std_logic = _m->busy: out std_logic;	///<

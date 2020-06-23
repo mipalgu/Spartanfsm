@@ -1,10 +1,10 @@
 //
-// State_SetBusy.h
+// State_SUSPENDED.h
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
-#ifndef clfsm_8BitBinaryToBCDEncoder_State_SetBusy_h
-#define clfsm_8BitBinaryToBCDEncoder_State_SetBusy_h
+#ifndef clfsm_EightBitBinaryToBCDEncoder_State_SUSPENDED_h
+#define clfsm_EightBitBinaryToBCDEncoder_State_SUSPENDED_h
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wc++98-compat"
@@ -17,11 +17,11 @@ namespace FSM
 {
   namespace CLM
   {
-    namespace FSM8BitBinaryToBCDEncoder
+    namespace FSMEightBitBinaryToBCDEncoder
     {
       namespace State
       {
-        class SetBusy: public CLState
+        class SUSPENDED: public CLState
         {
           class OnEntry: public CLAction
           {
@@ -47,25 +47,21 @@ namespace FSM
           {
             virtual void perform(CLMachine *, CLState *) const;
           };
-                          class Transition_0: public CLTransition
-                {
-                public:
-                    Transition_0(int toState = 4): CLTransition(toState) {}
+          #pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wzero-length-array"
+                CLTransition *_transitions[0];
+#pragma clang diagnostic pop
 
-                    virtual bool check(CLMachine *, CLState *) const;
-                };
-
-                CLTransition *_transitions[1];
 
                 public:
-                    SetBusy(const char *name = "SetBusy");
-                    virtual ~SetBusy();
+                    SUSPENDED(const char *name = "SUSPENDED");
+                    virtual ~SUSPENDED();
 
                     virtual CLTransition * const *transitions() const { return _transitions; }
-                    virtual int numberOfTransitions() const { return 1; }
+                    virtual int numberOfTransitions() const { return 0; }
 
-#                   include "State_SetBusy_Variables.h"
-#                   include "State_SetBusy_Methods.h"
+#                   include "State_SUSPENDED_Variables.h"
+#                   include "State_SUSPENDED_Methods.h"
             };
         }
       }
