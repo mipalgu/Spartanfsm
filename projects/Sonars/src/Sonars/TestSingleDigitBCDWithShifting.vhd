@@ -56,7 +56,7 @@ ARCHITECTURE behavior OF TestSingleDigitBCDWithShifting IS
    signal clk : std_logic := '0';
    signal EXTERNAL_binary : std_logic := '0';
    signal EXTERNAL_enable : std_logic := '0';
-   signal EXTERNAL_reset : std_logic := '0';
+   signal EXTERNAL_reset : std_logic := '1';
 
  	--Outputs
    signal EXTERNAL_busy : std_logic;
