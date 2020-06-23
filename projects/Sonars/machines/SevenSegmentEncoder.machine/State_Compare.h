@@ -130,19 +130,27 @@ namespace FSM
                 class Transition_10: public CLTransition
                 {
                 public:
-                    Transition_10(int toState = 15): CLTransition(toState) {}
+                    Transition_10(int toState = 16): CLTransition(toState) {}
 
                     virtual bool check(CLMachine *, CLState *) const;
                 };
 
-                CLTransition *_transitions[11];
+                class Transition_11: public CLTransition
+                {
+                public:
+                    Transition_11(int toState = 15): CLTransition(toState) {}
+
+                    virtual bool check(CLMachine *, CLState *) const;
+                };
+
+                CLTransition *_transitions[12];
 
                 public:
                     Compare(const char *name = "Compare");
                     virtual ~Compare();
 
                     virtual CLTransition * const *transitions() const { return _transitions; }
-                    virtual int numberOfTransitions() const { return 11; }
+                    virtual int numberOfTransitions() const { return 12; }
 
 #                   include "State_Compare_Variables.h"
 #                   include "State_Compare_Methods.h"

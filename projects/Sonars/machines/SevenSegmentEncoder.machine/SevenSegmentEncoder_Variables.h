@@ -5,4 +5,5 @@
 //
 #extern	data: in std_logic_vector(3 downto 0);	///<
 #extern	sevenSegmentData: out std_logic_vector(6 downto 0);	///<
-#machine	signal oldData: std_logic_vector(3 downto 0);	///<
+#machine	signal latchedData: std_logic_vector(3 downto 0);	///<
+#extern	signal busy: out std_logic;	///<

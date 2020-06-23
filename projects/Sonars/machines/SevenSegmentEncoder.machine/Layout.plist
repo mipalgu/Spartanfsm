@@ -190,21 +190,39 @@
 				</dict>
 				<dict>
 					<key>controlPoint1X</key>
-					<real>498</real>
+					<real>474</real>
 					<key>controlPoint1Y</key>
-					<real>388</real>
+					<real>366</real>
 					<key>controlPoint2X</key>
-					<real>509</real>
+					<real>530</real>
 					<key>controlPoint2Y</key>
-					<real>496</real>
+					<real>478</real>
 					<key>dstPointX</key>
-					<real>509</real>
+					<real>556.70803586935915</real>
 					<key>dstPointY</key>
-					<real>571</real>
+					<real>553.14041877042166</real>
 					<key>srcPointX</key>
-					<real>553.45512066191577</real>
+					<real>570.62889747983672</real>
 					<key>srcPointY</key>
-					<real>262.05469710149663</real>
+					<real>264.79621469437205</real>
+				</dict>
+				<dict>
+					<key>controlPoint1X</key>
+					<real>424</real>
+					<key>controlPoint1Y</key>
+					<real>327</real>
+					<key>controlPoint2X</key>
+					<real>468</real>
+					<key>controlPoint2Y</key>
+					<real>538</real>
+					<key>dstPointX</key>
+					<real>492.95507627936183</real>
+					<key>dstPointY</key>
+					<real>588.12306681348309</real>
+					<key>srcPointX</key>
+					<real>561.16474107517433</real>
+					<key>srcPointY</key>
+					<real>263.71310067654446</real>
 				</dict>
 			</array>
 			<key>bgColour</key>
@@ -249,6 +267,78 @@
 			<real>577</real>
 			<key>y</key>
 			<real>240</real>
+			<key>zoomedInternalHeight</key>
+			<real>0.0</real>
+			<key>zoomedOnEntryHeight</key>
+			<real>0.0</real>
+			<key>zoomedOnExitHeight</key>
+			<real>0.0</real>
+		</dict>
+		<key>Dash</key>
+		<dict>
+			<key>Transitions</key>
+			<array>
+				<dict>
+					<key>controlPoint1X</key>
+					<real>789.56888744713842</real>
+					<key>controlPoint1Y</key>
+					<real>638.57538950007188</real>
+					<key>controlPoint2X</key>
+					<real>968.78444372356932</real>
+					<key>controlPoint2Y</key>
+					<real>692.78769475003594</real>
+					<key>dstPointX</key>
+					<real>1113.4289966357335</real>
+					<key>dstPointY</key>
+					<real>734.06582709662882</real>
+					<key>srcPointX</key>
+					<real>601.04344047215147</real>
+					<key>srcPointY</key>
+					<real>593.61737618886059</real>
+				</dict>
+			</array>
+			<key>bgColour</key>
+			<dict>
+				<key>alpha</key>
+				<real>1</real>
+				<key>blue</key>
+				<real>0.92000000000000004</real>
+				<key>green</key>
+				<real>0.92000000000000004</real>
+				<key>red</key>
+				<real>0.92000000000000004</real>
+			</dict>
+			<key>editingMode</key>
+			<false/>
+			<key>expanded</key>
+			<false/>
+			<key>h</key>
+			<real>50</real>
+			<key>internalHeight</key>
+			<real>0.0</real>
+			<key>onEntryHeight</key>
+			<real>0.0</real>
+			<key>onExitHeight</key>
+			<real>0.0</real>
+			<key>stateSelected</key>
+			<false/>
+			<key>strokeColour</key>
+			<dict>
+				<key>alpha</key>
+				<real>1</real>
+				<key>blue</key>
+				<real>0.0</real>
+				<key>green</key>
+				<real>0.0</real>
+				<key>red</key>
+				<real>0.0</real>
+			</dict>
+			<key>w</key>
+			<real>100</real>
+			<key>x</key>
+			<real>562</real>
+			<key>y</key>
+			<real>578</real>
 			<key>zoomedInternalHeight</key>
 			<real>0.0</real>
 			<key>zoomedOnEntryHeight</key>
@@ -346,9 +436,9 @@
 					<key>dstPointY</key>
 					<real>735.19122288927599</real>
 					<key>srcPointX</key>
-					<real>557.82739163996496</real>
+					<real>537.5300057843109</real>
 					<key>srcPointY</key>
-					<real>601.38251394883196</real>
+					<real>616.41974147437111</real>
 				</dict>
 			</array>
 			<key>bgColour</key>
@@ -390,9 +480,9 @@
 			<key>w</key>
 			<real>100</real>
 			<key>x</key>
-			<real>509</real>
+			<real>488</real>
 			<key>y</key>
-			<real>596</real>
+			<real>613</real>
 			<key>zoomedInternalHeight</key>
 			<real>0.0</real>
 			<key>zoomedOnEntryHeight</key>
@@ -435,7 +525,7 @@
 				<real>0.92000000000000004</real>
 			</dict>
 			<key>editingMode</key>
-			<true/>
+			<false/>
 			<key>expanded</key>
 			<false/>
 			<key>h</key>
@@ -447,7 +537,7 @@
 			<key>onExitHeight</key>
 			<real>0.0</real>
 			<key>stateSelected</key>
-			<true/>
+			<false/>
 			<key>strokeColour</key>
 			<dict>
 				<key>alpha</key>

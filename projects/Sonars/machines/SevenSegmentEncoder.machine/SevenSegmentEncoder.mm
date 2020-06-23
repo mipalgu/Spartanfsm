@@ -22,6 +22,7 @@
 #include "State_Nine.h"
 #include "State_Wait.h"
 #include "State_Error.h"
+#include "State_Dash.h"
 
 using namespace FSM;
 using namespace CLM;
@@ -52,6 +53,7 @@ SevenSegmentEncoder::SevenSegmentEncoder(int mid, const char *name): CLMachine(m
 	_states[13] = new FSMSevenSegmentEncoder::State::Nine;
 	_states[14] = new FSMSevenSegmentEncoder::State::Wait;
 	_states[15] = new FSMSevenSegmentEncoder::State::Error;
+	_states[16] = new FSMSevenSegmentEncoder::State::Dash;
 
 	setSuspendState(_states[1]);            // set suspend state
 	setInitialState(_states[0]);            // set initial state
@@ -75,4 +77,5 @@ SevenSegmentEncoder::~SevenSegmentEncoder()
 	delete _states[13];
 	delete _states[14];
 	delete _states[15];
+	delete _states[16];
 }

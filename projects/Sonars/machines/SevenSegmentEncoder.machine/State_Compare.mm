@@ -30,6 +30,7 @@ Compare::Compare(const char *name): CLState(name, *new Compare::OnEntry, *new Co
 	_transitions[8] = new Transition_8();
 	_transitions[9] = new Transition_9();
 	_transitions[10] = new Transition_10();
+	_transitions[11] = new Transition_11();
 }
 
 Compare::~Compare()
@@ -50,6 +51,7 @@ Compare::~Compare()
 	delete _transitions[8];
 	delete _transitions[9];
 	delete _transitions[10];
+	delete _transitions[11];
 }
 
 void Compare::OnEntry::perform(CLMachine *_machine, CLState *_state) const
@@ -226,5 +228,17 @@ bool Compare::Transition_10::check(CLMachine *_machine, CLState *_state) const
 	return
 	(
 #		include "State_Compare_Transition_10.expr"
+	);
+}
+bool Compare::Transition_11::check(CLMachine *_machine, CLState *_state) const
+{
+#	include "SevenSegmentEncoder_VarRefs.mm"
+#	include "State_Compare_VarRefs.mm"
+#	include "SevenSegmentEncoder_FuncRefs.mm"
+#	include "State_Compare_FuncRefs.mm"
+
+	return
+	(
+#		include "State_Compare_Transition_11.expr"
 	);
 }

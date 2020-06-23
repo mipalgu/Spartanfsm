@@ -16,12 +16,12 @@ namespace FSM
     {
         class SevenSegmentEncoder: public CLMachine
         {
-            CLState *_states[16];
+            CLState *_states[17];
         public:
             SevenSegmentEncoder(int mid  = 0, const char *name = "SevenSegmentEncoder");
             virtual ~SevenSegmentEncoder();
             virtual CLState * const * states() const { return _states; }
-            virtual int numberOfStates() const { return 16; }
+            virtual int numberOfStates() const { return 17; }
 #           include "SevenSegmentEncoder_Variables.h"
 #           include "SevenSegmentEncoder_Methods.h"
         };
