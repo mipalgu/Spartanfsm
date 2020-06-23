@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-06-22 23:34 EDT
+--Date Generated: 2020-06-23 01:51 EDT
 --
 
 library IEEE;
@@ -37,10 +37,9 @@ architecture LLFSM of SingleDigitBCDEncoderWithShifting is
     constant STATE_SetBusy: std_logic_vector(3 downto 0) := "0011";
     constant STATE_EncodeWithCarry: std_logic_vector(3 downto 0) := "0100";
     constant STATE_EncodeWithoutCarry: std_logic_vector(3 downto 0) := "0101";
-    constant STATE_CheckEnable: std_logic_vector(3 downto 0) := "0110";
-    constant STATE_SetCarry: std_logic_vector(3 downto 0) := "0111";
-    constant STATE_WaitForEnable: std_logic_vector(3 downto 0) := "1000";
-    constant STATE_InitialPseudoState: std_logic_vector(3 downto 0) := "1001";
+    constant STATE_SetCarry: std_logic_vector(3 downto 0) := "0110";
+    constant STATE_WaitForEnable: std_logic_vector(3 downto 0) := "0111";
+    constant STATE_InitialPseudoState: std_logic_vector(3 downto 0) := "1000";
     signal currentState: std_logic_vector(3 downto 0) := STATE_Initial;
     signal targetState: std_logic_vector(3 downto 0) := currentState;
     signal previousRinglet: std_logic_vector(3 downto 0) := STATE_Initial xor "1111";
@@ -73,6 +72,7 @@ process (clk)
                             bcd <= "0000";
                             busy <= '0';
                             latchedBinary <= '0';
+                            carry <= '0';
                         when STATE_SetBusy=>
                             busy <= '1';
                         when STATE_EncodeWithCarry=>
@@ -109,39 +109,32 @@ process (clk)
                                 internalState <= Internal;
                             end if;
                         when STATE_SetBusy=>
-                            if (true) then
-                                targetState <= STATE_SetCarry;
+                            if (carry = '1') then
+                                targetState <= STATE_EncodeWithCarry;
+                                internalState <= OnExit;
+                            elsif (true) and (not (carry = '1')) then
+                                targetState <= STATE_EncodeWithoutCarry;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
                             end if;
                         when STATE_EncodeWithCarry=>
                             if (true) then
-                                targetState <= STATE_CheckEnable;
+                                targetState <= STATE_SetCarry;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
                             end if;
                         when STATE_EncodeWithoutCarry=>
                             if (true) then
-                                targetState <= STATE_CheckEnable;
-                                internalState <= OnExit;
-                            else
-                                internalState <= Internal;
-                            end if;
-                        when STATE_CheckEnable=>
-                            if (enable = '0') then
-                                targetState <= STATE_WaitForEnable;
+                                targetState <= STATE_SetCarry;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
                             end if;
                         when STATE_SetCarry=>
-                            if (carry = '1') then
-                                targetState <= STATE_EncodeWithCarry;
-                                internalState <= OnExit;
-                            elsif (true) and (not (carry = '1')) then
-                                targetState <= STATE_EncodeWithoutCarry;
+                            if (enable = '0') then
+                                targetState <= STATE_WaitForEnable;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
