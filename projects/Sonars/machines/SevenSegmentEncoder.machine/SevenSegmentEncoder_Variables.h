@@ -5,4 +5,4 @@
 //
 #extern	data: in std_logic_vector(3 downto 0);	///<
 #extern	sevenSegmentData: out std_logic_vector(6 downto 0);	///<
-#machine	oldData: std_logic_vector(3 downto 0);	///<
+#machine	signal oldData: std_logic_vector(3 downto 0);	///<

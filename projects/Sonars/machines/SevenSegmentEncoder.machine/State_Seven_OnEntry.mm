@@ -1,1 +1,1 @@
-sevenSegmentData <= 1110000";
+sevenSegmentData <= "1110000";
