@@ -1,1 +1,1 @@
-use IEEE.numberic_std.all;
+use IEEE.numeric_std.all;
