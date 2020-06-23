@@ -20,6 +20,7 @@ using namespace State;
 CheckEnable::CheckEnable(const char *name): CLState(name, *new CheckEnable::OnEntry, *new CheckEnable::OnExit, *new CheckEnable::Internal, NULLPTR, new CheckEnable::OnSuspend, new CheckEnable::OnResume)
 {
 	_transitions[0] = new Transition_0();
+	_transitions[1] = new Transition_1();
 }
 
 CheckEnable::~CheckEnable()
@@ -30,6 +31,7 @@ CheckEnable::~CheckEnable()
 	delete onSuspendAction();
 	delete onResumeAction();
 	delete _transitions[0];
+	delete _transitions[1];
 }
 
 void CheckEnable::OnEntry::perform(CLMachine *_machine, CLState *_state) const
@@ -86,5 +88,17 @@ bool CheckEnable::Transition_0::check(CLMachine *_machine, CLState *_state) cons
 	return
 	(
 #		include "State_CheckEnable_Transition_0.expr"
+	);
+}
+bool CheckEnable::Transition_1::check(CLMachine *_machine, CLState *_state) const
+{
+#	include "SingleDigitBCDEncoderWithShifting_VarRefs.mm"
+#	include "State_CheckEnable_VarRefs.mm"
+#	include "SingleDigitBCDEncoderWithShifting_FuncRefs.mm"
+#	include "State_CheckEnable_FuncRefs.mm"
+
+	return
+	(
+#		include "State_CheckEnable_Transition_1.expr"
 	);
 }

@@ -20,7 +20,6 @@ using namespace State;
 SetCarry::SetCarry(const char *name): CLState(name, *new SetCarry::OnEntry, *new SetCarry::OnExit, *new SetCarry::Internal, NULLPTR, new SetCarry::OnSuspend, new SetCarry::OnResume)
 {
 	_transitions[0] = new Transition_0();
-	_transitions[1] = new Transition_1();
 }
 
 SetCarry::~SetCarry()
@@ -31,7 +30,6 @@ SetCarry::~SetCarry()
 	delete onSuspendAction();
 	delete onResumeAction();
 	delete _transitions[0];
-	delete _transitions[1];
 }
 
 void SetCarry::OnEntry::perform(CLMachine *_machine, CLState *_state) const
@@ -88,17 +86,5 @@ bool SetCarry::Transition_0::check(CLMachine *_machine, CLState *_state) const
 	return
 	(
 #		include "State_SetCarry_Transition_0.expr"
-	);
-}
-bool SetCarry::Transition_1::check(CLMachine *_machine, CLState *_state) const
-{
-#	include "SingleDigitBCDEncoderWithShifting_VarRefs.mm"
-#	include "State_SetCarry_VarRefs.mm"
-#	include "SingleDigitBCDEncoderWithShifting_FuncRefs.mm"
-#	include "State_SetCarry_FuncRefs.mm"
-
-	return
-	(
-#		include "State_SetCarry_Transition_1.expr"
 	);
 }
