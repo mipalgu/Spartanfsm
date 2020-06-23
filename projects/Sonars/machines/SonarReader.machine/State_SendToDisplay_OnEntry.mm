@@ -1,1 +1,2 @@
 displayData <= dataToSend;
+displayDigit <= digit;
