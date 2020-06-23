@@ -1,1 +1,0 @@
-oldBcd <= bcd;
