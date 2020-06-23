@@ -1,2 +1,2 @@
 displayData <= dataToSend;
-displayDigit <= digit;
+displayDigit <= std_logic_vector(digit);
