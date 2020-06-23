@@ -1,5 +1,5 @@
 //
-// State_InitialPseudostate_FuncRefs.mm
+// State_InitialPseudoState_FuncRefs.mm
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //

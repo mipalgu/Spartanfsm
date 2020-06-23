@@ -1,10 +1,10 @@
 //
-// State_InitialPseudostate.h
+// State_InitialPseudoState.h
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
-#ifndef clfsm_SevenSegmentEncoding_State_InitialPseudostate_h
-#define clfsm_SevenSegmentEncoding_State_InitialPseudostate_h
+#ifndef clfsm_SevenSegmentEncoding_State_InitialPseudoState_h
+#define clfsm_SevenSegmentEncoding_State_InitialPseudoState_h
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wc++98-compat"
@@ -21,7 +21,7 @@ namespace FSM
     {
       namespace State
       {
-        class InitialPseudostate: public CLState
+        class InitialPseudoState: public CLState
         {
           class OnEntry: public CLAction
           {
@@ -58,14 +58,14 @@ namespace FSM
                 CLTransition *_transitions[1];
 
                 public:
-                    InitialPseudostate(const char *name = "InitialPseudostate");
-                    virtual ~InitialPseudostate();
+                    InitialPseudoState(const char *name = "InitialPseudoState");
+                    virtual ~InitialPseudoState();
 
                     virtual CLTransition * const *transitions() const { return _transitions; }
                     virtual int numberOfTransitions() const { return 1; }
 
-#                   include "State_InitialPseudostate_Variables.h"
-#                   include "State_InitialPseudostate_Methods.h"
+#                   include "State_InitialPseudoState_Variables.h"
+#                   include "State_InitialPseudoState_Methods.h"
             };
         }
       }

@@ -7,8 +7,8 @@
 #include "SevenSegmentEncoding.h"
 
 #include "State_Initial.h"
-#include "State_Suspend.h"
-#include "State_InitialPseudostate.h"
+#include "State_SUSPENDED.h"
+#include "State_InitialPseudoState.h"
 #include "State_Compare.h"
 #include "State_Zero.h"
 #include "State_One.h"
@@ -37,8 +37,8 @@ extern "C"
 SevenSegmentEncoding::SevenSegmentEncoding(int mid, const char *name): CLMachine(mid, name)
 {
 	_states[0] = new FSMSevenSegmentEncoding::State::Initial;
-	_states[1] = new FSMSevenSegmentEncoding::State::Suspend;
-	_states[2] = new FSMSevenSegmentEncoding::State::InitialPseudostate;
+	_states[1] = new FSMSevenSegmentEncoding::State::SUSPENDED;
+	_states[2] = new FSMSevenSegmentEncoding::State::InitialPseudoState;
 	_states[3] = new FSMSevenSegmentEncoding::State::Compare;
 	_states[4] = new FSMSevenSegmentEncoding::State::Zero;
 	_states[5] = new FSMSevenSegmentEncoding::State::One;

@@ -1,5 +1,5 @@
 //
-// State_InitialPseudostate_VarRefs.mm
+// State_InitialPseudoState_VarRefs.mm
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
@@ -7,7 +7,7 @@
 #pragma clang diagnostic ignored "-Wunused-variable"
 #pragma clang diagnostic ignored "-Wshadow"
 
-InitialPseudostate *_s = static_cast<InitialPseudostate *>(_state);
+InitialPseudoState *_s = static_cast<InitialPseudoState *>(_state);
 
 
 #pragma clang diagnostic pop

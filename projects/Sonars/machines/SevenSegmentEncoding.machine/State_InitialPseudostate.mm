@@ -1,5 +1,5 @@
 //
-// State_InitialPseudostate.mm
+// State_InitialPseudoState.mm
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
@@ -8,21 +8,21 @@
 
 #include "SevenSegmentEncoding_Includes.h"
 #include "SevenSegmentEncoding.h"
-#include "State_InitialPseudostate.h"
+#include "State_InitialPseudoState.h"
 
-#include "State_InitialPseudostate_Includes.h"
+#include "State_InitialPseudoState_Includes.h"
 
 using namespace FSM;
 using namespace CLM;
 using namespace FSMSevenSegmentEncoding;
 using namespace State;
 
-InitialPseudostate::InitialPseudostate(const char *name): CLState(name, *new InitialPseudostate::OnEntry, *new InitialPseudostate::OnExit, *new InitialPseudostate::Internal, NULLPTR, new InitialPseudostate::OnSuspend, new InitialPseudostate::OnResume)
+InitialPseudoState::InitialPseudoState(const char *name): CLState(name, *new InitialPseudoState::OnEntry, *new InitialPseudoState::OnExit, *new InitialPseudoState::Internal, NULLPTR, new InitialPseudoState::OnSuspend, new InitialPseudoState::OnResume)
 {
 	_transitions[0] = new Transition_0();
 }
 
-InitialPseudostate::~InitialPseudostate()
+InitialPseudoState::~InitialPseudoState()
 {
 	delete &onEntryAction();
 	delete &onExitAction();
@@ -32,59 +32,59 @@ InitialPseudostate::~InitialPseudostate()
 	delete _transitions[0];
 }
 
-void InitialPseudostate::OnEntry::perform(CLMachine *_machine, CLState *_state) const
+void InitialPseudoState::OnEntry::perform(CLMachine *_machine, CLState *_state) const
 {
 #	include "SevenSegmentEncoding_VarRefs.mm"
-#	include "State_InitialPseudostate_VarRefs.mm"
+#	include "State_InitialPseudoState_VarRefs.mm"
 #	include "SevenSegmentEncoding_FuncRefs.mm"
-#	include "State_InitialPseudostate_FuncRefs.mm"
-#	include "State_InitialPseudostate_OnEntry.mm"
+#	include "State_InitialPseudoState_FuncRefs.mm"
+#	include "State_InitialPseudoState_OnEntry.mm"
 }
  
-void InitialPseudostate::OnExit::perform(CLMachine *_machine, CLState *_state) const
+void InitialPseudoState::OnExit::perform(CLMachine *_machine, CLState *_state) const
 {
 #	include "SevenSegmentEncoding_VarRefs.mm"
-#	include "State_InitialPseudostate_VarRefs.mm"
+#	include "State_InitialPseudoState_VarRefs.mm"
 #	include "SevenSegmentEncoding_FuncRefs.mm"
-#	include "State_InitialPseudostate_FuncRefs.mm"
-#	include "State_InitialPseudostate_OnExit.mm"
+#	include "State_InitialPseudoState_FuncRefs.mm"
+#	include "State_InitialPseudoState_OnExit.mm"
 }
 
-void InitialPseudostate::Internal::perform(CLMachine *_machine, CLState *_state) const
+void InitialPseudoState::Internal::perform(CLMachine *_machine, CLState *_state) const
 {
 #	include "SevenSegmentEncoding_VarRefs.mm"
-#	include "State_InitialPseudostate_VarRefs.mm"
+#	include "State_InitialPseudoState_VarRefs.mm"
 #	include "SevenSegmentEncoding_FuncRefs.mm"
-#	include "State_InitialPseudostate_FuncRefs.mm"
-#	include "State_InitialPseudostate_Internal.mm"
+#	include "State_InitialPseudoState_FuncRefs.mm"
+#	include "State_InitialPseudoState_Internal.mm"
 }
 
-void InitialPseudostate::OnSuspend::perform(CLMachine *_machine, CLState *_state) const
+void InitialPseudoState::OnSuspend::perform(CLMachine *_machine, CLState *_state) const
 {
 #	include "SevenSegmentEncoding_VarRefs.mm"
-#	include "State_InitialPseudostate_VarRefs.mm"
+#	include "State_InitialPseudoState_VarRefs.mm"
 #	include "SevenSegmentEncoding_FuncRefs.mm"
-#	include "State_InitialPseudostate_FuncRefs.mm"
-#	include "State_InitialPseudostate_OnSuspend.mm"
+#	include "State_InitialPseudoState_FuncRefs.mm"
+#	include "State_InitialPseudoState_OnSuspend.mm"
 }
 
-void InitialPseudostate::OnResume::perform(CLMachine *_machine, CLState *_state) const
+void InitialPseudoState::OnResume::perform(CLMachine *_machine, CLState *_state) const
 {
 #	include "SevenSegmentEncoding_VarRefs.mm"
-#	include "State_InitialPseudostate_VarRefs.mm"
+#	include "State_InitialPseudoState_VarRefs.mm"
 #	include "SevenSegmentEncoding_FuncRefs.mm"
-#	include "State_InitialPseudostate_FuncRefs.mm"
-#	include "State_InitialPseudostate_OnResume.mm"
+#	include "State_InitialPseudoState_FuncRefs.mm"
+#	include "State_InitialPseudoState_OnResume.mm"
 }
-bool InitialPseudostate::Transition_0::check(CLMachine *_machine, CLState *_state) const
+bool InitialPseudoState::Transition_0::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "SevenSegmentEncoding_VarRefs.mm"
-#	include "State_InitialPseudostate_VarRefs.mm"
+#	include "State_InitialPseudoState_VarRefs.mm"
 #	include "SevenSegmentEncoding_FuncRefs.mm"
-#	include "State_InitialPseudostate_FuncRefs.mm"
+#	include "State_InitialPseudoState_FuncRefs.mm"
 
 	return
 	(
-#		include "State_InitialPseudostate_Transition_0.expr"
+#		include "State_InitialPseudoState_Transition_0.expr"
 	);
 }
