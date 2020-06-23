@@ -16,12 +16,12 @@ namespace FSM
     {
         class SingleDigitBCDEncoderWithShifting: public CLMachine
         {
-            CLState *_states[10];
+            CLState *_states[9];
         public:
             SingleDigitBCDEncoderWithShifting(int mid  = 0, const char *name = "SingleDigitBCDEncoderWithShifting");
             virtual ~SingleDigitBCDEncoderWithShifting();
             virtual CLState * const * states() const { return _states; }
-            virtual int numberOfStates() const { return 10; }
+            virtual int numberOfStates() const { return 9; }
 #           include "SingleDigitBCDEncoderWithShifting_Variables.h"
 #           include "SingleDigitBCDEncoderWithShifting_Methods.h"
         };

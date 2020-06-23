@@ -12,7 +12,6 @@
 #include "State_SetBusy.h"
 #include "State_EncodeWithCarry.h"
 #include "State_EncodeWithoutCarry.h"
-#include "State_CheckEnable.h"
 #include "State_SetCarry.h"
 #include "State_WaitForEnable.h"
 #include "State_InitialPseudoState.h"
@@ -36,10 +35,9 @@ SingleDigitBCDEncoderWithShifting::SingleDigitBCDEncoderWithShifting(int mid, co
 	_states[3] = new FSMSingleDigitBCDEncoderWithShifting::State::SetBusy;
 	_states[4] = new FSMSingleDigitBCDEncoderWithShifting::State::EncodeWithCarry;
 	_states[5] = new FSMSingleDigitBCDEncoderWithShifting::State::EncodeWithoutCarry;
-	_states[6] = new FSMSingleDigitBCDEncoderWithShifting::State::CheckEnable;
-	_states[7] = new FSMSingleDigitBCDEncoderWithShifting::State::SetCarry;
-	_states[8] = new FSMSingleDigitBCDEncoderWithShifting::State::WaitForEnable;
-	_states[9] = new FSMSingleDigitBCDEncoderWithShifting::State::InitialPseudoState;
+	_states[6] = new FSMSingleDigitBCDEncoderWithShifting::State::SetCarry;
+	_states[7] = new FSMSingleDigitBCDEncoderWithShifting::State::WaitForEnable;
+	_states[8] = new FSMSingleDigitBCDEncoderWithShifting::State::InitialPseudoState;
 
 	setSuspendState(_states[1]);            // set suspend state
 	setInitialState(_states[0]);            // set initial state
@@ -56,5 +54,4 @@ SingleDigitBCDEncoderWithShifting::~SingleDigitBCDEncoderWithShifting()
 	delete _states[6];
 	delete _states[7];
 	delete _states[8];
-	delete _states[9];
 }

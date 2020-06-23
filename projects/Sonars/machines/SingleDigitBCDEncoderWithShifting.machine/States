@@ -4,7 +4,6 @@ ResetRegisters
 SetBusy
 EncodeWithCarry
 EncodeWithoutCarry
-CheckEnable
 SetCarry
 WaitForEnable
 InitialPseudoState
