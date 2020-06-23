@@ -24,6 +24,8 @@
 #include "State_SendToDisplay.h"
 #include "State_WaitForDataToSend.h"
 #include "State_UpdateDigit.h"
+#include "State_BCDEncode.h"
+#include "State_Encoding.h"
 
 using namespace FSM;
 using namespace CLM;
@@ -56,6 +58,8 @@ SonarReader::SonarReader(int mid, const char *name): CLMachine(mid, name)
 	_states[15] = new FSMSonarReader::State::SendToDisplay;
 	_states[16] = new FSMSonarReader::State::WaitForDataToSend;
 	_states[17] = new FSMSonarReader::State::UpdateDigit;
+	_states[18] = new FSMSonarReader::State::BCDEncode;
+	_states[19] = new FSMSonarReader::State::Encoding;
 
 	setSuspendState(_states[1]);            // set suspend state
 	setInitialState(_states[0]);            // set initial state
@@ -81,4 +85,6 @@ SonarReader::~SonarReader()
 	delete _states[15];
 	delete _states[16];
 	delete _states[17];
+	delete _states[18];
+	delete _states[19];
 }

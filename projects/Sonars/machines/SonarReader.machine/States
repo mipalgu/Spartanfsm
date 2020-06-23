@@ -16,3 +16,5 @@ EncoderFinished
 SendToDisplay
 WaitForDataToSend
 UpdateDigit
+BCDEncode
+Encoding

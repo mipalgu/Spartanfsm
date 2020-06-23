@@ -16,12 +16,12 @@ namespace FSM
     {
         class SonarReader: public CLMachine
         {
-            CLState *_states[18];
+            CLState *_states[20];
         public:
             SonarReader(int mid  = 0, const char *name = "SonarReader");
             virtual ~SonarReader();
             virtual CLState * const * states() const { return _states; }
-            virtual int numberOfStates() const { return 18; }
+            virtual int numberOfStates() const { return 20; }
 #           include "SonarReader_Variables.h"
 #           include "SonarReader_Methods.h"
         };

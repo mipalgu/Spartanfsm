@@ -1,10 +1,10 @@
 //
-// State_ConvertDistance1.h
+// State_BCDEncode.h
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
-#ifndef clfsm_SonarReader_State_ConvertDistance1_h
-#define clfsm_SonarReader_State_ConvertDistance1_h
+#ifndef clfsm_SonarReader_State_BCDEncode_h
+#define clfsm_SonarReader_State_BCDEncode_h
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wc++98-compat"
@@ -21,7 +21,7 @@ namespace FSM
     {
       namespace State
       {
-        class ConvertDistance1: public CLState
+        class BCDEncode: public CLState
         {
           class OnEntry: public CLAction
           {
@@ -50,7 +50,7 @@ namespace FSM
                           class Transition_0: public CLTransition
                 {
                 public:
-                    Transition_0(int toState = 18): CLTransition(toState) {}
+                    Transition_0(int toState = 19): CLTransition(toState) {}
 
                     virtual bool check(CLMachine *, CLState *) const;
                 };
@@ -58,14 +58,14 @@ namespace FSM
                 CLTransition *_transitions[1];
 
                 public:
-                    ConvertDistance1(const char *name = "ConvertDistance1");
-                    virtual ~ConvertDistance1();
+                    BCDEncode(const char *name = "BCDEncode");
+                    virtual ~BCDEncode();
 
                     virtual CLTransition * const *transitions() const { return _transitions; }
                     virtual int numberOfTransitions() const { return 1; }
 
-#                   include "State_ConvertDistance1_Variables.h"
-#                   include "State_ConvertDistance1_Methods.h"
+#                   include "State_BCDEncode_Variables.h"
+#                   include "State_BCDEncode_Methods.h"
             };
         }
       }
