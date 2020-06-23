@@ -1,0 +1,1 @@
+digit <= digit + 1;
