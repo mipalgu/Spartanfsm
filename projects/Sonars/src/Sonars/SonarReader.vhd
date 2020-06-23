@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-06-23 06:30 EDT
+--Date Generated: 2020-06-23 07:18 EDT
 --
 
 library IEEE;
@@ -12,14 +12,14 @@ use IEEE.numeric_std.all;
 entity SonarReader is
     port (
         clk: in std_logic;
-        EXTERNAL_address1: out std_logic_vector(3 downto 0);
-        EXTERNAL_address2: out std_logic_vector(3 downto 0);
-        EXTERNAL_data1: out std_logic_vector(7 downto 0);
-        EXTERNAL_data2: out std_logic_vector(7 downto 0);
+        EXTERNAL_address: out std_logic_vector(3 downto 0);
+        EXTERNAL_data: out std_logic_vector(7 downto 0);
         EXTERNAL_trigger1: out std_logic;
         EXTERNAL_trigger2: out std_logic;
         EXTERNAL_echo1: in std_logic;
-        EXTERNAL_echo2: in std_logic
+        EXTERNAL_echo2: in std_logic;
+        EXTERNAL_echoReset1: out std_logic;
+        EXTERNAL_echoReset2: out std_logic
     );
 end SonarReader;
 
@@ -51,27 +51,28 @@ architecture LLFSM of SonarReader is
     constant STATE_SendToDisplay: std_logic_vector(4 downto 0) := "01111";
     constant STATE_WaitForDataToSend: std_logic_vector(4 downto 0) := "10000";
     constant STATE_UpdateDigit: std_logic_vector(4 downto 0) := "10001";
+    constant STATE_BCDEncode: std_logic_vector(4 downto 0) := "10010";
+    constant STATE_Encoding: std_logic_vector(4 downto 0) := "10011";
     signal currentState: std_logic_vector(4 downto 0) := STATE_Initial;
     signal targetState: std_logic_vector(4 downto 0) := currentState;
     signal previousRinglet: std_logic_vector(4 downto 0) := STATE_Initial xor "11111";
     --Snapshot of External Variables
-    signal address1: std_logic_vector(3 downto 0);
-    signal address2: std_logic_vector(3 downto 0);
-    signal data1: std_logic_vector(7 downto 0);
-    signal data2: std_logic_vector(7 downto 0);
+    signal address: std_logic_vector(3 downto 0);
+    signal data: std_logic_vector(7 downto 0);
     signal trigger1: std_logic;
     signal trigger2: std_logic;
     signal echo1: std_logic;
     signal echo2: std_logic;
+    signal echoReset1: std_logic;
+    signal echoReset2: std_logic;
     --Machine Variables
-    signal distance1: std_logic_vector(7 downto 0);
-    signal distance2: std_logic_vector(7 downto 0);
+    signal distance1: unsigned(7 downto 0);
+    signal distance2: unsigned(7 downto 0);
     signal displayBusy: std_logic;
     signal digit: unsigned(3 downto 0);
     signal output: std_logic_vector(7 downto 0);
     signal bcdData: std_logic_vector(11 downto 0);
-    signal distance1BCD: std_logic_vector(11 downto 0);
-    signal distance2BCD: std_logic_vector(11 downto 0);
+    signal bcdOutput:  std_logic_vector(11 downto 0);
     signal sevSegInput: std_logic_vector(3 downto 0);
     signal digitSelect: unsigned(3 downto 0);
     signal sevSegBusy: std_logic;
@@ -79,7 +80,89 @@ architecture LLFSM of SonarReader is
     signal displayDigit: std_logic_vector(3 downto 0);
     signal sevSegOutput: std_logic_vector(6 downto 0);
     signal dataToSend: std_logic_vector(7 downto 0);
+    signal bcdInput: std_logic_vector(7 downto 0);
+    signal bcdBusy: std_logic;
+
+	 component EightBitBinaryToBCDEncoder is
+		port (
+			clk: in std_logic;
+         EXTERNAL_data: in std_logic_vector(7 downto 0);
+         EXTERNAL_busy: out std_logic;
+         EXTERNAL_bcd: out std_logic_vector(11 downto 0)
+		);
+	 end component;
+	 
+	 component SevenSegmentEncoder is
+		port (
+			clk: in std_logic;
+         EXTERNAL_data: in std_logic_vector(3 downto 0);
+         EXTERNAL_sevenSegmentData: out std_logic_vector(6 downto 0);
+         EXTERNAL_busy: out std_logic
+		);
+	 end component;
+	 
+	 component DisplayGateway is
+		port (
+			clk: in std_logic;
+         EXTERNAL_addressLine: out std_logic_vector(3 downto 0);
+         EXTERNAL_dataLine: out std_logic_vector(7 downto 0);
+         EXTERNAL_data: in std_logic_vector(7 downto 0);
+         EXTERNAL_digit: in std_logic_vector(3 downto 0);
+         EXTERNAL_busy: out std_logic
+		);
+	 end component;
+	 
+	 component UltrasonicDistanceSensor is
+		port (
+			clk: in std_logic;
+         EXTERNAL_echo: in std_logic;
+         EXTERNAL_trigger: out std_logic;
+         EXTERNAL_distance: out unsigned(7 downto 0);
+			EXTERNAL_resetEcho: out std_logic
+		);
+	 end component;
+
 begin
+
+	display: DisplayGateway port map (
+		clk,
+		address,
+		data,
+		displayData,
+		displayDigit,
+		displayBusy
+	);
+	
+	sonar1: UltrasonicDistanceSensor port map (
+		clk,
+		echo1,
+		trigger1,
+		distance1,
+		echoReset1
+	);
+	
+	sonar2: UltrasonicDistanceSensor port map (
+		clk,
+		echo2,
+		trigger2,
+		distance2,
+		echoReset2
+	);
+	
+	bcdEncoder: EightBitBinaryToBCDEncoder port map (
+		clk,
+		bcdInput,
+		bcdBusy,
+		bcdOutput
+	);
+	
+	sevSegEncoder: SevenSegmentEncoder port map (
+		clk,
+		sevSegInput,
+		sevSegOutput,
+		sevSegBusy
+	);
+
 process (clk)
     begin
         if (rising_edge(clk)) then
@@ -97,16 +180,17 @@ process (clk)
                         when STATE_ResetDigit=>
                             digit <= x"0";
                         when STATE_ConvertDistance1=>
-                            bcdData<= distance1BCD;
+                            bcdInput <= std_logic_vector(distance1);
                             digitSelect <= digit;
                         when STATE_CreateSeparator=>
                             bcdData <= x"0AA";
                             digitSelect <= digit - 3;
                         when STATE_ConvertDistance2=>
-                            bcdData <= distance2BCD;
+                            bcdInput <= std_logic_vector(distance2);
                             digitSelect <= digit - 5;
                         when STATE_SendToDisplay=>
                             displayData <= dataToSend;
+                            displayDigit <= std_logic_vector(digit);
                         when STATE_UpdateDigit=>
                             digit <= digit + 1;
                         when others =>
@@ -139,8 +223,8 @@ process (clk)
                                 internalState <= Internal;
                             end if;
                         when STATE_ConvertDistance1=>
-                            if (true) then
-                                targetState <= STATE_CompareDigitSelect;
+                            if (bcdBusy = '0') then
+                                targetState <= STATE_BCDEncode;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
@@ -166,8 +250,8 @@ process (clk)
                                 internalState <= Internal;
                             end if;
                         when STATE_ConvertDistance2=>
-                            if (true) then
-                                targetState <= STATE_CompareDigitSelect;
+                            if (bcdBusy = '0') then
+                                targetState <= STATE_BCDEncode;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
@@ -251,6 +335,20 @@ process (clk)
                             else
                                 internalState <= Internal;
                             end if;
+                        when STATE_BCDEncode=>
+                            if (bcdBusy = '1') then
+                                targetState <= STATE_Encoding;
+                                internalState <= OnExit;
+                            else
+                                internalState <= Internal;
+                            end if;
+                        when STATE_Encoding=>
+                            if (bcdBusy = '0') then
+                                targetState <= STATE_CompareDigitSelect;
+                                internalState <= OnExit;
+                            else
+                                internalState <= Internal;
+                            end if;
                         when others =>
                             null;
                     end case;
@@ -270,17 +368,19 @@ process (clk)
                             sevSegInput <= bcdData(11 downto 8);
                         when STATE_WaitToFinish=>
                             dataToSend <= "0" & sevSegOutput;
+                        when STATE_Encoding=>
+                            bcdData<= bcdOutput;
                         when others =>
                             null;
                     end case;
                     internalState <= WriteSnapshot;
                 when WriteSnapshot =>
-                    EXTERNAL_address1 <= address1;
-                    EXTERNAL_address2 <= address2;
-                    EXTERNAL_data1 <= data1;
-                    EXTERNAL_data2 <= data2;
+                    EXTERNAL_address <= address;
+                    EXTERNAL_data <= data;
                     EXTERNAL_trigger1 <= trigger1;
                     EXTERNAL_trigger2 <= trigger2;
+                    EXTERNAL_echoReset1 <= echoReset1;
+                    EXTERNAL_echoReset2 <= echoReset2;
                     internalState <= ReadSnapshot;
                     previousRinglet <= currentState;
                     currentState <= targetState;
