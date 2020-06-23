@@ -53,7 +53,51 @@ architecture LLFSM of EightBitBinaryToBCDEncoder is
     signal encoderOutputs: std_logic_vector(11 downto 0);
     signal originalData: std_logic_vector(7 downto 0);
     signal reset: std_logic;
+	 
+	 component SingleDigitBCDEncoderWithShifting is
+		port (
+			clk: in std_logic;
+			EXTERNAL_binary: in std_logic;
+         EXTERNAL_enable: in std_logic;
+         EXTERNAL_busy: out std_logic;
+         EXTERNAL_bcd: out std_logic_vector(3 downto 0);
+         EXTERNAL_reset: in std_logic;
+         EXTERNAL_carry: out std_logic
+		);
+	 end component;
+	 
 begin
+
+	bcdEncoder0: SingleDigitBCDEncoderWithShifting port map (
+		clk,
+		binary,
+		enable,
+		busyEncoders(0),
+		encoderOutputs(3 downto 0),
+		reset,
+		carryBits(0)
+	);
+	
+	bcdEncoder1: SingleDigitBCDEncoderWithShifting port map (
+		clk,
+		carryBits(0),
+		enable,
+		busyEncoders(1),
+		encoderOutputs(7 downto 4),
+		reset,
+		carryBits(1)
+	);
+	
+	bcdEncoder2: SingleDigitBCDEncoderWithShifting port map (
+		clk,
+		carryBits(1),
+		enable,
+		busyEncoders(2),
+		encoderOutputs(11 downto 8),
+		reset,
+		carryBits(2)
+	);
+
 process (clk)
     begin
         if (rising_edge(clk)) then
