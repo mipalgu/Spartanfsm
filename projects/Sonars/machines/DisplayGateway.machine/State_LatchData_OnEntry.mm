@@ -1,0 +1,2 @@
+latchedData <= data;
+latchedDigit <= digit;

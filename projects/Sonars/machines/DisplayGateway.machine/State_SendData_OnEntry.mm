@@ -1,0 +1,2 @@
+addressLine <= latchedDigit;
+dataLine <= latchedData;

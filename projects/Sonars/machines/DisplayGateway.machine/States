@@ -1,0 +1,12 @@
+Initial
+SUSPENDED
+InitialPseudoState
+NoShutdown
+SetNoDecoding
+SetIntensity
+AllDigitsOn
+DisableDisplayTest
+LatchData
+SendData
+Wait
+CheckIfDifferent
