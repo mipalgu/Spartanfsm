@@ -24,3 +24,5 @@
 #extern	trigger2: out std_logic;	///<
 #extern	echo1: in std_logic;	///<
 #extern	echo2: in std_logic;	///<
+#extern	echoReset1: out std_logic;	///<
+#extern	echoReset2: out std_logic;	///<
