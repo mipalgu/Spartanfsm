@@ -18,10 +18,8 @@
 #machine	signal displayDigit: std_logic_vector(3 downto 0);	///<
 #machine	signal sevSegOutput: std_logic_vector(6 downto 0);	///<
 #machine	signal dataToSend: std_logic_vector(7 downto 0);	///<
-#extern	address1: out std_logic_vector(3 downto 0);	///<
-#extern	address2: out std_logic_vector(3 downto 0);	///<
-#extern	data1: out std_logic_vector(7 downto 0);	///<
-#extern	data2: out std_logic_vector(7 downto 0);	///<
+#extern	address: out std_logic_vector(3 downto 0);	///<
+#extern	data: out std_logic_vector(7 downto 0);	///<
 #extern	trigger1: out std_logic;	///<
 #extern	trigger2: out std_logic;	///<
 #extern	echo1: in std_logic;	///<
