@@ -298,7 +298,7 @@ createRisingEdge states codes vars = "if (rising_edge(clk)) then"
 
 createCodeForState :: String -> String -> String
 createCodeForState state code | code == "" = ""
-                              | otherwise  = "when " ++ state ++ "=>" +\> beautifyTrimmed 1 code
+                              | otherwise  = "when " ++ state ++ " =>" +\> beautifyTrimmed 1 code
 
 onlyValidNewLine :: String -> String -> String
 onlyValidNewLine str1 str2 | str1 == "" && str2 == "" = ""
