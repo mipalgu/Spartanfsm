@@ -23,15 +23,14 @@ SonarReader *_m = static_cast<SonarReader *>(_machine);
 #machine	&signal displayDigit: std_logic_vector(3 downto 0) = _m->signal displayDigit: std_logic_vector(3 downto 0);	///<
 #machine	&signal sevSegOutput: std_logic_vector(6 downto 0) = _m->signal sevSegOutput: std_logic_vector(6 downto 0);	///<
 #machine	&signal dataToSend: std_logic_vector(7 downto 0) = _m->signal dataToSend: std_logic_vector(7 downto 0);	///<
-#extern	&address: out std_logic_vector(3 downto 0) = _m->address: out std_logic_vector(3 downto 0);	///<
-#extern	&data: out std_logic_vector(7 downto 0) = _m->data: out std_logic_vector(7 downto 0);	///<
+#extern	&dataLine: out std_logic = _m->dataLine: out std_logic;	///<
 #extern	&trigger1: out std_logic = _m->trigger1: out std_logic;	///<
 #extern	&trigger2: out std_logic = _m->trigger2: out std_logic;	///<
 #extern	&echo1: in std_logic = _m->echo1: in std_logic;	///<
 #extern	&echo2: in std_logic = _m->echo2: in std_logic;	///<
-#extern	&echoReset1: out std_logic = _m->echoReset1: out std_logic;	///<
-#extern	&echoReset2: out std_logic = _m->echoReset2: out std_logic;	///<
 #machine	&signal bcdInput: std_logic_vector(7 downto 0) = _m->signal bcdInput: std_logic_vector(7 downto 0);	///<
 #machine	&signal bcdBusy: std_logic = _m->signal bcdBusy: std_logic;	///<
+#extern	&slaveClk: in std_logic = _m->slaveClk: in std_logic;	///<
+#extern	&cs: out std_logic = _m->cs: out std_logic;	///<
 
 #pragma clang diagnostic pop
