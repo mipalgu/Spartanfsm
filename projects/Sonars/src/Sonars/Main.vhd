@@ -32,54 +32,67 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity Main is
 	port (
 		clk: in std_logic;
-      PORTA: out std_logic_vector(11 downto 0);
-		PORTB: out std_logic_vector(11 downto 0);
-		PORTC: out std_logic_vector(7 downto 0);
-		PORTE: in std_logic_vector(3 downto 0)
+      dataLine0: out std_logic;
+		cs0: out std_logic;
+		trigger00: out std_logic;
+		echo00: in std_logic;
+		trigger01: out std_logic;
+		echo01: in std_logic;
+		dataLine1: out std_logic;
+		cs1: out std_logic;
+		trigger10: out std_logic;
+		echo10: in std_logic;
+		trigger11: out std_logic;
+		echo11: in std_logic;
+		slaveClk: out std_logic
 	);
 end Main;
 
 architecture Behavioral of Main is
+
+	signal slaveClkGen: std_logic;
 	
 	component SonarReader is
 		port(
 			clk: in std_logic;
-         EXTERNAL_address: out std_logic_vector(3 downto 0);
-         EXTERNAL_data: out std_logic_vector(7 downto 0);
+         EXTERNAL_dataLine: out std_logic;
          EXTERNAL_trigger1: out std_logic;
          EXTERNAL_trigger2: out std_logic;
          EXTERNAL_echo1: in std_logic;
          EXTERNAL_echo2: in std_logic;
-         EXTERNAL_echoReset1: out std_logic;
-         EXTERNAL_echoReset2: out std_logic
+         EXTERNAL_slaveClk: in std_logic;
+         EXTERNAL_cs: out std_logic
 		);
 	end component;
 	
 begin
 
-	sonar1_2: SonarReader port map (
+	sonar0_1: SonarReader port map (
 		clk,
-		PORTA(11 downto 8),
-		PORTA(7 downto 0),
-		PORTC(7),
-		PORTC(6),
-		PORTE(1),
-		PORTE(0),
-		PORTC(5),
-		PORTC(4)
+		dataLine0,
+		trigger00,
+		trigger01,
+		echo00,
+		echo01,
+		slaveClkGen,
+		cs0
 	);
 	
-	sonar3_4: SonarReader port map (
+	sonar2_3: SonarReader port map (
 		clk,
-		PORTB(11 downto 8),
-		PORTB(7 downto 0),
-		PORTC(3),
-		PORTC(2),
-		PORTE(3),
-		PORTE(2),
-		PORTC(1),
-		PORTC(0)
+		dataLine1,
+		trigger10,
+		trigger11,
+		echo10,
+		echo11,
+		slaveClkGen,
+		cs1
 	);
+	
+	process(slaveClkGen)
+	begin
+		slaveClk <= slaveClkGen;
+	end process;
 
 end Behavioral;
 
