@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-06-23 07:19 EDT
+--Date Generated: 2020-06-24 10:54 EDT
 --
 
 library IEEE;
@@ -14,8 +14,7 @@ entity UltrasonicDistanceSensor is
         clk: in std_logic;
         EXTERNAL_echo: in std_logic;
         EXTERNAL_trigger: out std_logic;
-        EXTERNAL_distance: out unsigned(7 downto 0);
-        EXTERNAL_resetEcho: out std_logic
+        EXTERNAL_distance: out unsigned(7 downto 0)
     );
 end UltrasonicDistanceSensor;
 
@@ -44,7 +43,6 @@ architecture LLFSM of UltrasonicDistanceSensor is
     signal echo: std_logic;
     signal trigger: std_logic;
     signal distance: unsigned(7 downto 0);
-    signal resetEcho: std_logic;
     --Machine Variables
     signal i: unsigned(23 downto 0);
     constant SPEED_OF_SOUND: unsigned(15 downto 0) := x"84D0";
@@ -65,17 +63,16 @@ process (clk)
                     end if;
                 when OnEntry =>
                     case currentState is
-                        when STATE_CountTime=>
+                        when STATE_CountTime =>
                             i <= (others => '0');
-                        when STATE_CalculateDistance=>
+                        when STATE_CalculateDistance =>
                             distance <= resize(RINGLET_LENGTH * i * SPEED_OF_SOUND / DOUBLE_FREQ, distance'length); --[periods (6/count) * count * period (20ns) * speedOfSound (34000cm/s)]/2
-                        when STATE_TriggerSignal=>
+                        when STATE_TriggerSignal =>
                             i <= (others => '0');
                             trigger <= '1';
-                        when STATE_LostSignal=>
+                        when STATE_LostSignal =>
                             distance <= (others => '1');
-                        when STATE_ResetEcho=>
-                            resetEcho <= '1';
+                        when STATE_ResetEcho =>
                             trigger <= '0';
                         when others =>
                             null;
@@ -83,16 +80,16 @@ process (clk)
                     internalState <= CheckTransition;
                 when CheckTransition =>
                     case currentState is
-                        when STATE_Initial=>
+                        when STATE_Initial =>
                             if (true) then
                                 targetState <= STATE_ResetEcho;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
                             end if;
-                        when STATE_SUSPENDED=>
+                        when STATE_SUSPENDED =>
                             internalState <= Internal;
-                        when STATE_CountTime=>
+                        when STATE_CountTime =>
                             if (echo = '1') then
                                 targetState <= STATE_CalculateDistance;
                                 internalState <= OnExit;
@@ -102,38 +99,35 @@ process (clk)
                             else
                                 internalState <= Internal;
                             end if;
-                        when STATE_CalculateDistance=>
+                        when STATE_CalculateDistance =>
                             if (true) then
                                 targetState <= STATE_ResetEcho;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
                             end if;
-                        when STATE_TriggerSignal=>
-                            if (i >= x"0000FA" and echo = '0') then
+                        when STATE_TriggerSignal =>
+                            if (i >= x"0000FA") then
                                 targetState <= STATE_CountTime;
-                                internalState <= OnExit;
-                            elsif (i >= TIMEOUT) and (not (i >= x"0000FA" and echo = '0')) then
-                                targetState <= STATE_ResetEcho;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
                             end if;
-                        when STATE_InitialPseudoState=>
+                        when STATE_InitialPseudoState =>
                             if (true) then
                                 targetState <= STATE_Initial;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
                             end if;
-                        when STATE_LostSignal=>
+                        when STATE_LostSignal =>
                             if (true) then
                                 targetState <= STATE_ResetEcho;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
                             end if;
-                        when STATE_ResetEcho=>
+                        when STATE_ResetEcho =>
                             if (echo = '0') then
                                 targetState <= STATE_TriggerSignal;
                                 internalState <= OnExit;
@@ -145,9 +139,9 @@ process (clk)
                     end case;
                 when Internal =>
                     case currentState is
-                        when STATE_CountTime=>
+                        when STATE_CountTime =>
                             i <= i + 1;
-                        when STATE_TriggerSignal=>
+                        when STATE_TriggerSignal =>
                             i <= i + 1;
                         when others =>
                             null;
@@ -155,11 +149,11 @@ process (clk)
                     internalState <= WriteSnapshot;
                 when OnExit =>
                     case currentState is
-                        when STATE_Initial=>
+                        when STATE_Initial =>
                             distance <= (others => '0');
-                        when STATE_CountTime=>
+                        when STATE_CountTime =>
                             i <= i + 1;
-                        when STATE_TriggerSignal=>
+                        when STATE_TriggerSignal =>
                             trigger <= '0';
                         when others =>
                             null;
@@ -168,7 +162,6 @@ process (clk)
                 when WriteSnapshot =>
                     EXTERNAL_trigger <= trigger;
                     EXTERNAL_distance <= distance;
-                    EXTERNAL_resetEcho <= resetEcho;
                     internalState <= ReadSnapshot;
                     previousRinglet <= currentState;
                     currentState <= targetState;
