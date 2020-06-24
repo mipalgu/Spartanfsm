@@ -15,7 +15,6 @@ UltrasonicDistanceSensor *_m = static_cast<UltrasonicDistanceSensor *>(_machine)
 #machine	&signal i: unsigned(23 downto 0) = _m->signal i: unsigned(23 downto 0);	///<
 #machine	&constant SPEED_OF_SOUND: unsigned(15 downto 0) := x"84D0" = _m->constant SPEED_OF_SOUND: unsigned(15 downto 0) := x"84D0";	///<
 #machine	&constant DOUBLE_FREQ: unsigned(27 downto 0) := x"5F5E100" = _m->constant DOUBLE_FREQ: unsigned(27 downto 0) := x"5F5E100";	///<
-#extern	&resetEcho: out std_logic = _m->resetEcho: out std_logic;	///<
 #machine	&constant TIMEOUT: unsigned(23 downto 0) := x"59C284" = _m->constant TIMEOUT: unsigned(23 downto 0) := x"59C284";	///<
 #machine	&constant RINGLET_LENGTH: unsigned(2 downto 0) := "110" = _m->constant RINGLET_LENGTH: unsigned(2 downto 0) := "110";	///<
 
