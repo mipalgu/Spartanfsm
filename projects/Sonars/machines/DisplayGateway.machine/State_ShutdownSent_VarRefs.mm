@@ -1,5 +1,5 @@
 //
-// State_SendData_VarRefs.mm
+// State_ShutdownSent_VarRefs.mm
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
@@ -7,7 +7,7 @@
 #pragma clang diagnostic ignored "-Wunused-variable"
 #pragma clang diagnostic ignored "-Wshadow"
 
-SendData *_s = static_cast<SendData *>(_state);
+ShutdownSent *_s = static_cast<ShutdownSent *>(_state);
 
 
 #pragma clang diagnostic pop

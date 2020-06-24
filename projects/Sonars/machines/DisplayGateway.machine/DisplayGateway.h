@@ -16,12 +16,12 @@ namespace FSM
     {
         class DisplayGateway: public CLMachine
         {
-            CLState *_states[12];
+            CLState *_states[18];
         public:
             DisplayGateway(int mid  = 0, const char *name = "DisplayGateway");
             virtual ~DisplayGateway();
             virtual CLState * const * states() const { return _states; }
-            virtual int numberOfStates() const { return 12; }
+            virtual int numberOfStates() const { return 18; }
 #           include "DisplayGateway_Variables.h"
 #           include "DisplayGateway_Methods.h"
         };

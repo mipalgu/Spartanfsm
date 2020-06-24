@@ -1,5 +1,5 @@
 //
-// State_SendData_FuncRefs.mm
+// State_ShutdownSent_FuncRefs.mm
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //

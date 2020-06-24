@@ -7,6 +7,12 @@ SetIntensity
 AllDigitsOn
 DisableDisplayTest
 LatchData
-SendData
+SendBit
 Wait
 CheckIfDifferent
+ShutdownSent
+NoDecodingSent
+IntensitySent
+EnableDigitsSent
+DisplayTestSent
+DataSend

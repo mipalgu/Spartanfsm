@@ -1,2 +1,2 @@
-addressLine <= x"C";
-dataLine <= x"01";
+txData <= x"0C01";
+

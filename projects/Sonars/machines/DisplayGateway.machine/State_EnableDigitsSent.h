@@ -1,10 +1,10 @@
 //
-// State_SendData.h
+// State_EnableDigitsSent.h
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
-#ifndef clfsm_DisplayGateway_State_SendData_h
-#define clfsm_DisplayGateway_State_SendData_h
+#ifndef clfsm_DisplayGateway_State_EnableDigitsSent_h
+#define clfsm_DisplayGateway_State_EnableDigitsSent_h
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wc++98-compat"
@@ -21,7 +21,7 @@ namespace FSM
     {
       namespace State
       {
-        class SendData: public CLState
+        class EnableDigitsSent: public CLState
         {
           class OnEntry: public CLAction
           {
@@ -50,7 +50,7 @@ namespace FSM
                           class Transition_0: public CLTransition
                 {
                 public:
-                    Transition_0(int toState = 10): CLTransition(toState) {}
+                    Transition_0(int toState = 7): CLTransition(toState) {}
 
                     virtual bool check(CLMachine *, CLState *) const;
                 };
@@ -58,14 +58,14 @@ namespace FSM
                 CLTransition *_transitions[1];
 
                 public:
-                    SendData(const char *name = "SendData");
-                    virtual ~SendData();
+                    EnableDigitsSent(const char *name = "EnableDigitsSent");
+                    virtual ~EnableDigitsSent();
 
                     virtual CLTransition * const *transitions() const { return _transitions; }
                     virtual int numberOfTransitions() const { return 1; }
 
-#                   include "State_SendData_Variables.h"
-#                   include "State_SendData_Methods.h"
+#                   include "State_EnableDigitsSent_Variables.h"
+#                   include "State_EnableDigitsSent_Methods.h"
             };
         }
       }
