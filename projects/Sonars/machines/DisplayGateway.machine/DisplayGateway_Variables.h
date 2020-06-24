@@ -14,3 +14,4 @@
 #machine	signal txData: std_logic_vector(15 downto 0);	///<
 #machine	signal latchedData: std_logic_vector(7 downto 0);	///<
 #machine	signal latchedDigit: std_logic_vector(3 downto 0);	///<
+#extern	slaveClk: in std_logic;	///<
