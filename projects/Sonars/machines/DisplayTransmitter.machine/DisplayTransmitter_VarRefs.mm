@@ -16,5 +16,6 @@ DisplayTransmitter *_m = static_cast<DisplayTransmitter *>(_machine);
 #machine	&signal dataToSend: std_logic_vector(15 downto 0) = _m->signal dataToSend: std_logic_vector(15 downto 0);	///<
 #machine	&signal bitsShifted: unsigned(4 downto 0) = _m->signal bitsShifted: unsigned(4 downto 0);	///<
 #extern	&cs: out std_logic = _m->cs: out std_logic;	///<
+#extern	&slaveClk: in std_logic = _m->slaveClk: in std_logic;	///<
 
 #pragma clang diagnostic pop

@@ -1,1 +1,1 @@
-bitsShift < 16
+slaveClk = '1' and bitsShifted < 16
