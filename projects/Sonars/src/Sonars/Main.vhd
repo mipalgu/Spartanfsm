@@ -26,8 +26,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 -- Uncomment the following library declaration if instantiating
 -- any Xilinx primitives in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
+library UNISIM;
+use UNISIM.VComponents.all;
 
 entity Main is
 	port (
@@ -51,6 +51,9 @@ end Main;
 architecture Behavioral of Main is
 
 	signal slaveClkGen: std_logic;
+	signal feedback: std_logic;
+	signal locked: std_logic;
+	signal machineClk: std_logic;
 	
 	component SonarReader is
 		port(
@@ -68,7 +71,7 @@ architecture Behavioral of Main is
 begin
 
 	sonar0_1: SonarReader port map (
-		clk,
+		machineClk,
 		dataLine0,
 		trigger00,
 		trigger01,
@@ -79,7 +82,7 @@ begin
 	);
 	
 	sonar2_3: SonarReader port map (
-		clk,
+		machineClk,
 		dataLine1,
 		trigger10,
 		trigger11,
@@ -87,6 +90,29 @@ begin
 		echo11,
 		slaveClkGen,
 		cs1
+	);
+	
+	pll: PLL_BASE generic map (
+		CLKFBOUT_MULT => 12,
+		CLKIN_PERIOD => 20.0,
+		CLKOUT0_DIVIDE => 60,
+		CLKOUT0_PHASE => 0.0,
+		CLKOUT1_DIVIDE => 10,
+		CLKOUT1_PHASE => 0.0,
+		CLK_FEEDBACK => "CLKFBOUT",
+		DIVCLK_DIVIDE => 1
+	) port map (
+		CLKIN => clk,
+		CLKFBIN => feedback,
+		CLKFBOUT => feedback,
+		LOCKED => locked,
+		CLKOUT0 => slaveClkGen,
+		CLKOUT1 => machineClk,
+		CLKOUT2 => open,
+		CLKOUT3 => open,
+		CLKOUT4 => open,
+		CLKOUT5 => open,
+		RST => '0'
 	);
 	
 	process(slaveClkGen)
