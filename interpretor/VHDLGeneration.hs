@@ -143,6 +143,7 @@ internalStateVhdl =
     ++ "constant Internal: std_logic_vector(2 downto 0) := \"011\";\n"
     ++ "constant ReadSnapshot: std_logic_vector(2 downto 0) := \"100\";\n"
     ++ "constant WriteSnapshot: std_logic_vector(2 downto 0) := \"101\";\n"
+    ++ "constant NoOnEntry: std_logic_vector(2 downto 0) := \"110\";\n"
     ++ "signal internalState: std_logic_vector(2 downto 0) := ReadSnapshot;\n"
 
 -- Get number of bits to represent the states in dir
@@ -220,7 +221,7 @@ createReadCode vars
 -- Creates the logic surrounding whether the OnEntry or CheckTransition should run
 createReadTransition :: String
 createReadTransition
-  = "if (previousRinglet = currentState) then\n    internalState <= CheckTransition;\nelse\n    internalState <= OnEntry;\nend if;"
+  = "if (previousRinglet = currentState) then\n    internalState <= NoOnEntry;\nelse\n    internalState <= OnEntry;\nend if;"
 
 -- Creates the ReadSnapshot section of the VHDL source file
 createReadSnapshot :: String -> String
@@ -344,6 +345,7 @@ createAllInRisingEdge states codes trans targets vars = "if (rising_edge(clk)) t
     +\> beautifyTrimmed 2 (createAllInternalStateCode "CheckTransition" states (map (\(trans, trgs) -> createTransitionCode trans trgs) (zip trans targets)) "")
     +\> beautifyTrimmed 2 (createAllInternalStateCode "Internal" states (getActions codes 1) "internalState <= WriteSnapshot;")
     +\> beautifyTrimmed 2 (createAllInternalStateCode "OnExit" states (getActions codes 2) "internalState <= WriteSnapshot;")
+    +\> beautifyTrimmed 2 ("when NoOnEntry =>" +\-> "internalState <= CheckTransition;")
     +\> beautifyTrimmed 2 (createWriteSnapshot vars)
     +\> beautifyTrimmed 2 othersNullBlock 
     +\> beautifyTrimmed 1 "end case;"
