@@ -53,7 +53,6 @@ architecture Behavioral of Main is
 	signal slaveClkGen: std_logic;
 	signal feedback: std_logic;
 	signal locked: std_logic;
-	signal machineClk: std_logic;
 	
 	component SonarReader is
 		port(
@@ -71,7 +70,7 @@ architecture Behavioral of Main is
 begin
 
 	sonar0_1: SonarReader port map (
-		machineClk,
+		clk,
 		dataLine0,
 		trigger00,
 		trigger01,
@@ -82,7 +81,7 @@ begin
 	);
 	
 	sonar2_3: SonarReader port map (
-		machineClk,
+		clk,
 		dataLine1,
 		trigger10,
 		trigger11,
@@ -97,8 +96,6 @@ begin
 		CLKIN_PERIOD => 20.0,
 		CLKOUT0_DIVIDE => 60,
 		CLKOUT0_PHASE => 0.0,
-		CLKOUT1_DIVIDE => 10,
-		CLKOUT1_PHASE => 0.0,
 		CLK_FEEDBACK => "CLKFBOUT",
 		DIVCLK_DIVIDE => 1
 	) port map (
@@ -107,7 +104,7 @@ begin
 		CLKFBOUT => feedback,
 		LOCKED => locked,
 		CLKOUT0 => slaveClkGen,
-		CLKOUT1 => machineClk,
+		CLKOUT1 => open,
 		CLKOUT2 => open,
 		CLKOUT3 => open,
 		CLKOUT4 => open,
