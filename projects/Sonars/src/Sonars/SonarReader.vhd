@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-06-24 10:39 EDT
+--Date Generated: 2020-06-24 20:27 EDT
 --
 
 library IEEE;
@@ -30,6 +30,7 @@ architecture LLFSM of SonarReader is
     constant Internal: std_logic_vector(2 downto 0) := "011";
     constant ReadSnapshot: std_logic_vector(2 downto 0) := "100";
     constant WriteSnapshot: std_logic_vector(2 downto 0) := "101";
+    constant NoOnEntry: std_logic_vector(2 downto 0) := "110";
     signal internalState: std_logic_vector(2 downto 0) := ReadSnapshot;
     --State Representation Bits
     constant STATE_Initial: std_logic_vector(4 downto 0) := "00000";
@@ -80,7 +81,6 @@ architecture LLFSM of SonarReader is
     signal dataToSend: std_logic_vector(7 downto 0);
     signal bcdInput: std_logic_vector(7 downto 0);
     signal bcdBusy: std_logic;
-
 
 	 component EightBitBinaryToBCDEncoder is
 		port (
@@ -170,7 +170,7 @@ process (clk)
                     echo2 <= EXTERNAL_echo2;
                     slaveClk <= EXTERNAL_slaveClk;
                     if (previousRinglet = currentState) then
-                        internalState <= CheckTransition;
+                        internalState <= NoOnEntry;
                     else
                         internalState <= OnEntry;
                     end if;
@@ -373,6 +373,8 @@ process (clk)
                             null;
                     end case;
                     internalState <= WriteSnapshot;
+                when NoOnEntry =>
+                    internalState <= CheckTransition;
                 when WriteSnapshot =>
                     EXTERNAL_dataLine <= dataLine;
                     EXTERNAL_trigger1 <= trigger1;

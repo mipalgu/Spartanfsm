@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-06-23 01:51 EDT
+--Date Generated: 2020-06-24 20:23 EDT
 --
 
 library IEEE;
@@ -29,6 +29,7 @@ architecture LLFSM of SingleDigitBCDEncoderWithShifting is
     constant Internal: std_logic_vector(2 downto 0) := "011";
     constant ReadSnapshot: std_logic_vector(2 downto 0) := "100";
     constant WriteSnapshot: std_logic_vector(2 downto 0) := "101";
+    constant NoOnEntry: std_logic_vector(2 downto 0) := "110";
     signal internalState: std_logic_vector(2 downto 0) := ReadSnapshot;
     --State Representation Bits
     constant STATE_Initial: std_logic_vector(3 downto 0) := "0000";
@@ -62,29 +63,29 @@ process (clk)
                     enable <= EXTERNAL_enable;
                     reset <= EXTERNAL_reset;
                     if (previousRinglet = currentState) then
-                        internalState <= CheckTransition;
+                        internalState <= NoOnEntry;
                     else
                         internalState <= OnEntry;
                     end if;
                 when OnEntry =>
                     case currentState is
-                        when STATE_ResetRegisters=>
+                        when STATE_ResetRegisters =>
                             bcd <= "0000";
                             busy <= '0';
                             latchedBinary <= '0';
                             carry <= '0';
-                        when STATE_SetBusy=>
+                        when STATE_SetBusy =>
                             busy <= '1';
-                        when STATE_EncodeWithCarry=>
+                        when STATE_EncodeWithCarry =>
                             bcd(0) <= latchedBinary;
                             bcd(1) <= not bcd(0);
                             bcd(2) <= not (bcd(1) xor bcd(0));
                             bcd(3) <= bcd(3) and bcd(0);
-                        when STATE_EncodeWithoutCarry=>
+                        when STATE_EncodeWithoutCarry =>
                             bcd <= bcd(2 downto 0) & latchedBinary;
-                        when STATE_SetCarry=>
+                        when STATE_SetCarry =>
                             carry <= bcd(3) or (bcd(2) and bcd(1)) or (bcd(2) and bcd(0));
-                        when STATE_WaitForEnable=>
+                        when STATE_WaitForEnable =>
                             busy <= '0';
                         when others =>
                             null;
@@ -92,23 +93,23 @@ process (clk)
                     internalState <= CheckTransition;
                 when CheckTransition =>
                     case currentState is
-                        when STATE_Initial=>
+                        when STATE_Initial =>
                             if (true) then
                                 targetState <= STATE_ResetRegisters;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
                             end if;
-                        when STATE_SUSPENDED=>
+                        when STATE_SUSPENDED =>
                             internalState <= Internal;
-                        when STATE_ResetRegisters=>
+                        when STATE_ResetRegisters =>
                             if (enable = '1') then
                                 targetState <= STATE_SetBusy;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
                             end if;
-                        when STATE_SetBusy=>
+                        when STATE_SetBusy =>
                             if (carry = '1') then
                                 targetState <= STATE_EncodeWithCarry;
                                 internalState <= OnExit;
@@ -118,28 +119,28 @@ process (clk)
                             else
                                 internalState <= Internal;
                             end if;
-                        when STATE_EncodeWithCarry=>
+                        when STATE_EncodeWithCarry =>
                             if (true) then
                                 targetState <= STATE_SetCarry;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
                             end if;
-                        when STATE_EncodeWithoutCarry=>
+                        when STATE_EncodeWithoutCarry =>
                             if (true) then
                                 targetState <= STATE_SetCarry;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
                             end if;
-                        when STATE_SetCarry=>
+                        when STATE_SetCarry =>
                             if (enable = '0') then
                                 targetState <= STATE_WaitForEnable;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
                             end if;
-                        when STATE_WaitForEnable=>
+                        when STATE_WaitForEnable =>
                             if (reset = '0') then
                                 targetState <= STATE_ResetRegisters;
                                 internalState <= OnExit;
@@ -149,7 +150,7 @@ process (clk)
                             else
                                 internalState <= Internal;
                             end if;
-                        when STATE_InitialPseudoState=>
+                        when STATE_InitialPseudoState =>
                             if (true) then
                                 targetState <= STATE_Initial;
                                 internalState <= OnExit;
@@ -167,14 +168,16 @@ process (clk)
                     internalState <= WriteSnapshot;
                 when OnExit =>
                     case currentState is
-                        when STATE_ResetRegisters=>
+                        when STATE_ResetRegisters =>
                             latchedBinary <= binary;
-                        when STATE_WaitForEnable=>
+                        when STATE_WaitForEnable =>
                             latchedBinary <= binary;
                         when others =>
                             null;
                     end case;
                     internalState <= WriteSnapshot;
+                when NoOnEntry =>
+                    internalState <= CheckTransition;
                 when WriteSnapshot =>
                     EXTERNAL_busy <= busy;
                     EXTERNAL_bcd <= bcd;

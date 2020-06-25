@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-06-23 01:00 EDT
+--Date Generated: 2020-06-24 20:24 EDT
 --
 
 library IEEE;
@@ -26,6 +26,7 @@ architecture LLFSM of EightBitBinaryToBCDEncoder is
     constant Internal: std_logic_vector(2 downto 0) := "011";
     constant ReadSnapshot: std_logic_vector(2 downto 0) := "100";
     constant WriteSnapshot: std_logic_vector(2 downto 0) := "101";
+    constant NoOnEntry: std_logic_vector(2 downto 0) := "110";
     signal internalState: std_logic_vector(2 downto 0) := ReadSnapshot;
     --State Representation Bits
     constant STATE_Initial: std_logic_vector(2 downto 0) := "000";
@@ -53,7 +54,7 @@ architecture LLFSM of EightBitBinaryToBCDEncoder is
     signal encoderOutputs: std_logic_vector(11 downto 0);
     signal originalData: std_logic_vector(7 downto 0);
     signal reset: std_logic;
-	 
+
 	 component SingleDigitBCDEncoderWithShifting is
 		port (
 			clk: in std_logic;
@@ -105,33 +106,33 @@ process (clk)
                 when ReadSnapshot =>
                     data <= EXTERNAL_data;
                     if (previousRinglet = currentState) then
-                        internalState <= CheckTransition;
+                        internalState <= NoOnEntry;
                     else
                         internalState <= OnEntry;
                     end if;
                 when OnEntry =>
                     case currentState is
-                        when STATE_Initial=>
+                        when STATE_Initial =>
                             bcd <= (others => '0');
                             latchedData <= (others => '0');
                             originalData <= (others => '0');
-                        when STATE_SetBusy=>
+                        when STATE_SetBusy =>
                             busy <= '1';
                             reset <= '1';
-                        when STATE_SetupVarsForEncoding=>
+                        when STATE_SetupVarsForEncoding =>
                             bitsShifted <= bitsShifted + 1;
                             binary <= latchedData(7);
                             latchedData <= latchedData(6 downto 0) & '0';
                             enable <= '1';
-                        when STATE_EncodeBits=>
+                        when STATE_EncodeBits =>
                             enable <= '0';
-                        when STATE_Reset=>
+                        when STATE_Reset =>
                             bitsShifted <= x"0";
                             binary <= '0';
                             enable <= '0';
                             busy <= '0';
                             reset <= '0';
-                        when STATE_SetResult=>
+                        when STATE_SetResult =>
                             bcd <= encoderOutputs;
                         when others =>
                             null;
@@ -139,37 +140,37 @@ process (clk)
                     internalState <= CheckTransition;
                 when CheckTransition =>
                     case currentState is
-                        when STATE_Initial=>
+                        when STATE_Initial =>
                             if (true) then
                                 targetState <= STATE_Reset;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
                             end if;
-                        when STATE_SUSPENDED=>
+                        when STATE_SUSPENDED =>
                             internalState <= Internal;
-                        when STATE_SetBusy=>
+                        when STATE_SetBusy =>
                             if (true) then
                                 targetState <= STATE_SetupVarsForEncoding;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
                             end if;
-                        when STATE_InitialPseudoState=>
+                        when STATE_InitialPseudoState =>
                             if (true) then
                                 targetState <= STATE_Initial;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
                             end if;
-                        when STATE_SetupVarsForEncoding=>
+                        when STATE_SetupVarsForEncoding =>
                             if (busyEncoders = "111") then
                                 targetState <= STATE_EncodeBits;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
                             end if;
-                        when STATE_EncodeBits=>
+                        when STATE_EncodeBits =>
                             if (busyEncoders = "000" and bitsShifted < 8) then
                                 targetState <= STATE_SetupVarsForEncoding;
                                 internalState <= OnExit;
@@ -179,14 +180,14 @@ process (clk)
                             else
                                 internalState <= Internal;
                             end if;
-                        when STATE_Reset=>
+                        when STATE_Reset =>
                             if (originalData /= data and busyEncoders = "000") then
                                 targetState <= STATE_SetBusy;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
                             end if;
-                        when STATE_SetResult=>
+                        when STATE_SetResult =>
                             if (true) then
                                 targetState <= STATE_Reset;
                                 internalState <= OnExit;
@@ -204,13 +205,15 @@ process (clk)
                     internalState <= WriteSnapshot;
                 when OnExit =>
                     case currentState is
-                        when STATE_Reset=>
+                        when STATE_Reset =>
                             latchedData <= data;
                             originalData <= data;
                         when others =>
                             null;
                     end case;
                     internalState <= WriteSnapshot;
+                when NoOnEntry =>
+                    internalState <= CheckTransition;
                 when WriteSnapshot =>
                     EXTERNAL_busy <= busy;
                     EXTERNAL_bcd <= bcd;
