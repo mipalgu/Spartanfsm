@@ -53,6 +53,19 @@ architecture Behavioral of Main is
 		);
 	end component;
 	
+	component ODDR2 is
+		port(
+			Q: out std_logic; -- 1-bit DDR output data
+			C0: in std_logic; -- 1-bit clock input
+			C1: in std_logic; -- 1-bit clock input
+			CE: in std_logic; -- 1-bit clock enable input
+			D0: in std_logic; -- 1-bit data input (associated with C1)
+			D1: in std_logic; -- 1-bit data input (associated with C1)
+			R: in std_logic; -- 1-bit reset input
+			S: in std_logic -- 1-bit set input
+		);
+	end component;
+	
 begin
 
 	sevSeg: SevenSegmentTester port map (
@@ -83,10 +96,16 @@ begin
 		RST => '0'
 	);
 	
-	process(slaveClkGen)
-	begin
-		slaveClk <= slaveClkGen;
-	end process;
+	clkBuff: ODDR2 port map (
+		C0 => slaveClkGen,
+		C1 => not slaveClkGen,
+		Q => slaveClk,
+		D1 => '0',
+		D0 => '1',
+		CE => '1',
+		R => '0',
+		S => '0'
+	);
 
 end Behavioral;
 
