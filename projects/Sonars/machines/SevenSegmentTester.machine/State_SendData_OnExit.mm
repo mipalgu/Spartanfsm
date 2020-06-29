@@ -1,1 +1,1 @@
-digit <= digit + "0001";
+digit <= std_logic_vector(unsigned(digit) + 1);
