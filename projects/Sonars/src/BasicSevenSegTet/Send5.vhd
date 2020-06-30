@@ -33,13 +33,13 @@ entity Send5 is
 	port (
 		slaveClk: in std_logic;
 		dataLine: out std_logic;
-		cs: out std_logic
+		cs: out std_logic;
+		enable: inout std_logic
 	);
 end Send5;
 
 architecture Behavioral of Send5 is
 	signal address: std_logic_vector(7 downto 0);
-	signal enable: std_logic := '0';
 	signal busy: std_logic;
 	signal data: std_logic_vector(7 downto 0);
 	signal state: std_logic_vector(3 downto 0) := "0000";

@@ -43,12 +43,14 @@ architecture Behavioral of Main is
 	signal slaveClkGen: std_logic;
 	signal feedback: std_logic;
 	signal locked: std_logic;
+	signal enable: std_logic;
 	
 	component Send5 is
 		port (
 			slaveClk: in std_logic;
 			dataLine: out std_logic;
-			cs: out std_logic
+			cs: out std_logic;
+			enable: inout std_logic
 		);
 	end component;
 	
@@ -75,7 +77,7 @@ architecture Behavioral of Main is
 begin
 
 	clkbuffGen: BUFG port map (
-		I => slaveClkGen,
+		I => slaveClkGen and enable,
 		O => latchedSlaveClk
 	);
 	
@@ -114,7 +116,8 @@ begin
 	snd5: Send5 port map (
 		latchedSlaveClk,
 		dataLine,
-		cs
+		cs,
+		enable
 	);
 
 end Behavioral;
