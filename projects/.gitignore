@@ -69,3 +69,9 @@
 *.xdl
 *.exe
 isim
+*.rpt
+*.htm
+*.summary
+*.qsf
+*.qdf
+*.bak
