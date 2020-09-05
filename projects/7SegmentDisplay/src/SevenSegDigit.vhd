@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-05 21:22 AEST
+--Date Generated: 2020-09-05 21:25 AEST
 --
 
 library IEEE;
@@ -12,7 +12,7 @@ use IEEE.std_logic_1164.All;
 entity SevenSegDigit is
     port (
         clk: in std_logic;
-        EXTERNAL_count: in std_logic(3 downto 0);
+        EXTERNAL_count: in std_logic_vector(3 downto 0);
         EXTERNAL_output: out std_logic_vector(6 downto 0)
     );
 end SevenSegDigit;
@@ -51,7 +51,7 @@ architecture LLFSM of SevenSegDigit is
     signal targetState: std_logic_vector(4 downto 0) := currentState;
     signal previousRinglet: std_logic_vector(4 downto 0) := STATE_Initial xor "11111";
     --Snapshot of External Variables
-    signal count: std_logic(3 downto 0);
+    signal count: std_logic_vector(3 downto 0);
     signal output: std_logic_vector(6 downto 0);
     --Machine Variables
 begin
