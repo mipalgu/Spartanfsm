@@ -1,0 +1,1 @@
+output <= (others => '0');
