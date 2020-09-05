@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-05 23:11 AEST
+--Date Generated: 2020-09-05 23:19 AEST
 --
 
 library IEEE;
@@ -79,7 +79,7 @@ process (clk)
                 when CheckTransition =>
                     case currentState is
                         when STATE_Initial =>
-                            if (increaseButton = '0' and decreaseButton = '0') then
+                            if (true) then
                                 targetState <= STATE_Check;
                                 internalState <= OnExit;
                             else
