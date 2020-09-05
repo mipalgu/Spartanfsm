@@ -1,10 +1,10 @@
 //
-// State_DecrementCount.h
+// State_CheckDecrease.h
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
-#ifndef clfsm_7Seg_State_DecrementCount_h
-#define clfsm_7Seg_State_DecrementCount_h
+#ifndef clfsm_DigitFlipper_State_CheckDecrease_h
+#define clfsm_DigitFlipper_State_CheckDecrease_h
 
 #include "CLState.h"
 #include "CLAction.h"
@@ -14,11 +14,11 @@ namespace FSM
 {
     namespace CLM
     {
-      namespace FSM7Seg
+      namespace FSMDigitFlipper
       {
         namespace State
         {
-            class DecrementCount: public CLState
+            class CheckDecrease: public CLState
             {
                 class OnEntry: public CLAction
                 {
@@ -38,22 +38,30 @@ namespace FSM
                 class Transition_0: public CLTransition
                 {
                 public:
-                    Transition_0(int toState = 3): CLTransition(toState) {}
+                    Transition_0(int toState = 8): CLTransition(toState) {}
 
                     virtual bool check(CLMachine *, CLState *) const;
                 };
 
-                CLTransition *_transitions[1];
+                class Transition_1: public CLTransition
+                {
+                public:
+                    Transition_1(int toState = 9): CLTransition(toState) {}
+
+                    virtual bool check(CLMachine *, CLState *) const;
+                };
+
+                CLTransition *_transitions[2];
 
                 public:
-                    DecrementCount(const char *name = "DecrementCount");
-                    virtual ~DecrementCount();
+                    CheckDecrease(const char *name = "CheckDecrease");
+                    virtual ~CheckDecrease();
 
                     virtual CLTransition * const *transitions() const { return _transitions; }
-                    virtual int numberOfTransitions() const { return 1; }
+                    virtual int numberOfTransitions() const { return 2; }
 
-#                   include "State_DecrementCount_Variables.h"
-#                   include "State_DecrementCount_Methods.h"
+#                   include "State_CheckDecrease_Variables.h"
+#                   include "State_CheckDecrease_Methods.h"
             };
         }
       }

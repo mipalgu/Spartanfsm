@@ -3,15 +3,15 @@
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
-#include "7Seg_Includes.h"
-#include "7Seg.h"
+#include "DigitFlipper_Includes.h"
+#include "DigitFlipper.h"
 #include "State_CheckDecrease.h"
 
 #include "State_CheckDecrease_Includes.h"
 
 using namespace FSM;
 using namespace CLM;
-using namespace FSM7Seg;
+using namespace FSMDigitFlipper;
 using namespace State;
 
 CheckDecrease::CheckDecrease(const char *name): CLState(name, *new CheckDecrease::OnEntry, *new CheckDecrease::OnExit, *new CheckDecrease::Internal)
@@ -32,36 +32,36 @@ CheckDecrease::~CheckDecrease()
 
 void CheckDecrease::OnEntry::perform(CLMachine *_machine, CLState *_state) const
 {
-#	include "7Seg_VarRefs.mm"
+#	include "DigitFlipper_VarRefs.mm"
 #	include "State_CheckDecrease_VarRefs.mm"
-#	include "7Seg_FuncRefs.mm"
+#	include "DigitFlipper_FuncRefs.mm"
 #	include "State_CheckDecrease_FuncRefs.mm"
 #	include "State_CheckDecrease_OnEntry.mm"
 }
 
 void CheckDecrease::OnExit::perform(CLMachine *_machine, CLState *_state) const
 {
-#	include "7Seg_VarRefs.mm"
+#	include "DigitFlipper_VarRefs.mm"
 #	include "State_CheckDecrease_VarRefs.mm"
-#	include "7Seg_FuncRefs.mm"
+#	include "DigitFlipper_FuncRefs.mm"
 #	include "State_CheckDecrease_FuncRefs.mm"
 #	include "State_CheckDecrease_OnExit.mm"
 }
 
 void CheckDecrease::Internal::perform(CLMachine *_machine, CLState *_state) const
 {
-#	include "7Seg_VarRefs.mm"
+#	include "DigitFlipper_VarRefs.mm"
 #	include "State_CheckDecrease_VarRefs.mm"
-#	include "7Seg_FuncRefs.mm"
+#	include "DigitFlipper_FuncRefs.mm"
 #	include "State_CheckDecrease_FuncRefs.mm"
 #	include "State_CheckDecrease_Internal.mm"
 }
 
 bool CheckDecrease::Transition_0::check(CLMachine *_machine, CLState *_state) const
 {
-#	include "7Seg_VarRefs.mm"
+#	include "DigitFlipper_VarRefs.mm"
 #	include "State_CheckDecrease_VarRefs.mm"
-#	include "7Seg_FuncRefs.mm"
+#	include "DigitFlipper_FuncRefs.mm"
 #	include "State_CheckDecrease_FuncRefs.mm"
 
 	return
@@ -71,9 +71,9 @@ bool CheckDecrease::Transition_0::check(CLMachine *_machine, CLState *_state) co
 }
 bool CheckDecrease::Transition_1::check(CLMachine *_machine, CLState *_state) const
 {
-#	include "7Seg_VarRefs.mm"
+#	include "DigitFlipper_VarRefs.mm"
 #	include "State_CheckDecrease_VarRefs.mm"
-#	include "7Seg_FuncRefs.mm"
+#	include "DigitFlipper_FuncRefs.mm"
 #	include "State_CheckDecrease_FuncRefs.mm"
 
 	return

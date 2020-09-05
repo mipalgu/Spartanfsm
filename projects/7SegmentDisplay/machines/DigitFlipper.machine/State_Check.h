@@ -3,8 +3,8 @@
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
-#ifndef clfsm_7Seg_State_Check_h
-#define clfsm_7Seg_State_Check_h
+#ifndef clfsm_DigitFlipper_State_Check_h
+#define clfsm_DigitFlipper_State_Check_h
 
 #include "CLState.h"
 #include "CLAction.h"
@@ -14,7 +14,7 @@ namespace FSM
 {
     namespace CLM
     {
-      namespace FSM7Seg
+      namespace FSMDigitFlipper
       {
         namespace State
         {

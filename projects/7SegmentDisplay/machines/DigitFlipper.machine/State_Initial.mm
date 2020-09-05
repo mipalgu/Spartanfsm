@@ -3,15 +3,15 @@
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
-#include "7Seg_Includes.h"
-#include "7Seg.h"
+#include "DigitFlipper_Includes.h"
+#include "DigitFlipper.h"
 #include "State_Initial.h"
 
 #include "State_Initial_Includes.h"
 
 using namespace FSM;
 using namespace CLM;
-using namespace FSM7Seg;
+using namespace FSMDigitFlipper;
 using namespace State;
 
 Initial::Initial(const char *name): CLState(name, *new Initial::OnEntry, *new Initial::OnExit, *new Initial::Internal)
@@ -30,36 +30,36 @@ Initial::~Initial()
 
 void Initial::OnEntry::perform(CLMachine *_machine, CLState *_state) const
 {
-#	include "7Seg_VarRefs.mm"
+#	include "DigitFlipper_VarRefs.mm"
 #	include "State_Initial_VarRefs.mm"
-#	include "7Seg_FuncRefs.mm"
+#	include "DigitFlipper_FuncRefs.mm"
 #	include "State_Initial_FuncRefs.mm"
 #	include "State_Initial_OnEntry.mm"
 }
 
 void Initial::OnExit::perform(CLMachine *_machine, CLState *_state) const
 {
-#	include "7Seg_VarRefs.mm"
+#	include "DigitFlipper_VarRefs.mm"
 #	include "State_Initial_VarRefs.mm"
-#	include "7Seg_FuncRefs.mm"
+#	include "DigitFlipper_FuncRefs.mm"
 #	include "State_Initial_FuncRefs.mm"
 #	include "State_Initial_OnExit.mm"
 }
 
 void Initial::Internal::perform(CLMachine *_machine, CLState *_state) const
 {
-#	include "7Seg_VarRefs.mm"
+#	include "DigitFlipper_VarRefs.mm"
 #	include "State_Initial_VarRefs.mm"
-#	include "7Seg_FuncRefs.mm"
+#	include "DigitFlipper_FuncRefs.mm"
 #	include "State_Initial_FuncRefs.mm"
 #	include "State_Initial_Internal.mm"
 }
 
 bool Initial::Transition_0::check(CLMachine *_machine, CLState *_state) const
 {
-#	include "7Seg_VarRefs.mm"
+#	include "DigitFlipper_VarRefs.mm"
 #	include "State_Initial_VarRefs.mm"
-#	include "7Seg_FuncRefs.mm"
+#	include "DigitFlipper_FuncRefs.mm"
 #	include "State_Initial_FuncRefs.mm"
 
 	return

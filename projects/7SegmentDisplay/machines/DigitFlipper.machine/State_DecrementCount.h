@@ -1,10 +1,10 @@
 //
-// State_MaxCount.h
+// State_DecrementCount.h
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
-#ifndef clfsm_7Seg_State_MaxCount_h
-#define clfsm_7Seg_State_MaxCount_h
+#ifndef clfsm_DigitFlipper_State_DecrementCount_h
+#define clfsm_DigitFlipper_State_DecrementCount_h
 
 #include "CLState.h"
 #include "CLAction.h"
@@ -14,11 +14,11 @@ namespace FSM
 {
     namespace CLM
     {
-      namespace FSM7Seg
+      namespace FSMDigitFlipper
       {
         namespace State
         {
-            class MaxCount: public CLState
+            class DecrementCount: public CLState
             {
                 class OnEntry: public CLAction
                 {
@@ -46,14 +46,14 @@ namespace FSM
                 CLTransition *_transitions[1];
 
                 public:
-                    MaxCount(const char *name = "MaxCount");
-                    virtual ~MaxCount();
+                    DecrementCount(const char *name = "DecrementCount");
+                    virtual ~DecrementCount();
 
                     virtual CLTransition * const *transitions() const { return _transitions; }
                     virtual int numberOfTransitions() const { return 1; }
 
-#                   include "State_MaxCount_Variables.h"
-#                   include "State_MaxCount_Methods.h"
+#                   include "State_DecrementCount_Variables.h"
+#                   include "State_DecrementCount_Methods.h"
             };
         }
       }

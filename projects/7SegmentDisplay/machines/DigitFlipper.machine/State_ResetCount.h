@@ -1,10 +1,10 @@
 //
-// State_InitialPseudoState.h
+// State_ResetCount.h
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
-#ifndef clfsm_7Seg_State_InitialPseudoState_h
-#define clfsm_7Seg_State_InitialPseudoState_h
+#ifndef clfsm_DigitFlipper_State_ResetCount_h
+#define clfsm_DigitFlipper_State_ResetCount_h
 
 #include "CLState.h"
 #include "CLAction.h"
@@ -14,11 +14,11 @@ namespace FSM
 {
     namespace CLM
     {
-      namespace FSM7Seg
+      namespace FSMDigitFlipper
       {
         namespace State
         {
-            class InitialPseudoState: public CLState
+            class ResetCount: public CLState
             {
                 class OnEntry: public CLAction
                 {
@@ -38,7 +38,7 @@ namespace FSM
                 class Transition_0: public CLTransition
                 {
                 public:
-                    Transition_0(int toState = 0): CLTransition(toState) {}
+                    Transition_0(int toState = 3): CLTransition(toState) {}
 
                     virtual bool check(CLMachine *, CLState *) const;
                 };
@@ -46,14 +46,14 @@ namespace FSM
                 CLTransition *_transitions[1];
 
                 public:
-                    InitialPseudoState(const char *name = "InitialPseudoState");
-                    virtual ~InitialPseudoState();
+                    ResetCount(const char *name = "ResetCount");
+                    virtual ~ResetCount();
 
                     virtual CLTransition * const *transitions() const { return _transitions; }
                     virtual int numberOfTransitions() const { return 1; }
 
-#                   include "State_InitialPseudoState_Variables.h"
-#                   include "State_InitialPseudoState_Methods.h"
+#                   include "State_ResetCount_Variables.h"
+#                   include "State_ResetCount_Methods.h"
             };
         }
       }

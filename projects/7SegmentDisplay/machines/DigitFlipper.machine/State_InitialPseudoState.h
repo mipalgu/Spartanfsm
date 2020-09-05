@@ -1,10 +1,10 @@
 //
-// State_CheckIncrease.h
+// State_InitialPseudoState.h
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
-#ifndef clfsm_7Seg_State_CheckIncrease_h
-#define clfsm_7Seg_State_CheckIncrease_h
+#ifndef clfsm_DigitFlipper_State_InitialPseudoState_h
+#define clfsm_DigitFlipper_State_InitialPseudoState_h
 
 #include "CLState.h"
 #include "CLAction.h"
@@ -14,11 +14,11 @@ namespace FSM
 {
     namespace CLM
     {
-      namespace FSM7Seg
+      namespace FSMDigitFlipper
       {
         namespace State
         {
-            class CheckIncrease: public CLState
+            class InitialPseudoState: public CLState
             {
                 class OnEntry: public CLAction
                 {
@@ -38,30 +38,22 @@ namespace FSM
                 class Transition_0: public CLTransition
                 {
                 public:
-                    Transition_0(int toState = 4): CLTransition(toState) {}
+                    Transition_0(int toState = 0): CLTransition(toState) {}
 
                     virtual bool check(CLMachine *, CLState *) const;
                 };
 
-                class Transition_1: public CLTransition
-                {
-                public:
-                    Transition_1(int toState = 6): CLTransition(toState) {}
-
-                    virtual bool check(CLMachine *, CLState *) const;
-                };
-
-                CLTransition *_transitions[2];
+                CLTransition *_transitions[1];
 
                 public:
-                    CheckIncrease(const char *name = "CheckIncrease");
-                    virtual ~CheckIncrease();
+                    InitialPseudoState(const char *name = "InitialPseudoState");
+                    virtual ~InitialPseudoState();
 
                     virtual CLTransition * const *transitions() const { return _transitions; }
-                    virtual int numberOfTransitions() const { return 2; }
+                    virtual int numberOfTransitions() const { return 1; }
 
-#                   include "State_CheckIncrease_Variables.h"
-#                   include "State_CheckIncrease_Methods.h"
+#                   include "State_InitialPseudoState_Variables.h"
+#                   include "State_InitialPseudoState_Methods.h"
             };
         }
       }

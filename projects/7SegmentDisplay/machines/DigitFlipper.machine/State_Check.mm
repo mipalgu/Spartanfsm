@@ -3,15 +3,15 @@
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
-#include "7Seg_Includes.h"
-#include "7Seg.h"
+#include "DigitFlipper_Includes.h"
+#include "DigitFlipper.h"
 #include "State_Check.h"
 
 #include "State_Check_Includes.h"
 
 using namespace FSM;
 using namespace CLM;
-using namespace FSM7Seg;
+using namespace FSMDigitFlipper;
 using namespace State;
 
 Check::Check(const char *name): CLState(name, *new Check::OnEntry, *new Check::OnExit, *new Check::Internal)
@@ -32,36 +32,36 @@ Check::~Check()
 
 void Check::OnEntry::perform(CLMachine *_machine, CLState *_state) const
 {
-#	include "7Seg_VarRefs.mm"
+#	include "DigitFlipper_VarRefs.mm"
 #	include "State_Check_VarRefs.mm"
-#	include "7Seg_FuncRefs.mm"
+#	include "DigitFlipper_FuncRefs.mm"
 #	include "State_Check_FuncRefs.mm"
 #	include "State_Check_OnEntry.mm"
 }
 
 void Check::OnExit::perform(CLMachine *_machine, CLState *_state) const
 {
-#	include "7Seg_VarRefs.mm"
+#	include "DigitFlipper_VarRefs.mm"
 #	include "State_Check_VarRefs.mm"
-#	include "7Seg_FuncRefs.mm"
+#	include "DigitFlipper_FuncRefs.mm"
 #	include "State_Check_FuncRefs.mm"
 #	include "State_Check_OnExit.mm"
 }
 
 void Check::Internal::perform(CLMachine *_machine, CLState *_state) const
 {
-#	include "7Seg_VarRefs.mm"
+#	include "DigitFlipper_VarRefs.mm"
 #	include "State_Check_VarRefs.mm"
-#	include "7Seg_FuncRefs.mm"
+#	include "DigitFlipper_FuncRefs.mm"
 #	include "State_Check_FuncRefs.mm"
 #	include "State_Check_Internal.mm"
 }
 
 bool Check::Transition_0::check(CLMachine *_machine, CLState *_state) const
 {
-#	include "7Seg_VarRefs.mm"
+#	include "DigitFlipper_VarRefs.mm"
 #	include "State_Check_VarRefs.mm"
-#	include "7Seg_FuncRefs.mm"
+#	include "DigitFlipper_FuncRefs.mm"
 #	include "State_Check_FuncRefs.mm"
 
 	return
@@ -71,9 +71,9 @@ bool Check::Transition_0::check(CLMachine *_machine, CLState *_state) const
 }
 bool Check::Transition_1::check(CLMachine *_machine, CLState *_state) const
 {
-#	include "7Seg_VarRefs.mm"
+#	include "DigitFlipper_VarRefs.mm"
 #	include "State_Check_VarRefs.mm"
-#	include "7Seg_FuncRefs.mm"
+#	include "DigitFlipper_FuncRefs.mm"
 #	include "State_Check_FuncRefs.mm"
 
 	return

@@ -1,10 +1,10 @@
 //
-// State_SUSPENDED.h
+// State_Initial.h
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
-#ifndef clfsm_7Seg_State_SUSPENDED_h
-#define clfsm_7Seg_State_SUSPENDED_h
+#ifndef clfsm_DigitFlipper_State_Initial_h
+#define clfsm_DigitFlipper_State_Initial_h
 
 #include "CLState.h"
 #include "CLAction.h"
@@ -14,11 +14,11 @@ namespace FSM
 {
     namespace CLM
     {
-      namespace FSM7Seg
+      namespace FSMDigitFlipper
       {
         namespace State
         {
-            class SUSPENDED: public CLState
+            class Initial: public CLState
             {
                 class OnEntry: public CLAction
                 {
@@ -35,21 +35,25 @@ namespace FSM
                     virtual void perform(CLMachine *, CLState *) const;
                 };
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wzero-length-array"
-                CLTransition *_transitions[0];
-#pragma clang diagnostic pop
+                class Transition_0: public CLTransition
+                {
+                public:
+                    Transition_0(int toState = 3): CLTransition(toState) {}
 
+                    virtual bool check(CLMachine *, CLState *) const;
+                };
+
+                CLTransition *_transitions[1];
 
                 public:
-                    SUSPENDED(const char *name = "SUSPENDED");
-                    virtual ~SUSPENDED();
+                    Initial(const char *name = "Initial");
+                    virtual ~Initial();
 
                     virtual CLTransition * const *transitions() const { return _transitions; }
-                    virtual int numberOfTransitions() const { return 0; }
+                    virtual int numberOfTransitions() const { return 1; }
 
-#                   include "State_SUSPENDED_Variables.h"
-#                   include "State_SUSPENDED_Methods.h"
+#                   include "State_Initial_Variables.h"
+#                   include "State_Initial_Methods.h"
             };
         }
       }
