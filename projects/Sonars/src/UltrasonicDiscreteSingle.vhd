@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-05 19:28 AEST
+--Date Generated: 2020-09-05 19:39 AEST
 --
 
 library IEEE;
@@ -49,13 +49,13 @@ architecture LLFSM of UltrasonicDiscreteSingle is
     signal distance: std_logic_vector(15 downto 0);
     --Machine Variables
     signal maxloops: unsigned(23 downto 0);
-    signal SCHEDULE_LENGTH: unsigned(15 downto 0);
-    signal SPEED_OF_SOUND: unsigned(15 downto 0);
-    signal SONAR_OFFSET: unsigned(15 downto 0);
+    signal SCHEDULE_LENGTH: unsigned(11 downto 0);
+    signal SPEED_OF_SOUND: unsigned(11 downto 0);
+    signal SONAR_OFFSET: unsigned(7 downto 0);
     signal MAX_DISTANCE: unsigned(23 downto 0);
-    signal MAX_TIME: unsigned(31 downto 0);
+    signal MAX_TIME: unsigned(27 downto 0);
     signal numloops: unsigned(23 downto 0);
-    signal CLOCK_PERIOD: unsigned(15 downto 0);
+    signal CLOCK_PERIOD: unsigned(7 downto 0);
     signal RINGLETS_PER_MS: unsigned(15 downto 0);
     signal i: unsigned(15 downto 0);
 begin
@@ -74,13 +74,13 @@ process (clk)
                     case currentState is
                         when STATE_Initial =>
                             distance <= x"FFFF";
-                            CLOCK_PERIOD <= x"0014"; -- 20 ns (50MHz clock)
-                            SCHEDULE_LENGTH <= x"0005" * CLOCK_PERIOD; -- 100 ns per ringlet
-                            SPEED_OF_SOUND <= x"0157"; -- 343 um/us (34300 cm/s)
-                            SONAR_OFFSET <= x"0028"; -- 40
+                            CLOCK_PERIOD <= x"14"; -- 20 ns (50MHz clock)
+                            SCHEDULE_LENGTH <= x"5" * CLOCK_PERIOD; -- 100 ns per ringlet
+                            SPEED_OF_SOUND <= x"157"; -- 343 um/us (34300 cm/s)
+                            SONAR_OFFSET <= x"28"; -- 40
                             MAX_DISTANCE <= x"3D0900"; -- 4 000 000 um (400 cm)
-                            MAX_TIME <= (x"00" & MAX_DISTANCE) * x"00000002" / (x"0000" & SPEED_OF_SOUND) * x"000003E8"; -- ns
-                            maxloops <= resize((MAX_TIME / (x"00" & SCHEDULE_LENGTH)), 24);
+                            MAX_TIME <= MAX_DISTANCE * x"2" / SPEED_OF_SOUND * x"3E8"; -- ns
+                            maxloops <= resize((MAX_TIME / SCHEDULE_LENGTH), 24);
                             RINGLETS_PER_MS <= resize(x"F4240" / (x"0" & SCHEDULE_LENGTH), 16);
                         when STATE_Setup_Pin =>
                             triggerPin <= '0';
