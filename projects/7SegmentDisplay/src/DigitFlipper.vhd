@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-05 23:19 AEST
+--Date Generated: 2020-09-05 23:23 AEST
 --
 
 library IEEE;
@@ -47,6 +47,7 @@ architecture LLFSM of DigitFlipper is
     signal increaseButton: std_logic;
     signal decreaseButton: std_logic;
     --Machine Variables
+    signal lastCount: std_logic_vector(3 downto 0);
 begin
 process (clk)
     begin
@@ -64,14 +65,19 @@ process (clk)
                     case currentState is
                         when STATE_Initial =>
                             count <= x"0";
+                            lastCount <= x"0";
                         when STATE_ResetCount =>
                             count <= (others => '0');
+                            lastCount <= (others => '0');
                         when STATE_IncrementCount =>
                             count <= std_logic_vector(unsigned(count) + 1);
+                            lastCount <= std_logic_vector(unsigned(lastCount) + 1);
                         when STATE_MaxCount =>
                             count <= x"F";
+                            lastCount <= x"F";
                         when STATE_DecrementCount =>
                             count <= std_logic_vector(unsigned(count) - 1);
+                            lastCount <= std_logic_vector(unsigned(lastCount) - 1);
                         when others =>
                             null;
                     end case;
@@ -112,10 +118,10 @@ process (clk)
                                 internalState <= Internal;
                             end if;
                         when STATE_CheckIncrease =>
-                            if (count = x"F") then
+                            if (lastCount = x"F") then
                                 targetState <= STATE_ResetCount;
                                 internalState <= OnExit;
-                            elsif (true) and (not (count = x"F")) then
+                            elsif (true) and (not (lastCount = x"F")) then
                                 targetState <= STATE_IncrementCount;
                                 internalState <= OnExit;
                             else
@@ -129,10 +135,10 @@ process (clk)
                                 internalState <= Internal;
                             end if;
                         when STATE_CheckDecrease =>
-                            if (count = x"0") then
+                            if (lastCount = x"0") then
                                 targetState <= STATE_MaxCount;
                                 internalState <= OnExit;
-                            elsif (true) and (not (count = x"0")) then
+                            elsif (true) and (not (lastCount = x"0")) then
                                 targetState <= STATE_DecrementCount;
                                 internalState <= OnExit;
                             else
