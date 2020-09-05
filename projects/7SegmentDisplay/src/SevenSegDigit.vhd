@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-05 21:41 AEST
+--Date Generated: 2020-09-05 21:43 AEST
 --
 
 library IEEE;
@@ -71,7 +71,7 @@ process (clk)
                         when STATE_Initial =>
                             output <= (others => '0');
                         when STATE_Zero =>
-                            output <= "011" & x"F";
+                            output <= "100" & x"0";
                         when others =>
                             null;
                     end case;
