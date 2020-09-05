@@ -4,6 +4,8 @@ use IEEE.std_logic_1164.All;
 entity top is
     port (
         CLOCK_50: in std_logic;
+		  CLOCK2_50: in std_logic;
+		  CLOCK3_50: in std_logic;
         GPIO: inout std_logic_vector(35 downto 0);
 		  HEX0: out std_logic_vector(6 downto 0);
 		  HEX1: out std_logic_vector(6 downto 0);
@@ -17,11 +19,13 @@ entity top is
 end top;
 
 architecture Behavioural of top is
-	signal distance: std_logic_vector(15 downto 0);
+	constant distance: std_logic_vector(15 downto 0) := x"04D2";
 	signal reset: std_logic := '1';
 	signal enable: std_logic := '0';
 	signal busy: std_logic;
 	signal bcd: std_logic_vector(19 downto 0);
+	signal encodedDistance: std_logic_vector(19 downto 0);
+	signal startEncoding: std_logic := '0';
 
 	component UltrasonicDiscreteSingle is
 		port (
@@ -53,55 +57,90 @@ architecture Behavioural of top is
 			bcd		:	OUT	STD_LOGIC_VECTOR(digits*4-1 DOWNTO 0));	--resulting BCD number
 	END component;
 	
+	component delayedLatch is
+		port (
+			data: in std_logic_vector(19 downto 0);
+			output: out std_logic_vector(19 downto 0)
+		);
+	end component;
+	
 begin
 
-	s1: UltrasonicDiscreteSingle port map (
-		clk => CLOCK_50,
-		EXTERNAL_triggerPin => GPIO(0),
-		EXTERNAL_echoPin => GPIO(1),
-		EXTERNAL_distance => distance
+--	s1: UltrasonicDiscreteSingle port map (
+--		clk => CLOCK_50,
+--		EXTERNAL_triggerPin => GPIO(0),
+--		EXTERNAL_echoPin => GPIO(1),
+--		EXTERNAL_distance => distance
+--	);
+	
+	latch: delayedLatch port map (
+		data => encodedDistance,
+		output => bcd
 	);
 	
 	bcd_encoder: binary_to_bcd generic map (
 		bits => 16,
 		digits => 5
 	) port map (
-		clk => CLOCK_50,
+		clk => CLOCK2_50,
 		reset_n => reset,
 		ena => enable,
 		binary => distance,
 		busy => busy,
-		bcd => bcd
+		bcd => encodedDistance
 	);
 	
 	digit0: SevenSegDigit port map (
-		clk => CLOCK_50,
+		clk => CLOCK3_50,
 		EXTERNAL_count => bcd(3 downto 0),
 		EXTERNAL_output => Hex1
 	);
 	
 	digit1: SevenSegDigit port map (
-		clk => CLOCK_50,
+		clk => CLOCK3_50,
 		EXTERNAL_count => bcd(7 downto 4),
 		EXTERNAL_output => Hex2
 	);
 	
 	digit2: SevenSegDigit port map (
-		clk => CLOCK_50,
+		clk => CLOCK3_50,
 		EXTERNAL_count => bcd(11 downto 8),
 		EXTERNAL_output => Hex3
 	);
 	
 	digit3: SevenSegDigit port map (
-		clk => CLOCK_50,
+		clk => CLOCK3_50,
 		EXTERNAL_count => bcd(15 downto 12),
 		EXTERNAL_output => Hex4
 	);
 	
 	digit4: SevenSegDigit port map (
-		clk => CLOCK_50,
+		clk => CLOCK3_50,
 		EXTERNAL_count => bcd(19 downto 16),
 		EXTERNAL_output => Hex5
 	);
+	
+	HEX0 <= (others => '1');
+	HEX6 <= (others => '1');
+	HEX7 <= (others => '1');
+
+process (CLOCK_50)
+begin
+
+if rising_edge(CLOCK_50) then
+	if startEncoding = '1' and busy = '0' then
+		reset <= '0';
+		enable <= '1';
+	elsif busy = '0' then
+		--bcd <= encodedDistance;
+		startEncoding <= '1';
+	else
+		reset <= '1';
+		enable <= '0';
+		startEncoding <= '0';
+	end if;
+end if;
+
+end process;
 	
 end Behavioural;
