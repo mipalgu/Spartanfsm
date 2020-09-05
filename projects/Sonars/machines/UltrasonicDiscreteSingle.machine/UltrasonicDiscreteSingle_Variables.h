@@ -5,7 +5,7 @@
 //
 #extern	triggerPin: out std_logic;	///<
 #extern	echoPin: inout std_logic;	///<
-#machine	signal distance: unsigned(15 downto 0);	///<
+#extern	distance: out std_logic_vector(15 downto 0);	///<
 #machine	signal maxloops: unsigned(23 downto 0);	///<
 #machine	signal SCHEDULE_LENGTH: unsigned(15 downto 0);	///<
 #machine	signal SPEED_OF_SOUND: unsigned(15 downto 0);	///<

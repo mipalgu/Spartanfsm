@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-05 18:50 AEST
+--Date Generated: 2020-09-05 19:28 AEST
 --
 
 library IEEE;
@@ -13,7 +13,8 @@ entity UltrasonicDiscreteSingle is
     port (
         clk: in std_logic;
         EXTERNAL_triggerPin: out std_logic;
-        EXTERNAL_echoPin: inout std_logic
+        EXTERNAL_echoPin: inout std_logic;
+        EXTERNAL_distance: out std_logic_vector(15 downto 0)
     );
 end UltrasonicDiscreteSingle;
 
@@ -45,8 +46,8 @@ architecture LLFSM of UltrasonicDiscreteSingle is
     --Snapshot of External Variables
     signal triggerPin: std_logic;
     signal echoPin: std_logic;
+    signal distance: std_logic_vector(15 downto 0);
     --Machine Variables
-    signal distance: unsigned(15 downto 0);
     signal maxloops: unsigned(23 downto 0);
     signal SCHEDULE_LENGTH: unsigned(15 downto 0);
     signal SPEED_OF_SOUND: unsigned(15 downto 0);
@@ -90,7 +91,7 @@ process (clk)
                         when STATE_LostPulse =>
                             distance <= (others => '1');
                         when STATE_Calculate_Distance =>
-                            distance <= resize(((x"00" & numloops) * (x"0000" & SCHEDULE_LENGTH) / x"000003E8" / (x"0000" & SPEED_OF_SOUND) / x"00002710"), 16);
+                            distance <= std_logic_vector(resize(((x"00" & numloops) * (x"0000" & SCHEDULE_LENGTH) / x"000003E8" / (x"0000" & SPEED_OF_SOUND) / x"00002710"), 16));
                         when others =>
                             null;
                     end case;
@@ -222,6 +223,7 @@ process (clk)
                 when WriteSnapshot =>
                     EXTERNAL_triggerPin <= triggerPin;
                     EXTERNAL_echoPin <= echoPin;
+                    EXTERNAL_distance <= distance;
                     internalState <= ReadSnapshot;
                     previousRinglet <= currentState;
                     currentState <= targetState;
