@@ -1,2 +1,0 @@
-latchedData <= data;
-originalData <= data;

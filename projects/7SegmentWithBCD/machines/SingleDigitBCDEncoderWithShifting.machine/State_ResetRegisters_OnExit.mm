@@ -1,1 +1,0 @@
-latchedBinary <= binary;
