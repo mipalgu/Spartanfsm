@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-05 19:56 AEST
+--Date Generated: 2020-09-05 20:36 AEST
 --
 
 library IEEE;
@@ -91,7 +91,7 @@ process (clk)
                         when STATE_LostPulse =>
                             distance <= (others => '1');
                         when STATE_Calculate_Distance =>
-                            distance <= std_logic_vector(resize(((x"00" & numloops) * (x"0000" & SCHEDULE_LENGTH) / x"000003E8" / (x"0000" & SPEED_OF_SOUND) / x"00002710"), 16));
+                            distance <= std_logic_vector(resize(numloops* SCHEDULE_LENGTH / x"3E8" / SPEED_OF_SOUND / x"2710"), 16);
                         when others =>
                             null;
                     end case;
