@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-05 19:39 AEST
+--Date Generated: 2020-09-05 19:46 AEST
 --
 
 library IEEE;
@@ -53,7 +53,7 @@ architecture LLFSM of UltrasonicDiscreteSingle is
     signal SPEED_OF_SOUND: unsigned(11 downto 0);
     signal SONAR_OFFSET: unsigned(7 downto 0);
     signal MAX_DISTANCE: unsigned(23 downto 0);
-    signal MAX_TIME: unsigned(27 downto 0);
+    signal MAX_TIME: unsigned(39 downto 0);
     signal numloops: unsigned(23 downto 0);
     signal CLOCK_PERIOD: unsigned(7 downto 0);
     signal RINGLETS_PER_MS: unsigned(15 downto 0);
@@ -80,8 +80,8 @@ process (clk)
                             SONAR_OFFSET <= x"28"; -- 40
                             MAX_DISTANCE <= x"3D0900"; -- 4 000 000 um (400 cm)
                             MAX_TIME <= MAX_DISTANCE * x"2" / SPEED_OF_SOUND * x"3E8"; -- ns
-                            maxloops <= resize((MAX_TIME / SCHEDULE_LENGTH), 24);
-                            RINGLETS_PER_MS <= resize(x"F4240" / (x"0" & SCHEDULE_LENGTH), 16);
+                            maxloops <= MAX_TIME / SCHEDULE_LENGTH;
+                            RINGLETS_PER_MS <= x"F4240" / SCHEDULE_LENGTH;
                         when STATE_Setup_Pin =>
                             triggerPin <= '0';
                         when STATE_WaitForPulseStart =>

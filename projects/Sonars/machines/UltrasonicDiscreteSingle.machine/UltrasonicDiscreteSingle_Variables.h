@@ -11,7 +11,7 @@
 #machine	signal SPEED_OF_SOUND: unsigned(11 downto 0);	///<
 #machine	signal SONAR_OFFSET: unsigned(7 downto 0);	///<
 #machine	signal MAX_DISTANCE: unsigned(23 downto 0);	///<
-#machine	signal MAX_TIME: unsigned(27 downto 0);	///<
+#machine	signal MAX_TIME: unsigned(39 downto 0);	///<
 #machine	signal numloops: unsigned(23 downto 0);	///<
 #machine	signal CLOCK_PERIOD: unsigned(7 downto 0);	///<
 #machine	signal RINGLETS_PER_MS: unsigned(15 downto 0);	///<
