@@ -1,1 +1,1 @@
-output <= x"FE";
+output <= "111" & x"E";
