@@ -19,7 +19,7 @@ entity top is
 end top;
 
 architecture Behavioural of top is
-	constant distance: std_logic_vector(15 downto 0) := x"04D2";
+	constant distance: std_logic_vector(15 downto 0) := x"3039";
 	signal reset: std_logic := '1';
 	signal enable: std_logic := '0';
 	signal busy: std_logic;
@@ -57,13 +57,6 @@ architecture Behavioural of top is
 			bcd		:	OUT	STD_LOGIC_VECTOR(digits*4-1 DOWNTO 0));	--resulting BCD number
 	END component;
 	
-	component delayedLatch is
-		port (
-			data: in std_logic_vector(19 downto 0);
-			output: out std_logic_vector(19 downto 0)
-		);
-	end component;
-	
 begin
 
 --	s1: UltrasonicDiscreteSingle port map (
@@ -72,11 +65,6 @@ begin
 --		EXTERNAL_echoPin => GPIO(1),
 --		EXTERNAL_distance => distance
 --	);
-	
-	latch: delayedLatch port map (
-		data => encodedDistance,
-		output => bcd
-	);
 	
 	bcd_encoder: binary_to_bcd generic map (
 		bits => 16,
@@ -124,18 +112,16 @@ begin
 	HEX6 <= (others => '1');
 	HEX7 <= (others => '1');
 
-process (CLOCK_50)
+process (CLOCK2_50)
 begin
 
-if rising_edge(CLOCK_50) then
-	if startEncoding = '1' and busy = '0' then
-		reset <= '0';
-		enable <= '1';
-	elsif busy = '0' then
-		--bcd <= encodedDistance;
+if rising_edge(CLOCK2_50) then
+	if startEncoding = '0' and busy = '0' then
+		bcd <= encodedDistance;
 		startEncoding <= '1';
+	elsif startEncoding = '1' and busy = '0' then
+		enable <= '1';
 	else
-		reset <= '1';
 		enable <= '0';
 		startEncoding <= '0';
 	end if;
