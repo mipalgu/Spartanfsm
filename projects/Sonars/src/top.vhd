@@ -19,13 +19,12 @@ entity top is
 end top;
 
 architecture Behavioural of top is
-	constant distance: std_logic_vector(15 downto 0) := x"3039";
+	signal distance: std_logic_vector(15 downto 0);
 	signal reset: std_logic := '1';
 	signal enable: std_logic := '0';
 	signal busy: std_logic;
 	signal bcd: std_logic_vector(19 downto 0);
 	signal encodedDistance: std_logic_vector(19 downto 0);
-	signal startEncoding: std_logic := '0';
 
 	component UltrasonicDiscreteSingle is
 		port (
@@ -59,12 +58,12 @@ architecture Behavioural of top is
 	
 begin
 
---	s1: UltrasonicDiscreteSingle port map (
---		clk => CLOCK_50,
---		EXTERNAL_triggerPin => GPIO(0),
---		EXTERNAL_echoPin => GPIO(1),
---		EXTERNAL_distance => distance
---	);
+	s1: UltrasonicDiscreteSingle port map (
+		clk => CLOCK_50,
+		EXTERNAL_triggerPin => GPIO(0),
+		EXTERNAL_echoPin => GPIO(1),
+		EXTERNAL_distance => distance
+	);
 	
 	bcd_encoder: binary_to_bcd generic map (
 		bits => 16,
@@ -116,14 +115,11 @@ process (CLOCK2_50)
 begin
 
 if rising_edge(CLOCK2_50) then
-	if startEncoding = '0' and busy = '0' then
+	if busy = '0' then
 		bcd <= encodedDistance;
-		startEncoding <= '1';
-	elsif startEncoding = '1' and busy = '0' then
 		enable <= '1';
 	else
 		enable <= '0';
-		startEncoding <= '0';
 	end if;
 end if;
 
