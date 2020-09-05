@@ -76,3 +76,5 @@ isim
 *.qdf
 *.bak
 db
+*.done
+incremental_db
