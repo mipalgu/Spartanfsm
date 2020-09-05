@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-05 22:07 AEST
+--Date Generated: 2020-09-05 23:08 AEST
 --
 
 library IEEE;
@@ -234,49 +234,49 @@ process (clk)
                             if (count = x"0") then
                                 targetState <= STATE_Zero;
                                 internalState <= OnExit;
-                            elsif (count = x"A") and (not (count = x"0")) then
+                            elsif (count = x"1") and (not (count = x"0")) then
                                 targetState <= STATE_One;
                                 internalState <= OnExit;
-                            elsif (count = x"b") and (not (count = x"A")) and (not (count = x"0")) then
+                            elsif (count = x"2") and (not (count = x"1")) and (not (count = x"0")) then
                                 targetState <= STATE_Two;
                                 internalState <= OnExit;
-                            elsif (count = x"C") and (not (count = x"b")) and (not (count = x"A")) and (not (count = x"0")) then
+                            elsif (count = x"3") and (not (count = x"2")) and (not (count = x"1")) and (not (count = x"0")) then
                                 targetState <= STATE_Three;
                                 internalState <= OnExit;
-                            elsif (count = x"d") and (not (count = x"C")) and (not (count = x"b")) and (not (count = x"A")) and (not (count = x"0")) then
+                            elsif (count = x"4") and (not (count = x"3")) and (not (count = x"2")) and (not (count = x"1")) and (not (count = x"0")) then
                                 targetState <= STATE_Four;
                                 internalState <= OnExit;
-                            elsif (count = x"e") and (not (count = x"d")) and (not (count = x"C")) and (not (count = x"b")) and (not (count = x"A")) and (not (count = x"0")) then
+                            elsif (count = x"5") and (not (count = x"4")) and (not (count = x"3")) and (not (count = x"2")) and (not (count = x"1")) and (not (count = x"0")) then
                                 targetState <= STATE_Five;
                                 internalState <= OnExit;
-                            elsif (count = x"F") and (not (count = x"e")) and (not (count = x"d")) and (not (count = x"C")) and (not (count = x"b")) and (not (count = x"A")) and (not (count = x"0")) then
+                            elsif (count = x"6") and (not (count = x"5")) and (not (count = x"4")) and (not (count = x"3")) and (not (count = x"2")) and (not (count = x"1")) and (not (count = x"0")) then
                                 targetState <= STATE_Six;
                                 internalState <= OnExit;
-                            elsif (count = x"1") and (not (count = x"F")) and (not (count = x"e")) and (not (count = x"d")) and (not (count = x"C")) and (not (count = x"b")) and (not (count = x"A")) and (not (count = x"0")) then
+                            elsif (count = x"7") and (not (count = x"6")) and (not (count = x"5")) and (not (count = x"4")) and (not (count = x"3")) and (not (count = x"2")) and (not (count = x"1")) and (not (count = x"0")) then
                                 targetState <= STATE_Seven;
                                 internalState <= OnExit;
-                            elsif (count = x"2") and (not (count = x"1")) and (not (count = x"F")) and (not (count = x"e")) and (not (count = x"d")) and (not (count = x"C")) and (not (count = x"b")) and (not (count = x"A")) and (not (count = x"0")) then
+                            elsif (count = x"8") and (not (count = x"7")) and (not (count = x"6")) and (not (count = x"5")) and (not (count = x"4")) and (not (count = x"3")) and (not (count = x"2")) and (not (count = x"1")) and (not (count = x"0")) then
                                 targetState <= STATE_Eight;
                                 internalState <= OnExit;
-                            elsif (count = x"3") and (not (count = x"2")) and (not (count = x"1")) and (not (count = x"F")) and (not (count = x"e")) and (not (count = x"d")) and (not (count = x"C")) and (not (count = x"b")) and (not (count = x"A")) and (not (count = x"0")) then
+                            elsif (count = x"9") and (not (count = x"8")) and (not (count = x"7")) and (not (count = x"6")) and (not (count = x"5")) and (not (count = x"4")) and (not (count = x"3")) and (not (count = x"2")) and (not (count = x"1")) and (not (count = x"0")) then
                                 targetState <= STATE_Nine;
                                 internalState <= OnExit;
-                            elsif (count = x"4") and (not (count = x"3")) and (not (count = x"2")) and (not (count = x"1")) and (not (count = x"F")) and (not (count = x"e")) and (not (count = x"d")) and (not (count = x"C")) and (not (count = x"b")) and (not (count = x"A")) and (not (count = x"0")) then
+                            elsif (count = x"a") and (not (count = x"9")) and (not (count = x"8")) and (not (count = x"7")) and (not (count = x"6")) and (not (count = x"5")) and (not (count = x"4")) and (not (count = x"3")) and (not (count = x"2")) and (not (count = x"1")) and (not (count = x"0")) then
                                 targetState <= STATE_A;
                                 internalState <= OnExit;
-                            elsif (count = x"5") and (not (count = x"4")) and (not (count = x"3")) and (not (count = x"2")) and (not (count = x"1")) and (not (count = x"F")) and (not (count = x"e")) and (not (count = x"d")) and (not (count = x"C")) and (not (count = x"b")) and (not (count = x"A")) and (not (count = x"0")) then
+                            elsif (count = x"b") and (not (count = x"a")) and (not (count = x"9")) and (not (count = x"8")) and (not (count = x"7")) and (not (count = x"6")) and (not (count = x"5")) and (not (count = x"4")) and (not (count = x"3")) and (not (count = x"2")) and (not (count = x"1")) and (not (count = x"0")) then
                                 targetState <= STATE_B;
                                 internalState <= OnExit;
-                            elsif (count = x"6") and (not (count = x"5")) and (not (count = x"4")) and (not (count = x"3")) and (not (count = x"2")) and (not (count = x"1")) and (not (count = x"F")) and (not (count = x"e")) and (not (count = x"d")) and (not (count = x"C")) and (not (count = x"b")) and (not (count = x"A")) and (not (count = x"0")) then
+                            elsif (count = x"c") and (not (count = x"b")) and (not (count = x"a")) and (not (count = x"9")) and (not (count = x"8")) and (not (count = x"7")) and (not (count = x"6")) and (not (count = x"5")) and (not (count = x"4")) and (not (count = x"3")) and (not (count = x"2")) and (not (count = x"1")) and (not (count = x"0")) then
                                 targetState <= STATE_C;
                                 internalState <= OnExit;
-                            elsif (count = x"7") and (not (count = x"6")) and (not (count = x"5")) and (not (count = x"4")) and (not (count = x"3")) and (not (count = x"2")) and (not (count = x"1")) and (not (count = x"F")) and (not (count = x"e")) and (not (count = x"d")) and (not (count = x"C")) and (not (count = x"b")) and (not (count = x"A")) and (not (count = x"0")) then
+                            elsif (count = x"d") and (not (count = x"c")) and (not (count = x"b")) and (not (count = x"a")) and (not (count = x"9")) and (not (count = x"8")) and (not (count = x"7")) and (not (count = x"6")) and (not (count = x"5")) and (not (count = x"4")) and (not (count = x"3")) and (not (count = x"2")) and (not (count = x"1")) and (not (count = x"0")) then
                                 targetState <= STATE_D;
                                 internalState <= OnExit;
-                            elsif (count = x"8") and (not (count = x"7")) and (not (count = x"6")) and (not (count = x"5")) and (not (count = x"4")) and (not (count = x"3")) and (not (count = x"2")) and (not (count = x"1")) and (not (count = x"F")) and (not (count = x"e")) and (not (count = x"d")) and (not (count = x"C")) and (not (count = x"b")) and (not (count = x"A")) and (not (count = x"0")) then
+                            elsif (count = x"e") and (not (count = x"d")) and (not (count = x"c")) and (not (count = x"b")) and (not (count = x"a")) and (not (count = x"9")) and (not (count = x"8")) and (not (count = x"7")) and (not (count = x"6")) and (not (count = x"5")) and (not (count = x"4")) and (not (count = x"3")) and (not (count = x"2")) and (not (count = x"1")) and (not (count = x"0")) then
                                 targetState <= STATE_E;
                                 internalState <= OnExit;
-                            elsif (count = x"9") and (not (count = x"8")) and (not (count = x"7")) and (not (count = x"6")) and (not (count = x"5")) and (not (count = x"4")) and (not (count = x"3")) and (not (count = x"2")) and (not (count = x"1")) and (not (count = x"F")) and (not (count = x"e")) and (not (count = x"d")) and (not (count = x"C")) and (not (count = x"b")) and (not (count = x"A")) and (not (count = x"0")) then
+                            elsif (count = x"f") and (not (count = x"e")) and (not (count = x"d")) and (not (count = x"c")) and (not (count = x"b")) and (not (count = x"a")) and (not (count = x"9")) and (not (count = x"8")) and (not (count = x"7")) and (not (count = x"6")) and (not (count = x"5")) and (not (count = x"4")) and (not (count = x"3")) and (not (count = x"2")) and (not (count = x"1")) and (not (count = x"0")) then
                                 targetState <= STATE_F;
                                 internalState <= OnExit;
                             else
