@@ -10,6 +10,8 @@ end top;
 
 architecture Behavioural of top is
 	signal distance: std_logic_vector(15 downto 0);
+	signal pins: std_logic_vector(1 downto 0);
+	constant highImpedance: std_logic_vector(33 downto 0) := (others => 'Z');
 
 	component UltrasonicDiscreteSingle is
 		port (
@@ -24,9 +26,11 @@ begin
 
 	s1: UltrasonicDiscreteSingle port map (
 		clk => CLOCK_50,
-		EXTERNAL_triggerPin => GPIO(0),
-		EXTERNAL_echoPin => GPIO(1),
+		EXTERNAL_triggerPin => pins(0),
+		EXTERNAL_echoPin => pins(1),
 		EXTERNAL_distance => distance
 	);
+	
+	GPIO <= highImpedance & pins;
 	
 end Behavioural;
