@@ -83,3 +83,4 @@ incremental_db
 *.pin
 *.sld
 *.sof
+*.qws
