@@ -169,9 +169,12 @@ filterForState state trans = return (filter (\x -> hasState x state) trans)
 getTransitionsForState :: String -> String -> IO [String]
 getTransitionsForState state dir = getAllTransitionFiles dir >>= (filterForState state)
 
+getTransitionNumber :: String -> Integer
+getTransitionNumber trans = read((splitOn ".expr" ((splitOn "Transition_" trans)!!1))!!0)
+
 --Seperate files into transition files.
 seperateTransitions :: String -> IO [String]
-seperateTransitions files = return (filter hasTransitionInFileName (lines files))
+seperateTransitions files = return (sortBy (\x y -> compare (getTransitionNumber x) (getTransitionNumber y) ) (filter hasTransitionInFileName (lines files)))
 
 --Gets the transition code for a given state
 getTransCodeForState :: String -> String -> IO [String]
