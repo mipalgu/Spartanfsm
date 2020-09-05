@@ -1,0 +1,1 @@
+distance <= (others => '1');
