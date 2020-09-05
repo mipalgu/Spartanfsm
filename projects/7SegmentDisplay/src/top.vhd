@@ -18,6 +18,49 @@ entity top is
 end top;
 
 architecture Behavioural of top is
+
+	signal encodedNumber: std_logic_vector(6 downto 0);
+	signal count: std_logic_vector(3 downto 0);
 	
+	component SevenSegDigit is
+    port (
+        clk: in std_logic;
+        EXTERNAL_count: in std_logic_vector(3 downto 0);
+        EXTERNAL_output: out std_logic_vector(6 downto 0)
+    );
+	end component;
+	
+	component DigitFlipper is
+    port (
+        clk: in std_logic;
+        EXTERNAL_count: out std_logic_vector(3 downto 0);
+        EXTERNAL_increaseButton: in std_logic;
+        EXTERNAL_decreaseButton: in std_logic
+    );
+	end component;
+
+begin
+
+	dig: SevenSegDigit port map (
+		clk => CLOCK_50,
+		EXTERNAL_count => count,
+		EXTERNAL_output => encodedNumber
+	);
+	
+	flip: DigitFlipper port map (
+      clk => CLOCK_50,
+        EXTERNAL_count => count,
+        EXTERNAL_increaseButton => Key(2),
+        EXTERNAL_decreaseButton => Key(3)
+    );
+	
+	Hex0 <= encodedNumber;
+	Hex1 <= encodedNumber;
+	Hex2 <= encodedNumber;
+	Hex3 <= encodedNumber;
+	Hex4 <= encodedNumber;
+	Hex5 <= encodedNumber;
+	Hex6 <= encodedNumber;
+	Hex7 <= encodedNumber;
 
 end architecture;
