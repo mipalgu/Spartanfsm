@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-05 19:52 AEST
+--Date Generated: 2020-09-05 19:54 AEST
 --
 
 library IEEE;
@@ -48,12 +48,12 @@ architecture LLFSM of UltrasonicDiscreteSingle is
     signal echoPin: std_logic;
     signal distance: std_logic_vector(15 downto 0);
     --Machine Variables
-    signal maxloops: unsigned(35 downto 0);
+    signal maxloops: unsigned(33 downto 0);
     signal SCHEDULE_LENGTH: unsigned(7 downto 0);
     signal SPEED_OF_SOUND: unsigned(8 downto 0);
     signal SONAR_OFFSET: unsigned(5 downto 0);
     signal MAX_DISTANCE: unsigned(21 downto 0);
-    signal MAX_TIME: unsigned(35 downto 0);
+    signal MAX_TIME: unsigned(33 downto 0);
     signal numloops: unsigned(23 downto 0);
     signal CLOCK_PERIOD: unsigned(4 downto 0);
     signal RINGLETS_PER_MS: unsigned(15 downto 0);
