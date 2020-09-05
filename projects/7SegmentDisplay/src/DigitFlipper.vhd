@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-05 23:23 AEST
+--Date Generated: 2020-09-05 23:27 AEST
 --
 
 library IEEE;
@@ -101,17 +101,17 @@ process (clk)
                                 internalState <= Internal;
                             end if;
                         when STATE_Check =>
-                            if (increaseButton = '1') then
+                            if (increaseButton = '0') then
                                 targetState <= STATE_CheckIncrease;
                                 internalState <= OnExit;
-                            elsif (decreaseButton = '1') and (not (increaseButton = '1')) then
+                            elsif (decreaseButton = '0') and (not (increaseButton = '0')) then
                                 targetState <= STATE_CheckDecrease;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
                             end if;
                         when STATE_ResetCount =>
-                            if (increaseButton = '0') then
+                            if (increaseButton = '1') then
                                 targetState <= STATE_Check;
                                 internalState <= OnExit;
                             else
@@ -128,7 +128,7 @@ process (clk)
                                 internalState <= Internal;
                             end if;
                         when STATE_IncrementCount =>
-                            if (increaseButton = '0') then
+                            if (increaseButton = '1') then
                                 targetState <= STATE_Check;
                                 internalState <= OnExit;
                             else
@@ -145,14 +145,14 @@ process (clk)
                                 internalState <= Internal;
                             end if;
                         when STATE_MaxCount =>
-                            if (decreaseButton = '0') then
+                            if (decreaseButton = '1') then
                                 targetState <= STATE_Check;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
                             end if;
                         when STATE_DecrementCount =>
-                            if (decreaseButton = '0') then
+                            if (decreaseButton = '1') then
                                 targetState <= STATE_Check;
                                 internalState <= OnExit;
                             else
