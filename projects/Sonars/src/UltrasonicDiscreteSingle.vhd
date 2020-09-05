@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-05 19:46 AEST
+--Date Generated: 2020-09-05 19:52 AEST
 --
 
 library IEEE;
@@ -48,14 +48,14 @@ architecture LLFSM of UltrasonicDiscreteSingle is
     signal echoPin: std_logic;
     signal distance: std_logic_vector(15 downto 0);
     --Machine Variables
-    signal maxloops: unsigned(23 downto 0);
-    signal SCHEDULE_LENGTH: unsigned(11 downto 0);
-    signal SPEED_OF_SOUND: unsigned(11 downto 0);
-    signal SONAR_OFFSET: unsigned(7 downto 0);
-    signal MAX_DISTANCE: unsigned(23 downto 0);
-    signal MAX_TIME: unsigned(39 downto 0);
+    signal maxloops: unsigned(35 downto 0);
+    signal SCHEDULE_LENGTH: unsigned(7 downto 0);
+    signal SPEED_OF_SOUND: unsigned(8 downto 0);
+    signal SONAR_OFFSET: unsigned(5 downto 0);
+    signal MAX_DISTANCE: unsigned(21 downto 0);
+    signal MAX_TIME: unsigned(35 downto 0);
     signal numloops: unsigned(23 downto 0);
-    signal CLOCK_PERIOD: unsigned(7 downto 0);
+    signal CLOCK_PERIOD: unsigned(4 downto 0);
     signal RINGLETS_PER_MS: unsigned(15 downto 0);
     signal i: unsigned(15 downto 0);
 begin
@@ -74,12 +74,12 @@ process (clk)
                     case currentState is
                         when STATE_Initial =>
                             distance <= x"FFFF";
-                            CLOCK_PERIOD <= x"14"; -- 20 ns (50MHz clock)
-                            SCHEDULE_LENGTH <= x"5" * CLOCK_PERIOD; -- 100 ns per ringlet
-                            SPEED_OF_SOUND <= x"157"; -- 343 um/us (34300 cm/s)
-                            SONAR_OFFSET <= x"28"; -- 40
-                            MAX_DISTANCE <= x"3D0900"; -- 4 000 000 um (400 cm)
-                            MAX_TIME <= MAX_DISTANCE * x"2" / SPEED_OF_SOUND * x"3E8"; -- ns
+                            CLOCK_PERIOD <= '1' & x"4"; -- 20 ns (50MHz clock)
+                            SCHEDULE_LENGTH <= "101" * CLOCK_PERIOD; -- 100 ns per ringlet
+                            SPEED_OF_SOUND <= '1' & x"57"; -- 343 um/us (34300 cm/s)
+                            SONAR_OFFSET <= "10" & x"8"; -- 40
+                            MAX_DISTANCE <= "11" & x"D0900"; -- 4 000 000 um (400 cm)
+                            MAX_TIME <= MAX_DISTANCE * "10" / SPEED_OF_SOUND * ("11" & x"E8"); -- ns
                             maxloops <= MAX_TIME / SCHEDULE_LENGTH;
                             RINGLETS_PER_MS <= x"F4240" / SCHEDULE_LENGTH;
                         when STATE_Setup_Pin =>
