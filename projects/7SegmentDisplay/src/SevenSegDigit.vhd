@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-05 21:43 AEST
+--Date Generated: 2020-09-05 21:52 AEST
 --
 
 library IEEE;
@@ -47,6 +47,7 @@ architecture LLFSM of SevenSegDigit is
     constant STATE_D: std_logic_vector(4 downto 0) := "10000";
     constant STATE_E: std_logic_vector(4 downto 0) := "10001";
     constant STATE_Check: std_logic_vector(4 downto 0) := "10010";
+    constant STATE_F: std_logic_vector(4 downto 0) := "10011";
     signal currentState: std_logic_vector(4 downto 0) := STATE_Initial;
     signal targetState: std_logic_vector(4 downto 0) := currentState;
     signal previousRinglet: std_logic_vector(4 downto 0) := STATE_Initial xor "11111";
@@ -72,6 +73,36 @@ process (clk)
                             output <= (others => '0');
                         when STATE_Zero =>
                             output <= "100" & x"0";
+                        when STATE_One =>
+                            output <= "1111001";
+                        when STATE_Two =>
+                            output <= "0100100";
+                        when STATE_Three =>
+                            output <= "0110000";
+                        when STATE_Four =>
+                            output <= "0011001";
+                        when STATE_Five =>
+                            output <= "0010010";
+                        when STATE_Six =>
+                            output <= "0000010";
+                        when STATE_Seven =>
+                            output <= "1111000";
+                        when STATE_Eight =>
+                            output <= "0000000";
+                        when STATE_Nine =>
+                            output <= "0011000";
+                        when STATE_A =>
+                            output <= "0001000";
+                        when STATE_B =>
+                            output <= "0000011";
+                        when STATE_C =>
+                            output <= "1000110";
+                        when STATE_D =>
+                            output <= "0100001";
+                        when STATE_E =>
+                            output <= "0000110";
+                        when STATE_F =>
+                            output <= "0001110";
                         when others =>
                             null;
                     end case;
@@ -102,36 +133,158 @@ process (clk)
                                 internalState <= Internal;
                             end if;
                         when STATE_One =>
-                            internalState <= Internal;
+                            if (true) then
+                                targetState <= STATE_Check;
+                                internalState <= OnExit;
+                            else
+                                internalState <= Internal;
+                            end if;
                         when STATE_Two =>
-                            internalState <= Internal;
+                            if (true) then
+                                targetState <= STATE_Check;
+                                internalState <= OnExit;
+                            else
+                                internalState <= Internal;
+                            end if;
                         when STATE_Three =>
-                            internalState <= Internal;
+                            if (true) then
+                                targetState <= STATE_Check;
+                                internalState <= OnExit;
+                            else
+                                internalState <= Internal;
+                            end if;
                         when STATE_Four =>
-                            internalState <= Internal;
+                            if (true) then
+                                targetState <= STATE_Check;
+                                internalState <= OnExit;
+                            else
+                                internalState <= Internal;
+                            end if;
                         when STATE_Five =>
-                            internalState <= Internal;
+                            if (true) then
+                                targetState <= STATE_Check;
+                                internalState <= OnExit;
+                            else
+                                internalState <= Internal;
+                            end if;
                         when STATE_Six =>
-                            internalState <= Internal;
+                            if (true) then
+                                targetState <= STATE_Check;
+                                internalState <= OnExit;
+                            else
+                                internalState <= Internal;
+                            end if;
                         when STATE_Seven =>
-                            internalState <= Internal;
+                            if (true) then
+                                targetState <= STATE_Check;
+                                internalState <= OnExit;
+                            else
+                                internalState <= Internal;
+                            end if;
                         when STATE_Eight =>
-                            internalState <= Internal;
+                            if (true) then
+                                targetState <= STATE_Check;
+                                internalState <= OnExit;
+                            else
+                                internalState <= Internal;
+                            end if;
                         when STATE_Nine =>
-                            internalState <= Internal;
+                            if (true) then
+                                targetState <= STATE_Check;
+                                internalState <= OnExit;
+                            else
+                                internalState <= Internal;
+                            end if;
                         when STATE_A =>
-                            internalState <= Internal;
+                            if (true) then
+                                targetState <= STATE_Check;
+                                internalState <= OnExit;
+                            else
+                                internalState <= Internal;
+                            end if;
                         when STATE_B =>
-                            internalState <= Internal;
+                            if (true) then
+                                targetState <= STATE_Check;
+                                internalState <= OnExit;
+                            else
+                                internalState <= Internal;
+                            end if;
                         when STATE_C =>
-                            internalState <= Internal;
+                            if (true) then
+                                targetState <= STATE_Check;
+                                internalState <= OnExit;
+                            else
+                                internalState <= Internal;
+                            end if;
                         when STATE_D =>
-                            internalState <= Internal;
+                            if (true) then
+                                targetState <= STATE_Check;
+                                internalState <= OnExit;
+                            else
+                                internalState <= Internal;
+                            end if;
                         when STATE_E =>
-                            internalState <= Internal;
+                            if (true) then
+                                targetState <= STATE_Check;
+                                internalState <= OnExit;
+                            else
+                                internalState <= Internal;
+                            end if;
                         when STATE_Check =>
                             if (count = x"0") then
                                 targetState <= STATE_Zero;
+                                internalState <= OnExit;
+                            elsif (count = x"A") and (not (count = x"0")) then
+                                targetState <= STATE_One;
+                                internalState <= OnExit;
+                            elsif (count = x"b") and (not (count = x"A")) and (not (count = x"0")) then
+                                targetState <= STATE_Two;
+                                internalState <= OnExit;
+                            elsif (count = x"C") and (not (count = x"b")) and (not (count = x"A")) and (not (count = x"0")) then
+                                targetState <= STATE_Three;
+                                internalState <= OnExit;
+                            elsif (count = x"d") and (not (count = x"C")) and (not (count = x"b")) and (not (count = x"A")) and (not (count = x"0")) then
+                                targetState <= STATE_Four;
+                                internalState <= OnExit;
+                            elsif (count = x"e") and (not (count = x"d")) and (not (count = x"C")) and (not (count = x"b")) and (not (count = x"A")) and (not (count = x"0")) then
+                                targetState <= STATE_Five;
+                                internalState <= OnExit;
+                            elsif (count = x"F") and (not (count = x"e")) and (not (count = x"d")) and (not (count = x"C")) and (not (count = x"b")) and (not (count = x"A")) and (not (count = x"0")) then
+                                targetState <= STATE_Six;
+                                internalState <= OnExit;
+                            elsif (count = x"1") and (not (count = x"F")) and (not (count = x"e")) and (not (count = x"d")) and (not (count = x"C")) and (not (count = x"b")) and (not (count = x"A")) and (not (count = x"0")) then
+                                targetState <= STATE_Seven;
+                                internalState <= OnExit;
+                            elsif (count = x"2") and (not (count = x"1")) and (not (count = x"F")) and (not (count = x"e")) and (not (count = x"d")) and (not (count = x"C")) and (not (count = x"b")) and (not (count = x"A")) and (not (count = x"0")) then
+                                targetState <= STATE_Eight;
+                                internalState <= OnExit;
+                            elsif (count = x"3") and (not (count = x"2")) and (not (count = x"1")) and (not (count = x"F")) and (not (count = x"e")) and (not (count = x"d")) and (not (count = x"C")) and (not (count = x"b")) and (not (count = x"A")) and (not (count = x"0")) then
+                                targetState <= STATE_Nine;
+                                internalState <= OnExit;
+                            elsif (count = x"4") and (not (count = x"3")) and (not (count = x"2")) and (not (count = x"1")) and (not (count = x"F")) and (not (count = x"e")) and (not (count = x"d")) and (not (count = x"C")) and (not (count = x"b")) and (not (count = x"A")) and (not (count = x"0")) then
+                                targetState <= STATE_A;
+                                internalState <= OnExit;
+                            elsif (count = x"5") and (not (count = x"4")) and (not (count = x"3")) and (not (count = x"2")) and (not (count = x"1")) and (not (count = x"F")) and (not (count = x"e")) and (not (count = x"d")) and (not (count = x"C")) and (not (count = x"b")) and (not (count = x"A")) and (not (count = x"0")) then
+                                targetState <= STATE_B;
+                                internalState <= OnExit;
+                            elsif (count = x"6") and (not (count = x"5")) and (not (count = x"4")) and (not (count = x"3")) and (not (count = x"2")) and (not (count = x"1")) and (not (count = x"F")) and (not (count = x"e")) and (not (count = x"d")) and (not (count = x"C")) and (not (count = x"b")) and (not (count = x"A")) and (not (count = x"0")) then
+                                targetState <= STATE_C;
+                                internalState <= OnExit;
+                            elsif (count = x"7") and (not (count = x"6")) and (not (count = x"5")) and (not (count = x"4")) and (not (count = x"3")) and (not (count = x"2")) and (not (count = x"1")) and (not (count = x"F")) and (not (count = x"e")) and (not (count = x"d")) and (not (count = x"C")) and (not (count = x"b")) and (not (count = x"A")) and (not (count = x"0")) then
+                                targetState <= STATE_D;
+                                internalState <= OnExit;
+                            elsif (count = x"8") and (not (count = x"7")) and (not (count = x"6")) and (not (count = x"5")) and (not (count = x"4")) and (not (count = x"3")) and (not (count = x"2")) and (not (count = x"1")) and (not (count = x"F")) and (not (count = x"e")) and (not (count = x"d")) and (not (count = x"C")) and (not (count = x"b")) and (not (count = x"A")) and (not (count = x"0")) then
+                                targetState <= STATE_E;
+                                internalState <= OnExit;
+                            elsif (count = x"9") and (not (count = x"8")) and (not (count = x"7")) and (not (count = x"6")) and (not (count = x"5")) and (not (count = x"4")) and (not (count = x"3")) and (not (count = x"2")) and (not (count = x"1")) and (not (count = x"F")) and (not (count = x"e")) and (not (count = x"d")) and (not (count = x"C")) and (not (count = x"b")) and (not (count = x"A")) and (not (count = x"0")) then
+                                targetState <= STATE_F;
+                                internalState <= OnExit;
+                            else
+                                internalState <= Internal;
+                            end if;
+                        when STATE_F =>
+                            if (true) then
+                                targetState <= STATE_Check;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;

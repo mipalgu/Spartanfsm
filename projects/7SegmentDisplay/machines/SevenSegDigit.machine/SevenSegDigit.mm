@@ -25,6 +25,7 @@
 #include "State_D.h"
 #include "State_E.h"
 #include "State_Check.h"
+#include "State_F.h"
 
 using namespace FSM;
 using namespace CLM;
@@ -58,6 +59,7 @@ SevenSegDigit::SevenSegDigit(int mid, const char *name): CLMachine(mid, name)
 	_states[16] = new FSMSevenSegDigit::State::D;
 	_states[17] = new FSMSevenSegDigit::State::E;
 	_states[18] = new FSMSevenSegDigit::State::Check;
+	_states[19] = new FSMSevenSegDigit::State::F;
 
 	setSuspendState(_states[1]);            // set suspend state
 	setInitialState(_states[0]);            // set initial state
@@ -84,4 +86,5 @@ SevenSegDigit::~SevenSegDigit()
 	delete _states[16];
 	delete _states[17];
 	delete _states[18];
+	delete _states[19];
 }

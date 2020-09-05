@@ -16,6 +16,7 @@ using namespace State;
 
 Three::Three(const char *name): CLState(name, *new Three::OnEntry, *new Three::OnExit, *new Three::Internal)
 {
+	_transitions[0] = new Transition_0();
 }
 
 Three::~Three()
@@ -24,6 +25,7 @@ Three::~Three()
 	delete &onExitAction();
 	delete &internalAction();
 
+	delete _transitions[0];
 }
 
 void Three::OnEntry::perform(CLMachine *_machine, CLState *_state) const
@@ -53,3 +55,15 @@ void Three::Internal::perform(CLMachine *_machine, CLState *_state) const
 #	include "State_Three_Internal.mm"
 }
 
+bool Three::Transition_0::check(CLMachine *_machine, CLState *_state) const
+{
+#	include "SevenSegDigit_VarRefs.mm"
+#	include "State_Three_VarRefs.mm"
+#	include "SevenSegDigit_FuncRefs.mm"
+#	include "State_Three_FuncRefs.mm"
+
+	return
+	(
+#		include "State_Three_Transition_0.expr"
+	);
+}

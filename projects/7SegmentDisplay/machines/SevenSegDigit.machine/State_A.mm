@@ -16,6 +16,7 @@ using namespace State;
 
 A::A(const char *name): CLState(name, *new A::OnEntry, *new A::OnExit, *new A::Internal)
 {
+	_transitions[0] = new Transition_0();
 }
 
 A::~A()
@@ -24,6 +25,7 @@ A::~A()
 	delete &onExitAction();
 	delete &internalAction();
 
+	delete _transitions[0];
 }
 
 void A::OnEntry::perform(CLMachine *_machine, CLState *_state) const
@@ -53,3 +55,15 @@ void A::Internal::perform(CLMachine *_machine, CLState *_state) const
 #	include "State_A_Internal.mm"
 }
 
+bool A::Transition_0::check(CLMachine *_machine, CLState *_state) const
+{
+#	include "SevenSegDigit_VarRefs.mm"
+#	include "State_A_VarRefs.mm"
+#	include "SevenSegDigit_FuncRefs.mm"
+#	include "State_A_FuncRefs.mm"
+
+	return
+	(
+#		include "State_A_Transition_0.expr"
+	);
+}

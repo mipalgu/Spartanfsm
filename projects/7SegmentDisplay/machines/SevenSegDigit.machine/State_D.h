@@ -35,18 +35,22 @@ namespace FSM
                     virtual void perform(CLMachine *, CLState *) const;
                 };
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wzero-length-array"
-                CLTransition *_transitions[0];
-#pragma clang diagnostic pop
+                class Transition_0: public CLTransition
+                {
+                public:
+                    Transition_0(int toState = 18): CLTransition(toState) {}
 
+                    virtual bool check(CLMachine *, CLState *) const;
+                };
+
+                CLTransition *_transitions[1];
 
                 public:
                     D(const char *name = "D");
                     virtual ~D();
 
                     virtual CLTransition * const *transitions() const { return _transitions; }
-                    virtual int numberOfTransitions() const { return 0; }
+                    virtual int numberOfTransitions() const { return 1; }
 
 #                   include "State_D_Variables.h"
 #                   include "State_D_Methods.h"
