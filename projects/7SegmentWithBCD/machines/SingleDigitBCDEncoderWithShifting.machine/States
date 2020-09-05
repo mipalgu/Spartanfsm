@@ -1,0 +1,9 @@
+Initial
+SUSPENDED
+ResetRegisters
+SetBusy
+EncodeWithCarry
+EncodeWithoutCarry
+SetCarry
+WaitForEnable
+InitialPseudoState
