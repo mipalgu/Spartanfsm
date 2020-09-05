@@ -78,3 +78,8 @@ isim
 db
 *.done
 incremental_db
+*.smsg
+*.jdi
+*.pin
+*.sld
+*.sof
