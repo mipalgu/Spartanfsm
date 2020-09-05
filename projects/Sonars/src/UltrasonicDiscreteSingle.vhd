@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-05 19:54 AEST
+--Date Generated: 2020-09-05 19:56 AEST
 --
 
 library IEEE;
@@ -56,8 +56,8 @@ architecture LLFSM of UltrasonicDiscreteSingle is
     signal MAX_TIME: unsigned(33 downto 0);
     signal numloops: unsigned(23 downto 0);
     signal CLOCK_PERIOD: unsigned(4 downto 0);
-    signal RINGLETS_PER_MS: unsigned(15 downto 0);
-    signal i: unsigned(15 downto 0);
+    signal RINGLETS_PER_MS: unsigned(19 downto 0);
+    signal i: unsigned(19 downto 0);
 begin
 process (clk)
     begin
