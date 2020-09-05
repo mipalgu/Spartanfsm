@@ -84,3 +84,5 @@ incremental_db
 *.sld
 *.sof
 *.qws
+*.qpf
+*.sdc
