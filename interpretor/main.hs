@@ -24,9 +24,6 @@ main = do
     stateBitSize <- getNumberOfBits dir
     projectName <- return $ getProjectName dir
     variables <- getVariables dir projectName
-    putStrLn (show transitions)
-   -- putStrLn (show targetStates)
-   -- putStrLn (show states)
     architecture <- return $ createArchitecture states internals transitions targetStates stateBitSize projectName variables
     includes <- getIncludes dir projectName
     entity <- return $ createEntity includes projectName variables
