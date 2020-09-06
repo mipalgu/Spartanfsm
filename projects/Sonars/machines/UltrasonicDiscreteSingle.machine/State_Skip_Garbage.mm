@@ -17,6 +17,7 @@ using namespace State;
 Skip_Garbage::Skip_Garbage(const char *name): CLState(name, *new Skip_Garbage::OnEntry, *new Skip_Garbage::OnExit, *new Skip_Garbage::Internal)
 {
 	_transitions[0] = new Transition_0();
+	_transitions[1] = new Transition_1();
 }
 
 Skip_Garbage::~Skip_Garbage()
@@ -26,6 +27,7 @@ Skip_Garbage::~Skip_Garbage()
 	delete &internalAction();
 
 	delete _transitions[0];
+	delete _transitions[1];
 }
 
 void Skip_Garbage::OnEntry::perform(CLMachine *_machine, CLState *_state) const
@@ -65,5 +67,17 @@ bool Skip_Garbage::Transition_0::check(CLMachine *_machine, CLState *_state) con
 	return
 	(
 #		include "State_Skip_Garbage_Transition_0.expr"
+	);
+}
+bool Skip_Garbage::Transition_1::check(CLMachine *_machine, CLState *_state) const
+{
+#	include "UltrasonicDiscreteSingle_VarRefs.mm"
+#	include "State_Skip_Garbage_VarRefs.mm"
+#	include "UltrasonicDiscreteSingle_FuncRefs.mm"
+#	include "State_Skip_Garbage_FuncRefs.mm"
+
+	return
+	(
+#		include "State_Skip_Garbage_Transition_1.expr"
 	);
 }

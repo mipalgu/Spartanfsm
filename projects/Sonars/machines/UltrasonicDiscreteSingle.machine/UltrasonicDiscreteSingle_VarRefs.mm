@@ -25,5 +25,6 @@ UltrasonicDiscreteSingle *_m = static_cast<UltrasonicDiscreteSingle *>(_machine)
 #machine	&signal RINGLETS_PER_S: unsigned(31 downto 0) = _m->signal RINGLETS_PER_S: unsigned(31 downto 0);	///<
 #extern	&LEDG: out std_logic_vector(8 downto 0) = _m->LEDG: out std_logic_vector(8 downto 0);	///<
 #extern	&LEDR: out std_logic_vector(17 downto 0) = _m->LEDR: out std_logic_vector(17 downto 0);	///<
+#machine	&signal lostState: std_logic_vector(3 downto 0) = _m->signal lostState: std_logic_vector(3 downto 0);	///<
 
 #pragma clang diagnostic pop

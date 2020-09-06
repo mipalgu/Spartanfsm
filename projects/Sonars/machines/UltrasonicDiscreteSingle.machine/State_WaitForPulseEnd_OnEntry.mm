@@ -1,1 +1,1 @@
-
+lostState <= currentState;
