@@ -8,3 +8,4 @@ ClearTrigger
 LostPulse
 WaitForPulseEnd
 Calculate_Distance
+WaitForOneSecond

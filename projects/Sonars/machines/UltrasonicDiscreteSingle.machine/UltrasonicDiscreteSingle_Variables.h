@@ -15,4 +15,5 @@
 #machine	signal numloops: unsigned(23 downto 0);	///<
 #machine	signal CLOCK_PERIOD: unsigned(4 downto 0);	///<
 #machine	signal RINGLETS_PER_MS: unsigned(19 downto 0);	///<
-#machine	signal i: unsigned(19 downto 0);	///<
+#machine	signal i: unsigned(31 downto 0);	///<
+#machine	signal RINGLETS_PER_S: unsigned(31 downto 0);	///<

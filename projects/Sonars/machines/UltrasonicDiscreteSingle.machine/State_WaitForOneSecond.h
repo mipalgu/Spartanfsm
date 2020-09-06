@@ -1,10 +1,10 @@
 //
-// State_LostPulse.h
+// State_WaitForOneSecond.h
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
-#ifndef clfsm_UltrasonicDiscreteSingle_State_LostPulse_h
-#define clfsm_UltrasonicDiscreteSingle_State_LostPulse_h
+#ifndef clfsm_UltrasonicDiscreteSingle_State_WaitForOneSecond_h
+#define clfsm_UltrasonicDiscreteSingle_State_WaitForOneSecond_h
 
 #include "CLState.h"
 #include "CLAction.h"
@@ -18,7 +18,7 @@ namespace FSM
       {
         namespace State
         {
-            class LostPulse: public CLState
+            class WaitForOneSecond: public CLState
             {
                 class OnEntry: public CLAction
                 {
@@ -38,7 +38,7 @@ namespace FSM
                 class Transition_0: public CLTransition
                 {
                 public:
-                    Transition_0(int toState = 10): CLTransition(toState) {}
+                    Transition_0(int toState = 3): CLTransition(toState) {}
 
                     virtual bool check(CLMachine *, CLState *) const;
                 };
@@ -46,14 +46,14 @@ namespace FSM
                 CLTransition *_transitions[1];
 
                 public:
-                    LostPulse(const char *name = "LostPulse");
-                    virtual ~LostPulse();
+                    WaitForOneSecond(const char *name = "WaitForOneSecond");
+                    virtual ~WaitForOneSecond();
 
                     virtual CLTransition * const *transitions() const { return _transitions; }
                     virtual int numberOfTransitions() const { return 1; }
 
-#                   include "State_LostPulse_Variables.h"
-#                   include "State_LostPulse_Methods.h"
+#                   include "State_WaitForOneSecond_Variables.h"
+#                   include "State_WaitForOneSecond_Methods.h"
             };
         }
       }
