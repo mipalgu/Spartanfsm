@@ -1,4 +1,4 @@
-distance <= x"FFFF";
+distance <= (others => '0');
 CLOCK_PERIOD <= '1' & x"4"; -- 20 ns (50MHz clock)
 SCHEDULE_LENGTH <= "101" * CLOCK_PERIOD; -- 100 ns per ringlet
 SPEED_OF_SOUND <= '1' & x"57"; -- 343 um/us (34300 cm/s)

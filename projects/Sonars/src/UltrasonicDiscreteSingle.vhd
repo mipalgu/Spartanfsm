@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-07 02:12 AEST
+--Date Generated: 2020-09-07 02:19 AEST
 --
 
 library IEEE;
@@ -84,7 +84,7 @@ process (clk)
                 when OnEntry =>
                     case currentState is
                         when STATE_Initial =>
-                            distance <= x"FFFF";
+                            distance <= (others => '0');
                             CLOCK_PERIOD <= '1' & x"4"; -- 20 ns (50MHz clock)
                             SCHEDULE_LENGTH <= "101" * CLOCK_PERIOD; -- 100 ns per ringlet
                             SPEED_OF_SOUND <= '1' & x"57"; -- 343 um/us (34300 cm/s)
@@ -154,10 +154,7 @@ process (clk)
                                 internalState <= Internal;
                             end if;
                         when STATE_Skip_Garbage =>
-                            if (numloops >= maxloops) then
-                                targetState <= STATE_LostPulse;
-                                internalState <= OnExit;
-                            elsif (echoIn = '0') and (not (numloops >= maxloops)) then
+                            if (echoIn = '0') then
                                 targetState <= STATE_WaitForPulseStart;
                                 internalState <= OnExit;
                             else
@@ -226,8 +223,6 @@ process (clk)
                     end case;
                 when Internal =>
                     case currentState is
-                        when STATE_Skip_Garbage =>
-                            numloops <= numloops + 1;
                         when STATE_WaitForPulseStart =>
                             numloops <= numloops + 1;
                             i <= i + 1;
@@ -254,6 +249,7 @@ process (clk)
                             sendEcho <= '0';
                         when STATE_WaitForPulseStart =>
                             numloops <= numloops + 1;
+                            triggerPin <= '0';
                         when STATE_ClearTrigger =>
                             numloops <= numloops + 1;
                         when STATE_LostPulse =>

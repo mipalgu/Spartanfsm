@@ -172,13 +172,13 @@
 			<array>
 				<dict>
 					<key>controlPoint1X</key>
-					<real>389.06268753259155</real>
+					<real>387.83406926373442</real>
 					<key>controlPoint1Y</key>
-					<real>166.32674287034556</real>
+					<real>156.00133295489928</real>
 					<key>controlPoint2X</key>
-					<real>388.53134376629578</real>
+					<real>382.63630544023488</real>
 					<key>controlPoint2Y</key>
-					<real>196.66337143517276</real>
+					<real>185.38642040786183</real>
 					<key>dstPointX</key>
 					<real>380.03742352848508</real>
 					<key>dstPointY</key>
@@ -583,24 +583,6 @@
 		<dict>
 			<key>Transitions</key>
 			<array>
-				<dict>
-					<key>controlPoint1X</key>
-					<real>532</real>
-					<key>controlPoint1Y</key>
-					<real>204</real>
-					<key>controlPoint2X</key>
-					<real>541</real>
-					<key>controlPoint2Y</key>
-					<real>243</real>
-					<key>dstPointX</key>
-					<real>495.2737842800172</real>
-					<key>dstPointY</key>
-					<real>382.72947783091558</real>
-					<key>srcPointX</key>
-					<real>702.38860678468745</real>
-					<key>srcPointY</key>
-					<real>96.227493424853989</real>
-				</dict>
 				<dict>
 					<key>controlPoint1X</key>
 					<real>654.78605189882308</real>
