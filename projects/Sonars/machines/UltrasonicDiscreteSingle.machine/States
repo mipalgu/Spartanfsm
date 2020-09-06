@@ -2,7 +2,6 @@ Initial
 SUSPENDED
 InitialPseudoState
 Setup_Pin
-SetupMeasure
 Skip_Garbage
 WaitForPulseStart
 ClearTrigger

@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-05 20:38 AEST
+--Date Generated: 2020-09-06 16:14 AEST
 --
 
 library IEEE;
@@ -33,13 +33,12 @@ architecture LLFSM of UltrasonicDiscreteSingle is
     constant STATE_SUSPENDED: std_logic_vector(3 downto 0) := "0001";
     constant STATE_InitialPseudoState: std_logic_vector(3 downto 0) := "0010";
     constant STATE_Setup_Pin: std_logic_vector(3 downto 0) := "0011";
-    constant STATE_SetupMeasure: std_logic_vector(3 downto 0) := "0100";
-    constant STATE_Skip_Garbage: std_logic_vector(3 downto 0) := "0101";
-    constant STATE_WaitForPulseStart: std_logic_vector(3 downto 0) := "0110";
-    constant STATE_ClearTrigger: std_logic_vector(3 downto 0) := "0111";
-    constant STATE_LostPulse: std_logic_vector(3 downto 0) := "1000";
-    constant STATE_WaitForPulseEnd: std_logic_vector(3 downto 0) := "1001";
-    constant STATE_Calculate_Distance: std_logic_vector(3 downto 0) := "1010";
+    constant STATE_Skip_Garbage: std_logic_vector(3 downto 0) := "0100";
+    constant STATE_WaitForPulseStart: std_logic_vector(3 downto 0) := "0101";
+    constant STATE_ClearTrigger: std_logic_vector(3 downto 0) := "0110";
+    constant STATE_LostPulse: std_logic_vector(3 downto 0) := "0111";
+    constant STATE_WaitForPulseEnd: std_logic_vector(3 downto 0) := "1000";
+    constant STATE_Calculate_Distance: std_logic_vector(3 downto 0) := "1001";
     signal currentState: std_logic_vector(3 downto 0) := STATE_Initial;
     signal targetState: std_logic_vector(3 downto 0) := currentState;
     signal previousRinglet: std_logic_vector(3 downto 0) := STATE_Initial xor "1111";
@@ -115,13 +114,6 @@ process (clk)
                                 internalState <= Internal;
                             end if;
                         when STATE_Setup_Pin =>
-                            if (true) then
-                                targetState <= STATE_SetupMeasure;
-                                internalState <= OnExit;
-                            else
-                                internalState <= Internal;
-                            end if;
-                        when STATE_SetupMeasure =>
                             if (true) then
                                 targetState <= STATE_Skip_Garbage;
                                 internalState <= OnExit;

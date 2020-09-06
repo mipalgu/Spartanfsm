@@ -10,7 +10,6 @@
 #include "State_SUSPENDED.h"
 #include "State_InitialPseudoState.h"
 #include "State_Setup_Pin.h"
-#include "State_SetupMeasure.h"
 #include "State_Skip_Garbage.h"
 #include "State_WaitForPulseStart.h"
 #include "State_ClearTrigger.h"
@@ -35,13 +34,12 @@ UltrasonicDiscreteSingle::UltrasonicDiscreteSingle(int mid, const char *name): C
 	_states[1] = new FSMUltrasonicDiscreteSingle::State::SUSPENDED;
 	_states[2] = new FSMUltrasonicDiscreteSingle::State::InitialPseudoState;
 	_states[3] = new FSMUltrasonicDiscreteSingle::State::Setup_Pin;
-	_states[4] = new FSMUltrasonicDiscreteSingle::State::SetupMeasure;
-	_states[5] = new FSMUltrasonicDiscreteSingle::State::Skip_Garbage;
-	_states[6] = new FSMUltrasonicDiscreteSingle::State::WaitForPulseStart;
-	_states[7] = new FSMUltrasonicDiscreteSingle::State::ClearTrigger;
-	_states[8] = new FSMUltrasonicDiscreteSingle::State::LostPulse;
-	_states[9] = new FSMUltrasonicDiscreteSingle::State::WaitForPulseEnd;
-	_states[10] = new FSMUltrasonicDiscreteSingle::State::Calculate_Distance;
+	_states[4] = new FSMUltrasonicDiscreteSingle::State::Skip_Garbage;
+	_states[5] = new FSMUltrasonicDiscreteSingle::State::WaitForPulseStart;
+	_states[6] = new FSMUltrasonicDiscreteSingle::State::ClearTrigger;
+	_states[7] = new FSMUltrasonicDiscreteSingle::State::LostPulse;
+	_states[8] = new FSMUltrasonicDiscreteSingle::State::WaitForPulseEnd;
+	_states[9] = new FSMUltrasonicDiscreteSingle::State::Calculate_Distance;
 
 	setSuspendState(_states[1]);            // set suspend state
 	setInitialState(_states[0]);            // set initial state
@@ -59,5 +57,4 @@ UltrasonicDiscreteSingle::~UltrasonicDiscreteSingle()
 	delete _states[7];
 	delete _states[8];
 	delete _states[9];
-	delete _states[10];
 }
