@@ -64,7 +64,8 @@ module SpartanLLFSM_Format(
     getIncludes,
     suspended,
     allTargetsToState,
-    initialPseudostate
+    initialPseudostate,
+    getInitialState
 ) where
 
 import SpartanLLFSM_Strings
@@ -205,6 +206,14 @@ getTargetTransition n contents = return $ (read (getTargetStateFromTransitionLin
 --Gets the transition number from a file
 readTargetTransition :: Int -> String -> IO Int
 readTargetTransition n file = getFileContents file >>= getTargetTransition n
+
+getInitialState :: String -> [String] -> IO String
+getInitialState dir states = do
+    hasIncorrectTransitions <- (getTransitionsForState initialPseudostate dir) >>= (\x -> return ( (length x) /= 1 && (map toLower (head x)) /= "true"))
+    if hasIncorrectTransitions then 
+        error ("Initial Pseudostate has too many transitions or non-true transition")
+    else 
+        (getTargetsForState dir initialPseudostate 1) >>= (\x -> return $ head $ targetToState states x)
 
 --Gets the targets for n transition of state in directory
 getTargetsForState :: String -> String -> Int -> IO [Int]

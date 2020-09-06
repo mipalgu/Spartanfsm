@@ -194,10 +194,11 @@ createVariables :: [String] -> String
 createVariables vars =  (foldl (+\>) "--Machine Variables" vars) ++ "\n"
 
 -- Create variables in architecture block
-createArchitectureVariables :: Int -> [String] -> String -> String
-createArchitectureVariables size states vars = internalStateVhdl
+createArchitectureVariables :: Int -> [String] -> String -> String -> String
+createArchitectureVariables size states vars firstState = 
+    internalStateVhdl
     ++ createAllStates (numberOfBits $ length states) (getBins states) states
-    ++ (createCurrentState (states!!0) (numberOfBits (length states)))
+    ++ (createCurrentState (firstState) (numberOfBits (length states)))
     ++ createTargetState (numberOfBits $ length states)
     ++ createPreviousRinglet (numberOfBits $ length states) (states!!0)
 --    ++ createSuspendedFrom (numberOfBits $ length states)
@@ -360,10 +361,10 @@ createProcessBlock states codes transitions targets vars = "process (clk)\n    b
     ++ "    end process;"
 
 --Create entire architecture block
-createArchitecture :: [String] -> [[String]] -> [[String]] -> [[String]] -> Int -> String -> String -> String
-createArchitecture states risingEdgeCode transitions targets size name vars = 
+createArchitecture :: [String] -> [[String]] -> [[String]] -> [[String]] -> Int -> String -> String -> String -> String
+createArchitecture states risingEdgeCode transitions targets size name vars firstState = 
     "architecture LLFSM of " ++ name ++ " is"
-    ++ beautify 1 (createArchitectureVariables size (map toStateName states) vars)
+    ++ beautify 1 (createArchitectureVariables size (map toStateName states) vars firstState)
     ++ "begin"
     +\> createProcessBlock (map toStateName states) risingEdgeCode transitions targets vars
     ++ "\nend LLFSM;"

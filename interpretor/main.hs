@@ -16,6 +16,7 @@ main = do
     states <- getAllStates dir
     hasInitialPseudostate states
     hasSuspended states
+    initialState <- getInitialState dir states
     internals <- getAllInternals dir states
     transitions <- getAllTransCodeForAllStates dir states
     numberOfTargets <- return $ getNumberOfTargets states transitions
@@ -24,7 +25,7 @@ main = do
     stateBitSize <- getNumberOfBits dir
     projectName <- return $ getProjectName dir
     variables <- getVariables dir projectName
-    architecture <- return $ createArchitecture states internals transitions targetStates stateBitSize projectName variables
+    architecture <- return $ createArchitecture states internals transitions targetStates stateBitSize projectName variables initialState
     includes <- getIncludes dir projectName
     entity <- return $ createEntity includes projectName variables
     timeString <- getLocalTimeString
