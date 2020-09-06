@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-06 16:40 AEST
+--Date Generated: 2020-09-06 16:49 AEST
 --
 
 library IEEE;
@@ -232,6 +232,7 @@ process (clk)
                             echoPin <= '0';
                         when STATE_Skip_Garbage =>
                             triggerPin <= '1';
+                            echoPin <= '0';
                             numloops <= numloops + 1;
                         when STATE_WaitForPulseStart =>
                             numloops <= numloops + 1;
