@@ -14,7 +14,9 @@ entity top is
 		  HEX4: out std_logic_vector(6 downto 0);
 		  HEX5: out std_logic_vector(6 downto 0);
 		  HEX6: out std_logic_vector(6 downto 0);
-		  HEX7: out std_logic_vector(6 downto 0)
+		  HEX7: out std_logic_vector(6 downto 0);
+		  LEDG: out std_logic_vector(8 downto 0);
+		  LEDR: out std_logic_vector(17 downto 0)
     );
 end top;
 
