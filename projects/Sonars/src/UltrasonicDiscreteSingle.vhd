@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-07 02:40 AEST
+--Date Generated: 2020-09-07 02:47 AEST
 --
 
 library IEEE;
@@ -112,8 +112,8 @@ process (clk)
                             lostState <= currentState;
                         when STATE_LostPulse =>
                             distance <= (others => '1');
-                            LEDR <= i(26 downto 9);
-                            LEDG <= i(8 downto 0);--'0' & x"0" & lostState;
+                            LEDR <= std_logic_vector(maxloops(33 downto 16));
+                            LEDG <= std_logic_vector(maxloops(15 downto 7));--'0' & x"0" & lostState;
                         when STATE_WaitForPulseEnd =>
                             lostState <= currentState;
                         when STATE_Calculate_Distance =>
