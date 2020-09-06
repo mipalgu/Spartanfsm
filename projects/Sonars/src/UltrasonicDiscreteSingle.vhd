@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-06 17:33 AEST
+--Date Generated: 2020-09-07 02:07 AEST
 --
 
 library IEEE;
@@ -101,6 +101,8 @@ process (clk)
                             triggerPin <= '0';
                         when STATE_Skip_Garbage =>
                             lostState <= currentState;
+                            echoOut <= '0';
+                            sendEcho <= '1';
                         when STATE_WaitForPulseStart =>
                             i <= (others => '0');
                             lostState <= currentState;
@@ -248,6 +250,7 @@ process (clk)
                         when STATE_Skip_Garbage =>
                             triggerPin <= '1';
                             numloops <= numloops + 1;
+                            sendEcho <= '0';
                         when STATE_WaitForPulseStart =>
                             numloops <= numloops + 1;
                         when STATE_ClearTrigger =>
