@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-06 16:24 AEST
+--Date Generated: 2020-09-06 16:31 AEST
 --
 
 library IEEE;
@@ -14,7 +14,9 @@ entity UltrasonicDiscreteSingle is
         clk: in std_logic;
         EXTERNAL_triggerPin: out std_logic;
         EXTERNAL_echoPin: inout std_logic;
-        EXTERNAL_distance: out std_logic_vector(15 downto 0)
+        EXTERNAL_distance: out std_logic_vector(15 downto 0);
+        EXTERNAL_LEDG: out std_logic_vector(8 downto 0);
+        EXTERNAL_LEDR: out std_logic_vector(17 downto 0)
     );
 end UltrasonicDiscreteSingle;
 
@@ -47,6 +49,8 @@ architecture LLFSM of UltrasonicDiscreteSingle is
     signal triggerPin: std_logic;
     signal echoPin: std_logic;
     signal distance: std_logic_vector(15 downto 0);
+    signal LEDG: std_logic_vector(8 downto 0);
+    signal LEDR: std_logic_vector(17 downto 0);
     --Machine Variables
     signal maxloops: unsigned(33 downto 0);
     signal SCHEDULE_LENGTH: unsigned(7 downto 0);
@@ -84,6 +88,8 @@ process (clk)
                             maxloops <= MAX_TIME / SCHEDULE_LENGTH;
                             RINGLETS_PER_MS <= x"F4240" / SCHEDULE_LENGTH;
                             RINGLETS_PER_S <= x"3E8" * RINGLETS_PER_MS;
+                            LEDG <= (others => '1');
+                            LEDG <= (others => '1');
                         when STATE_Setup_Pin =>
                             triggerPin <= '0';
                         when STATE_WaitForPulseStart =>
@@ -92,8 +98,12 @@ process (clk)
                             triggerPin <= '0';
                         when STATE_LostPulse =>
                             distance <= (others => '1');
+                            LEDG <= (others => '0');
+                            LEDR <= (others => '1');
                         when STATE_Calculate_Distance =>
                             distance <= std_logic_vector(resize((numloops* SCHEDULE_LENGTH / x"3E8" / SPEED_OF_SOUND / x"2710"), 16));
+                            LEDG <= (others => '1');
+                            LEDR <= (others => '0');
                         when STATE_WaitForOneSecond =>
                             i <= x"00000000";
                         when others =>
@@ -230,6 +240,8 @@ process (clk)
                     EXTERNAL_triggerPin <= triggerPin;
                     EXTERNAL_echoPin <= echoPin;
                     EXTERNAL_distance <= distance;
+                    EXTERNAL_LEDG <= LEDG;
+                    EXTERNAL_LEDR <= LEDR;
                     internalState <= ReadSnapshot;
                     previousRinglet <= currentState;
                     currentState <= targetState;

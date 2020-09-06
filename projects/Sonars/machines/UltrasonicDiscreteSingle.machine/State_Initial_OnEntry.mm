@@ -8,3 +8,5 @@ MAX_TIME <= MAX_DISTANCE * "10" / SPEED_OF_SOUND * ("11" & x"E8"); -- ns
 maxloops <= MAX_TIME / SCHEDULE_LENGTH;
 RINGLETS_PER_MS <= x"F4240" / SCHEDULE_LENGTH;
 RINGLETS_PER_S <= x"3E8" * RINGLETS_PER_MS;
+LEDG <= (others => '1');
+LEDG <= (others => '1');
