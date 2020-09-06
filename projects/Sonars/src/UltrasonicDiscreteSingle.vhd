@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-07 02:33 AEST
+--Date Generated: 2020-09-07 02:36 AEST
 --
 
 library IEEE;
@@ -106,13 +106,13 @@ process (clk)
                             triggerPin <= '0';
                         when STATE_WaitForPulseStart =>
                             i <= (others => '0');
-                            lostState <= currentState;
+                            --lostState <= currentState;
                         when STATE_ClearTrigger =>
                             triggerPin <= '0';
                             lostState <= currentState;
                         when STATE_LostPulse =>
                             distance <= (others => '1');
-                            LEDR <= (others => '1');
+                            LEDR <= i(26 downto 0);
                             LEDG <= '0' & x"0" & lostState;
                         when STATE_WaitForPulseEnd =>
                             lostState <= currentState;
