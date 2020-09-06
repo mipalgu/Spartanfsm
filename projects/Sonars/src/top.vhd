@@ -1,6 +1,9 @@
 library IEEE;
 use IEEE.std_logic_1164.All;
 
+library altera; 
+use altera.altera_primitives_components.all; 
+
 entity top is
     port (
         CLOCK_50: in std_logic;
@@ -27,13 +30,21 @@ architecture Behavioural of top is
 	signal busy: std_logic;
 	signal bcd: std_logic_vector(19 downto 0);
 	signal encodedDistance: std_logic_vector(19 downto 0);
+	signal echoIn: std_logic;
+	signal echoOut: std_logic;
+	signal sendEcho: std_logic;
+	signal triggerLatched: std_logic;
 
 	component UltrasonicDiscreteSingle is
 		port (
 			clk: in std_logic;
 			EXTERNAL_triggerPin: out std_logic;
-			EXTERNAL_echoPin: inout std_logic;
-			EXTERNAL_distance: out std_logic_vector(15 downto 0)
+			EXTERNAL_echoIn: in std_logic;
+			EXTERNAL_distance: out std_logic_vector(15 downto 0);
+			EXTERNAL_LEDG: out std_logic_vector(8 downto 0);
+         EXTERNAL_LEDR: out std_logic_vector(17 downto 0);
+			EXTERNAL_echoOut: out std_logic;
+         EXTERNAL_sendEcho: out std_logic
 		);
 	end component;
 	
@@ -58,13 +69,75 @@ architecture Behavioural of top is
 			bcd		:	OUT	STD_LOGIC_VECTOR(digits*4-1 DOWNTO 0));	--resulting BCD number
 	END component;
 	
+	component ALT_IOBUF is
+		generic (
+			IO_STANDARD: string;
+			CURRENT_STRENGTH_NEW: String;
+			ENABLE_BUS_HOLD: STRING;
+			WEAK_PULL_UP_RESISTOR: STRING;
+			LOCATION: STRING
+		);
+		port (
+			i: in std_logic;
+			oe: in std_logic;
+			io: inout std_logic;
+			o: out std_logic
+		);
+	end component;
+	
+	component ALT_OUTBUF is
+		generic (
+			IO_STANDARD: string;
+			LOCATION: string;
+			CURRENT_STRENGTH: string;
+			ENABLE_BUS_HOLD: string;
+			WEAK_PULL_UP_RESISTOR: string
+		);
+		port (
+			i: in std_logic;
+			o: out std_logic
+		);
+	end component;
+	
 begin
+
+	echo_buf: ALT_IOBUF generic map (
+		IO_STANDARD => "3.3-V LVTTL",
+		CURRENT_STRENGTH_NEW => "8mA",
+		ENABLE_BUS_HOLD => "none",
+		WEAK_PULL_UP_RESISTOR => "off",
+		LOCATION => "IOBANK_4"
+	) 
+	port map (
+		i => echoOut, 
+		oe => sendEcho, 
+		o => echoIn, 
+		io => GPIO(1)
+	);
+
+
+	trigger_buf: ALT_OUTBUF generic map (
+		IO_STANDARD => "3.3-V LVTTL",
+		LOCATION => "IOBANK_4",
+		CURRENT_STRENGTH => "8mA",
+		ENABLE_BUS_HOLD => "off",
+		WEAK_PULL_UP_RESISTOR => "off"
+	)
+	port map (
+		i => triggerLatched,
+		o => GPIO(0)
+	);
+
 
 	s1: UltrasonicDiscreteSingle port map (
 		clk => CLOCK_50,
-		EXTERNAL_triggerPin => GPIO(0),
-		EXTERNAL_echoPin => GPIO(1),
-		EXTERNAL_distance => distance
+		EXTERNAL_triggerPin => triggerLatched,
+		EXTERNAL_echoIn => echoIn,
+		EXTERNAL_distance => distance,
+		EXTERNAL_LEDG => LEDG,
+		EXTERNAL_LEDR => LEDR,
+		EXTERNAL_echoOut => echoOut,
+      EXTERNAL_sendEcho => sendEcho
 	);
 	
 	bcd_encoder: binary_to_bcd generic map (
