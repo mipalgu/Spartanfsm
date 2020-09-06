@@ -17,6 +17,7 @@
 #include "State_WaitForPulseEnd.h"
 #include "State_Calculate_Distance.h"
 #include "State_WaitForOneSecond.h"
+#include "State_SetupMeasure.h"
 
 using namespace FSM;
 using namespace CLM;
@@ -42,6 +43,7 @@ UltrasonicDiscreteSingle::UltrasonicDiscreteSingle(int mid, const char *name): C
 	_states[8] = new FSMUltrasonicDiscreteSingle::State::WaitForPulseEnd;
 	_states[9] = new FSMUltrasonicDiscreteSingle::State::Calculate_Distance;
 	_states[10] = new FSMUltrasonicDiscreteSingle::State::WaitForOneSecond;
+	_states[11] = new FSMUltrasonicDiscreteSingle::State::SetupMeasure;
 
 	setSuspendState(_states[1]);            // set suspend state
 	setInitialState(_states[0]);            // set initial state
@@ -60,4 +62,5 @@ UltrasonicDiscreteSingle::~UltrasonicDiscreteSingle()
 	delete _states[8];
 	delete _states[9];
 	delete _states[10];
+	delete _states[11];
 }

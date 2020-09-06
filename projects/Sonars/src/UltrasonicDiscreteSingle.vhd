@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-06 16:49 AEST
+--Date Generated: 2020-09-06 17:23 AEST
 --
 
 library IEEE;
@@ -13,10 +13,12 @@ entity UltrasonicDiscreteSingle is
     port (
         clk: in std_logic;
         EXTERNAL_triggerPin: out std_logic;
-        EXTERNAL_echoPin: inout std_logic;
+        EXTERNAL_echoIn: in std_logic;
         EXTERNAL_distance: out std_logic_vector(15 downto 0);
         EXTERNAL_LEDG: out std_logic_vector(8 downto 0);
-        EXTERNAL_LEDR: out std_logic_vector(17 downto 0)
+        EXTERNAL_LEDR: out std_logic_vector(17 downto 0);
+        EXTERNAL_echoOut: out std_logic;
+        EXTERNAL_sendEcho: out std_logic
     );
 end UltrasonicDiscreteSingle;
 
@@ -42,15 +44,18 @@ architecture LLFSM of UltrasonicDiscreteSingle is
     constant STATE_WaitForPulseEnd: std_logic_vector(3 downto 0) := "1000";
     constant STATE_Calculate_Distance: std_logic_vector(3 downto 0) := "1001";
     constant STATE_WaitForOneSecond: std_logic_vector(3 downto 0) := "1010";
+    constant STATE_SetupMeasure: std_logic_vector(3 downto 0) := "1011";
     signal currentState: std_logic_vector(3 downto 0) := STATE_Initial;
     signal targetState: std_logic_vector(3 downto 0) := currentState;
     signal previousRinglet: std_logic_vector(3 downto 0) := STATE_Initial xor "1111";
     --Snapshot of External Variables
     signal triggerPin: std_logic;
-    signal echoPin: std_logic;
+    signal echoIn: std_logic;
     signal distance: std_logic_vector(15 downto 0);
     signal LEDG: std_logic_vector(8 downto 0);
     signal LEDR: std_logic_vector(17 downto 0);
+    signal echoOut: std_logic;
+    signal sendEcho: std_logic;
     --Machine Variables
     signal maxloops: unsigned(33 downto 0);
     signal SCHEDULE_LENGTH: unsigned(7 downto 0);
@@ -70,7 +75,7 @@ process (clk)
         if (rising_edge(clk)) then
             case internalState is
                 when ReadSnapshot =>
-                    echoPin <= EXTERNAL_echoPin;
+                    echoIn <= EXTERNAL_echoIn;
                     if (previousRinglet = currentState) then
                         internalState <= NoOnEntry;
                     else
@@ -114,6 +119,8 @@ process (clk)
                             LEDR <= (others => '0');
                         when STATE_WaitForOneSecond =>
                             i <= x"00000000";
+                        when STATE_SetupMeasure =>
+                            sendEcho <= '0';
                         when others =>
                             null;
                     end case;
@@ -138,7 +145,7 @@ process (clk)
                             end if;
                         when STATE_Setup_Pin =>
                             if (true) then
-                                targetState <= STATE_Skip_Garbage;
+                                targetState <= STATE_SetupMeasure;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
@@ -147,7 +154,7 @@ process (clk)
                             if (numloops >= maxloops) then
                                 targetState <= STATE_LostPulse;
                                 internalState <= OnExit;
-                            elsif (echoPin = '0') and (not (numloops >= maxloops)) then
+                            elsif (echoIn = '0') and (not (numloops >= maxloops)) then
                                 targetState <= STATE_WaitForPulseStart;
                                 internalState <= OnExit;
                             else
@@ -167,7 +174,7 @@ process (clk)
                             if (numloops >= maxloops) then
                                 targetState <= STATE_LostPulse;
                                 internalState <= OnExit;
-                            elsif (echoPin = '1') and (not (numloops >= maxloops)) then
+                            elsif (echoIn = '1') and (not (numloops >= maxloops)) then
                                 targetState <= STATE_WaitForPulseEnd;
                                 internalState <= OnExit;
                             else
@@ -204,6 +211,13 @@ process (clk)
                             else
                                 internalState <= Internal;
                             end if;
+                        when STATE_SetupMeasure =>
+                            if (true) then
+                                targetState <= STATE_Skip_Garbage;
+                                internalState <= OnExit;
+                            else
+                                internalState <= Internal;
+                            end if;
                         when others =>
                             null;
                     end case;
@@ -229,10 +243,10 @@ process (clk)
                         when STATE_Initial =>
                             numloops <= (others => '0');
                         when STATE_Setup_Pin =>
-                            echoPin <= '0';
+                            echoOut <= '0';
+                            sendEcho <= '1';
                         when STATE_Skip_Garbage =>
                             triggerPin <= '1';
-                            echoPin <= '0';
                             numloops <= numloops + 1;
                         when STATE_WaitForPulseStart =>
                             numloops <= numloops + 1;
@@ -250,10 +264,11 @@ process (clk)
                     internalState <= CheckTransition;
                 when WriteSnapshot =>
                     EXTERNAL_triggerPin <= triggerPin;
-                    EXTERNAL_echoPin <= echoPin;
                     EXTERNAL_distance <= distance;
                     EXTERNAL_LEDG <= LEDG;
                     EXTERNAL_LEDR <= LEDR;
+                    EXTERNAL_echoOut <= echoOut;
+                    EXTERNAL_sendEcho <= sendEcho;
                     internalState <= ReadSnapshot;
                     previousRinglet <= currentState;
                     currentState <= targetState;

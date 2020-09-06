@@ -1,1 +1,2 @@
-echoPin <= '0';
+echoOut <= '0';
+sendEcho <= '1';

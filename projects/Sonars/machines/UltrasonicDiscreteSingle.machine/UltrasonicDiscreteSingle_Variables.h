@@ -4,7 +4,7 @@
 // Automatically created through MiPalCASE -- do not change manually!
 //
 #extern	triggerPin: out std_logic;	///<
-#extern	echoPin: inout std_logic;	///<
+#extern	echoIn: in std_logic;	///<
 #extern	distance: out std_logic_vector(15 downto 0);	///<
 #machine	signal maxloops: unsigned(33 downto 0);	///<
 #machine	signal SCHEDULE_LENGTH: unsigned(7 downto 0);	///<
@@ -20,3 +20,5 @@
 #extern	LEDG: out std_logic_vector(8 downto 0);	///<
 #extern	LEDR: out std_logic_vector(17 downto 0);	///<
 #machine	signal lostState: std_logic_vector(3 downto 0);	///<
+#extern	echoOut: out std_logic;	///<
+#extern	sendEcho: out std_logic;	///<

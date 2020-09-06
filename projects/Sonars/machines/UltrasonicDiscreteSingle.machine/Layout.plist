@@ -141,7 +141,7 @@
 			<key>onExitHeight</key>
 			<real>0.0</real>
 			<key>stateSelected</key>
-			<false/>
+			<true/>
 			<key>strokeColour</key>
 			<dict>
 				<key>alpha</key>
@@ -435,27 +435,99 @@
 			<key>zoomedOnExitHeight</key>
 			<real>0.0</real>
 		</dict>
+		<key>SetupMeasure</key>
+		<dict>
+			<key>Transitions</key>
+			<array>
+				<dict>
+					<key>controlPoint1X</key>
+					<real>632.64296077376821</real>
+					<key>controlPoint1Y</key>
+					<real>79.628456619533196</real>
+					<key>controlPoint2X</key>
+					<real>679.3214803868841</real>
+					<key>controlPoint2Y</key>
+					<real>82.314228309766591</real>
+					<key>dstPointX</key>
+					<real>696.01597193332543</real>
+					<key>dstPointY</key>
+					<real>83.368149893192466</real>
+					<key>srcPointX</key>
+					<real>585.96479660261377</real>
+					<key>srcPointY</key>
+					<real>76.937963280123313</real>
+				</dict>
+			</array>
+			<key>bgColour</key>
+			<dict>
+				<key>alpha</key>
+				<real>1</real>
+				<key>blue</key>
+				<real>0.92000000000000004</real>
+				<key>green</key>
+				<real>0.92000000000000004</real>
+				<key>red</key>
+				<real>0.92000000000000004</real>
+			</dict>
+			<key>editingMode</key>
+			<false/>
+			<key>expanded</key>
+			<false/>
+			<key>h</key>
+			<real>50</real>
+			<key>internalHeight</key>
+			<real>0.0</real>
+			<key>onEntryHeight</key>
+			<real>0.0</real>
+			<key>onExitHeight</key>
+			<real>0.0</real>
+			<key>stateSelected</key>
+			<false/>
+			<key>strokeColour</key>
+			<dict>
+				<key>alpha</key>
+				<real>1</real>
+				<key>blue</key>
+				<real>0.0</real>
+				<key>green</key>
+				<real>0.0</real>
+				<key>red</key>
+				<real>0.0</real>
+			</dict>
+			<key>w</key>
+			<real>100</real>
+			<key>x</key>
+			<real>536</real>
+			<key>y</key>
+			<real>76</real>
+			<key>zoomedInternalHeight</key>
+			<real>0.0</real>
+			<key>zoomedOnEntryHeight</key>
+			<real>0.0</real>
+			<key>zoomedOnExitHeight</key>
+			<real>0.0</real>
+		</dict>
 		<key>Setup_Pin</key>
 		<dict>
 			<key>Transitions</key>
 			<array>
 				<dict>
 					<key>controlPoint1X</key>
-					<real>493.15062825542662</real>
+					<real>455.89744539393649</real>
 					<key>controlPoint1Y</key>
-					<real>173.22492572151813</real>
+					<real>186.88965617067916</real>
 					<key>controlPoint2X</key>
-					<real>552.07531412771334</real>
+					<real>500.3512524908852</real>
 					<key>controlPoint2Y</key>
-					<real>130.11246286075905</real>
+					<real>129.01817332294951</real>
 					<key>dstPointX</key>
-					<real>596.01290822275291</real>
+					<real>522.57815603935967</real>
 					<key>dstPointY</key>
-					<real>95.568035133832353</real>
+					<real>100.08243189908477</real>
 					<key>srcPointX</key>
-					<real>434.15998850500961</real>
+					<real>433.67054184546214</real>
 					<key>srcPointY</key>
-					<real>216.27507553076123</real>
+					<real>215.825397594544</real>
 				</dict>
 			</array>
 			<key>bgColour</key>
@@ -525,9 +597,9 @@
 					<key>dstPointY</key>
 					<real>381.7464374963667</real>
 					<key>srcPointX</key>
-					<real>610.64466094067268</real>
+					<real>702.38860678468745</real>
 					<key>srcPointY</key>
-					<real>112.67766952966369</real>
+					<real>96.227493424853989</real>
 				</dict>
 				<dict>
 					<key>controlPoint1X</key>
@@ -543,9 +615,9 @@
 					<key>dstPointY</key>
 					<real>268.17961264059375</real>
 					<key>srcPointX</key>
-					<real>651.14624563946666</real>
+					<real>711.54285139621334</real>
 					<key>srcPointY</key>
-					<real>119.86722821213831</real>
+					<real>102.11563489155546</real>
 				</dict>
 			</array>
 			<key>bgColour</key>
@@ -572,7 +644,7 @@
 			<key>onExitHeight</key>
 			<real>0.0</real>
 			<key>stateSelected</key>
-			<true/>
+			<false/>
 			<key>strokeColour</key>
 			<dict>
 				<key>alpha</key>
@@ -587,9 +659,9 @@
 			<key>w</key>
 			<real>100</real>
 			<key>x</key>
-			<real>646</real>
+			<real>746</real>
 			<key>y</key>
-			<real>95</real>
+			<real>84</real>
 			<key>zoomedInternalHeight</key>
 			<real>0.0</real>
 			<key>zoomedOnEntryHeight</key>

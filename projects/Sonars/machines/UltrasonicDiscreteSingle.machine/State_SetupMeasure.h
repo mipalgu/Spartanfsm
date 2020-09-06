@@ -1,10 +1,10 @@
 //
-// State_Setup_Pin.h
+// State_SetupMeasure.h
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
-#ifndef clfsm_UltrasonicDiscreteSingle_State_Setup_Pin_h
-#define clfsm_UltrasonicDiscreteSingle_State_Setup_Pin_h
+#ifndef clfsm_UltrasonicDiscreteSingle_State_SetupMeasure_h
+#define clfsm_UltrasonicDiscreteSingle_State_SetupMeasure_h
 
 #include "CLState.h"
 #include "CLAction.h"
@@ -18,7 +18,7 @@ namespace FSM
       {
         namespace State
         {
-            class Setup_Pin: public CLState
+            class SetupMeasure: public CLState
             {
                 class OnEntry: public CLAction
                 {
@@ -38,7 +38,7 @@ namespace FSM
                 class Transition_0: public CLTransition
                 {
                 public:
-                    Transition_0(int toState = 11): CLTransition(toState) {}
+                    Transition_0(int toState = 4): CLTransition(toState) {}
 
                     virtual bool check(CLMachine *, CLState *) const;
                 };
@@ -46,14 +46,14 @@ namespace FSM
                 CLTransition *_transitions[1];
 
                 public:
-                    Setup_Pin(const char *name = "Setup_Pin");
-                    virtual ~Setup_Pin();
+                    SetupMeasure(const char *name = "SetupMeasure");
+                    virtual ~SetupMeasure();
 
                     virtual CLTransition * const *transitions() const { return _transitions; }
                     virtual int numberOfTransitions() const { return 1; }
 
-#                   include "State_Setup_Pin_Variables.h"
-#                   include "State_Setup_Pin_Methods.h"
+#                   include "State_SetupMeasure_Variables.h"
+#                   include "State_SetupMeasure_Methods.h"
             };
         }
       }
