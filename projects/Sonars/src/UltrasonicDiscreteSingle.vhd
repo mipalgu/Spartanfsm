@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-06 17:23 AEST
+--Date Generated: 2020-09-06 17:33 AEST
 --
 
 library IEEE;
@@ -191,7 +191,7 @@ process (clk)
                             if (numloops >= maxloops) then
                                 targetState <= STATE_LostPulse;
                                 internalState <= OnExit;
-                            elsif (echoPin = '0') and (not (numloops >= maxloops)) then
+                            elsif (echoIn = '0') and (not (numloops >= maxloops)) then
                                 targetState <= STATE_Calculate_Distance;
                                 internalState <= OnExit;
                             else
