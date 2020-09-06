@@ -436,10 +436,27 @@ getMachineVars str = map getMachineVariableCode $ filter isMachineVar (lines str
 createPortDeclaration :: [String] -> String
 createPortDeclaration xs = init (foldl (\x y -> x +\->  y) ("port (" +\-> "clk: in std_logic;") xs) +\> ");"
 
+isParameter :: String -> Bool
+isParameter code = (splitOn "\t" code)!!0 == "#param"
+
+getParameterCode :: String -> String
+getParameterCode code = (splitOn "\t" code)!!1
+
+getAllParameterVariableCode :: [String] -> [String]
+getAllParameterVariableCode = map getParameterCode
+
+getParameters :: String -> [String]
+getParameters vars = getAllParameterVariableCode $ filter isParameter (lines vars)
+
+createGenericDeclaration :: [String] -> String
+createGenericDeclaration vs | length vs == 0 = ""
+                            | otherwise      = init (foldl (\x y -> x +\-> y) ("generic (" +\-> "") vs) +\> ");"
+
 --Create entity block
 createEntity :: String -> String -> String -> String
 createEntity includes name vars = "library IEEE;\nuse IEEE.std_logic_1164.All;\n" ++ includes ++ "\n\nentity " ++ name ++ " is"
-    ++ beautify 1 (createPortDeclaration $ getExternals $ removeAllTrailingComments $ filterOutComments vars)
+    ++ beautify 1 (createGenericDeclaration $ getParameters $ removeAllTrailingComments $ filterOutComments vars)
+    ++ removeFirstNewLine (beautify 1 (createPortDeclaration $ getExternals $ removeAllTrailingComments $ filterOutComments vars))
     ++ "end " ++ name ++ ";"
 
 -- Checks mode for input
