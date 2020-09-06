@@ -364,7 +364,7 @@ createProcessBlock states codes transitions targets vars = "process (clk)\n    b
 createArchitecture :: [String] -> [[String]] -> [[String]] -> [[String]] -> Int -> String -> String -> String -> String
 createArchitecture states risingEdgeCode transitions targets size name vars firstState = 
     "architecture LLFSM of " ++ name ++ " is"
-    ++ beautify 1 (createArchitectureVariables size (map toStateName states) vars firstState)
+    ++ beautify 1 (createArchitectureVariables size (map toStateName states) vars (toStateName firstState))
     ++ "begin"
     +\> createProcessBlock (map toStateName states) risingEdgeCode transitions targets vars
     ++ "\nend LLFSM;"
