@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-07 02:36 AEST
+--Date Generated: 2020-09-07 02:40 AEST
 --
 
 library IEEE;
@@ -112,8 +112,8 @@ process (clk)
                             lostState <= currentState;
                         when STATE_LostPulse =>
                             distance <= (others => '1');
-                            LEDR <= i(26 downto 0);
-                            LEDG <= '0' & x"0" & lostState;
+                            LEDR <= i(26 downto 9);
+                            LEDG <= i(8 downto 0);--'0' & x"0" & lostState;
                         when STATE_WaitForPulseEnd =>
                             lostState <= currentState;
                         when STATE_Calculate_Distance =>
@@ -164,7 +164,7 @@ process (clk)
                             if (numloops >= maxloops) then
                                 targetState <= STATE_LostPulse;
                                 internalState <= OnExit;
-                            elsif (i >= RINGLETS_PER_MS) and (not (numloops >= maxloops)) then
+                            elsif (i >= (x"000" & RINGLETS_PER_MS)) and (not (numloops >= maxloops)) then
                                 targetState <= STATE_ClearTrigger;
                                 internalState <= OnExit;
                             else
