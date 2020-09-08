@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-09 03:05 AEST
+--Date Generated: 2020-09-09 03:23 AEST
 --
 
 library IEEE;
@@ -58,13 +58,12 @@ architecture LLFSM of UltrasonicDiscreteSingle is
     signal sendEcho: std_logic;
     --Machine Variables
     signal maxloops: unsigned(39 downto 0);
-    signal SCHEDULE_LENGTH: unsigned(11 downto 0);
-    signal SPEED_OF_SOUND: unsigned(11 downto 0);
-    signal SONAR_OFFSET: unsigned(7 downto 0);
-    signal MAX_DISTANCE: unsigned(23 downto 0);
+    constant SCHEDULE_LENGTH: unsigned(7 downto 0) := x"64";
+    constant SPEED_OF_SOUND: unsigned(11 downto 0) := x"157";
+    constant SONAR_OFFSET: unsigned(7 downto 0) := x"28";
+    constant MAX_DISTANCE: unsigned(23 downto 0) := x"3D0900";
     signal MAX_TIME: unsigned(39 downto 0);
     signal numloops: unsigned(39 downto 0);
-    signal CLOCK_PERIOD: unsigned(7 downto 0);
     signal RINGLETS_PER_MS: unsigned(19 downto 0);
     signal i: unsigned(31 downto 0);
     signal RINGLETS_PER_S: unsigned(31 downto 0);
@@ -85,11 +84,6 @@ process (clk)
                     case currentState is
                         when STATE_Initial =>
                             distance <= (others => '0');
-                            CLOCK_PERIOD <= x"14"; -- 20 ns (50MHz clock)
-                            SCHEDULE_LENGTH <= x"064"; -- 100 ns per ringlet
-                            SPEED_OF_SOUND <= x"157"; -- 343 um/us (34300 cm/s)
-                            SONAR_OFFSET <= x"28"; -- 40
-                            MAX_DISTANCE <= x"3D0900"; -- 4 000 000 um (400 cm)
                             MAX_TIME <= ((MAX_DISTANCE * x"2") / SPEED_OF_SOUND) *x"3E8"; -- ns
                             maxloops <= MAX_TIME / SCHEDULE_LENGTH;
                             RINGLETS_PER_MS <= x"F4240" / SCHEDULE_LENGTH;
