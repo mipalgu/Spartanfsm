@@ -86,3 +86,6 @@ incremental_db
 *.qws
 *.qpf
 *.sdc
+simulation
+*.stp
+*.vwf
