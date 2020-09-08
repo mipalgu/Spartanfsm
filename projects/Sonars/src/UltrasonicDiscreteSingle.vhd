@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-09 03:23 AEST
+--Date Generated: 2020-09-09 03:24 AEST
 --
 
 library IEEE;
@@ -85,9 +85,7 @@ process (clk)
                         when STATE_Initial =>
                             distance <= (others => '0');
                             MAX_TIME <= ((MAX_DISTANCE * x"2") / SPEED_OF_SOUND) *x"3E8"; -- ns
-                            maxloops <= MAX_TIME / SCHEDULE_LENGTH;
                             RINGLETS_PER_MS <= x"F4240" / SCHEDULE_LENGTH;
-                            RINGLETS_PER_S <= x"3E8" * RINGLETS_PER_MS;
                             LEDG <= (others => '1');
                             lostState <= (others => '0');
                         when STATE_Setup_Pin =>
@@ -233,6 +231,8 @@ process (clk)
                     case currentState is
                         when STATE_Initial =>
                             numloops <= (others => '0');
+                            maxloops <= MAX_TIME / SCHEDULE_LENGTH;
+                            RINGLETS_PER_S <= x"3E8" * RINGLETS_PER_MS;
                         when STATE_Setup_Pin =>
                             echoOut <= '0';
                             sendEcho <= '1';
