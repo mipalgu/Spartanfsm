@@ -57,7 +57,7 @@ architecture LLFSM of UltrasonicDiscreteSingle is
     signal echoOut: std_logic;
     signal sendEcho: std_logic;
     --Machine Variables
-    signal maxloops: unsigned(39 downto 0);
+    signal maxloops: unsigned(39 downto 0); attribute preserve: boolean; attribute preserve of maxloops: signal is true;
     constant SCHEDULE_LENGTH: unsigned(7 downto 0) := x"64";
     constant SPEED_OF_SOUND: unsigned(11 downto 0) := x"157";
     constant SONAR_OFFSET: unsigned(7 downto 0) := x"28";
