@@ -1,15 +1,16 @@
 SRCS?=main.hs io.hs stringManipulation.hs LLFSMFormat.hs helpers.hs VHDLGeneration.hs
 E?=@
+bin_name?=spartanfsm
 
 build:
 	$Eghc ${SRCS} -odir bin -hidir bin
-	$Emv main spartanllfsm
+	$Emv main ${bin_name}
 
 clean:
-	$Erm -f bin/* spartanllfsm
+	$Erm -f bin/* ${bin_name}
 
 install:
-	$Emv spartanllfsm /usr/local/bin
+	$Emv ${bin_name} /usr/local/bin
 
 uninstall:
-	$Erm -f /usr/local/bin/spartanllfsm
+	$Erm -f /usr/local/bin/${bin_name}
