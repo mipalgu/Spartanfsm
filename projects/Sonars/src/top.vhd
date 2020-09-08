@@ -101,19 +101,19 @@ architecture Behavioural of top is
 	
 begin
 
-	echo_buf: ALT_IOBUF generic map (
-		IO_STANDARD => "3.3-V LVTTL",
-		CURRENT_STRENGTH_NEW => "8mA",
-		ENABLE_BUS_HOLD => "none",
-		WEAK_PULL_UP_RESISTOR => "off",
-		LOCATION => "IOBANK_4"
-	) 
-	port map (
-		i => echoOut, 
-		oe => sendEcho, 
-		o => echoIn, 
-		io => GPIO(1)
-	);
+--	echo_buf: ALT_IOBUF generic map (
+--		IO_STANDARD => "3.3-V LVTTL",
+--		CURRENT_STRENGTH_NEW => "8mA",
+--		ENABLE_BUS_HOLD => "none",
+--		WEAK_PULL_UP_RESISTOR => "off",
+--		LOCATION => "IOBANK_4"
+--	) 
+--	port map (
+--		i => echoOut, 
+--		oe => sendEcho, 
+--		o => echoIn, 
+--		io => GPIO(1)
+--	);
 
 
 	trigger_buf: ALT_OUTBUF generic map (
@@ -132,11 +132,11 @@ begin
 	s1: UltrasonicDiscreteSingle port map (
 		clk => CLOCK_50,
 		EXTERNAL_triggerPin => triggerLatched,
-		EXTERNAL_echoIn => echoIn,
+		EXTERNAL_echoIn => GPIO(1),
 		EXTERNAL_distance => distance,
 		EXTERNAL_LEDG => LEDG,
 		EXTERNAL_LEDR => LEDR,
-		EXTERNAL_echoOut => echoOut,
+		EXTERNAL_echoOut => GPIO(1),
       EXTERNAL_sendEcho => sendEcho
 	);
 	

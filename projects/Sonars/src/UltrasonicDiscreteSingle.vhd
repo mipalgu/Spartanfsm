@@ -57,17 +57,17 @@ architecture LLFSM of UltrasonicDiscreteSingle is
     signal echoOut: std_logic;
     signal sendEcho: std_logic;
     --Machine Variables
-    signal maxloops: unsigned(33 downto 0);
-    signal SCHEDULE_LENGTH: unsigned(7 downto 0);
-    signal SPEED_OF_SOUND: unsigned(8 downto 0);
-    signal SONAR_OFFSET: unsigned(5 downto 0);
-    signal MAX_DISTANCE: unsigned(21 downto 0);
-    signal MAX_TIME: unsigned(33 downto 0);
+    signal maxloops: Integer;
+    signal SCHEDULE_LENGTH: Integer;
+    signal SPEED_OF_SOUND: Integer;
+    signal SONAR_OFFSET: Integer;
+    signal MAX_DISTANCE: Integer;
+    signal MAX_TIME: Integer;
     signal numloops: unsigned(23 downto 0);
-    signal CLOCK_PERIOD: unsigned(4 downto 0);
-    signal RINGLETS_PER_MS: unsigned(19 downto 0);
+    signal CLOCK_PERIOD: Integer;
+    signal RINGLETS_PER_MS: Integer;
     signal i: unsigned(31 downto 0);
-    signal RINGLETS_PER_S: unsigned(31 downto 0);
+    signal RINGLETS_PER_S: Integer;
     signal lostState: std_logic_vector(3 downto 0);
 begin
 process (clk)
@@ -85,15 +85,15 @@ process (clk)
                     case currentState is
                         when STATE_Initial =>
                             distance <= (others => '0');
-                            CLOCK_PERIOD <= '1' & x"4"; -- 20 ns (50MHz clock)
-                            SCHEDULE_LENGTH <= "101" * CLOCK_PERIOD; -- 100 ns per ringlet
-                            SPEED_OF_SOUND <= '1' & x"57"; -- 343 um/us (34300 cm/s)
-                            SONAR_OFFSET <= "10" & x"8"; -- 40
-                            MAX_DISTANCE <= "11" & x"D0900"; -- 4 000 000 um (400 cm)
-                            MAX_TIME <= ((MAX_DISTANCE * "10") / SPEED_OF_SOUND) * ("11" & x"E8"); -- ns
+                            CLOCK_PERIOD <= 20; -- 20 ns (50MHz clock)
+                            SCHEDULE_LENGTH <= 5 * CLOCK_PERIOD; -- 100 ns per ringlet
+                            SPEED_OF_SOUND <= 343; -- 343 um/us (34300 cm/s)
+                            SONAR_OFFSET <= 40; -- 40
+                            MAX_DISTANCE <= 4000000; -- 4 000 000 um (400 cm)
+                            MAX_TIME <= (MAX_DISTANCE / SPEED_OF_SOUND) * 2000; -- ns
                             maxloops <= MAX_TIME / SCHEDULE_LENGTH;
-                            RINGLETS_PER_MS <= x"F4240" / SCHEDULE_LENGTH;
-                            RINGLETS_PER_S <= x"3E8" * RINGLETS_PER_MS;
+                            RINGLETS_PER_MS <= 1000000 / SCHEDULE_LENGTH;
+                            RINGLETS_PER_S <= 1000 * RINGLETS_PER_MS;
                             LEDG <= (others => '1');
                             LEDG <= (others => '1');
                             lostState <= (others => '0');
@@ -112,8 +112,9 @@ process (clk)
                             lostState <= currentState;
                         when STATE_LostPulse =>
                             distance <= (others => '1');
-                            LEDR <= std_logic_vector(maxloops(33 downto 16));
-                            LEDG <= std_logic_vector(maxloops(15 downto 7));--'0' & x"0" & lostState;
+                            LEDR <= std_logic_vector(to_unsigned(maxloops, LEDR'length));
+									 LEDG <= (others => '1');
+                            --LEDG <= std_logic_vector(to_unsigned(maxloops(8 downto 0), LEDG'length);--'0' & x"0" & lostState;
                         when STATE_WaitForPulseEnd =>
                             lostState <= currentState;
                         when STATE_Calculate_Distance =>
@@ -164,7 +165,7 @@ process (clk)
                             if (numloops >= maxloops) then
                                 targetState <= STATE_LostPulse;
                                 internalState <= OnExit;
-                            elsif (i >= (x"000" & RINGLETS_PER_MS)) and (not (numloops >= maxloops)) then
+                            elsif (i >= RINGLETS_PER_MS) and (not (numloops >= maxloops)) then
                                 targetState <= STATE_ClearTrigger;
                                 internalState <= OnExit;
                             else
