@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-09 02:51 AEST
+--Date Generated: 2020-09-09 03:05 AEST
 --
 
 library IEEE;
@@ -86,7 +86,7 @@ process (clk)
                         when STATE_Initial =>
                             distance <= (others => '0');
                             CLOCK_PERIOD <= x"14"; -- 20 ns (50MHz clock)
-                            SCHEDULE_LENGTH <= x"5" * CLOCK_PERIOD; -- 100 ns per ringlet
+                            SCHEDULE_LENGTH <= x"064"; -- 100 ns per ringlet
                             SPEED_OF_SOUND <= x"157"; -- 343 um/us (34300 cm/s)
                             SONAR_OFFSET <= x"28"; -- 40
                             MAX_DISTANCE <= x"3D0900"; -- 4 000 000 um (400 cm)
