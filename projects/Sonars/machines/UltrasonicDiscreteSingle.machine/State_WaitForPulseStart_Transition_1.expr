@@ -1,1 +1,1 @@
-i >= (x"000" & RINGLETS_PER_MS)
+i >= RINGLETS_PER_MS
