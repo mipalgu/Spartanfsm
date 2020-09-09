@@ -34,5 +34,8 @@ begin
 		suspended => suspended,
 		EXTERNAL_LED => ledValue
 	);
+	
+	LEDG <= (others => ledValue);
+	LEDR <= (others => ledValue);
 
 end Behavioral;
