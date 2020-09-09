@@ -13,8 +13,9 @@ bcd *_m = static_cast<bcd *>(_machine);
 #param	&digits: Integer = _m->digits: Integer;	///<
 #extern	&binary: in std_logic_vector(N - 1 downto 0) = _m->binary: in std_logic_vector(N - 1 downto 0);	///<
 #extern	&bcd: out std_logic_vector(digits * 4 - 1 downto 0) = _m->bcd: out std_logic_vector(digits * 4 - 1 downto 0);	///<
-#extern	&enable: in std_logic = _m->enable: in std_logic;	///<
-#extern	&busy: out std_logic = _m->busy: out std_logic;	///<
-int	& = _m->;	///<
+#machine	&variable exponent: integer range -1 to digits - 1 := digits - 1 = _m->variable exponent: integer range -1 to digits - 1 := digits - 1;	///<
+#machine	&signal unsignedBinary: unsigned(N-1 downto 0) = _m->signal unsignedBinary: unsigned(N-1 downto 0);	///<
+#machine	&signal data: unsigned(3 downto 0) = _m->signal data: unsigned(3 downto 0);	///<
+#machine	&signal tempBcd: unsigned(N * 4 - 1 downto 0) = _m->signal tempBcd: unsigned(N * 4 - 1 downto 0);	///<
 
 #pragma clang diagnostic pop

@@ -1,5 +1,5 @@
 //
-// State_SeparateInput_VarRefs.mm
+// State_ConvertToBcd_VarRefs.mm
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
@@ -7,7 +7,7 @@
 #pragma clang diagnostic ignored "-Wunused-variable"
 #pragma clang diagnostic ignored "-Wshadow"
 
-SeparateInput *_s = static_cast<SeparateInput *>(_state);
+ConvertToBcd *_s = static_cast<ConvertToBcd *>(_state);
 
 
 #pragma clang diagnostic pop

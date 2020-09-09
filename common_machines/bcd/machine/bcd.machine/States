@@ -1,4 +1,6 @@
 Initial
 SUSPENDED
 InitialPseudoState
-SeparateInput
+FindSignificantBits
+ConvertToBcd
+UpdateBcdVariable

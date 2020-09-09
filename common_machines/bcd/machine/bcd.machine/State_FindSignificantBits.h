@@ -1,10 +1,10 @@
 //
-// State_SeparateInput.h
+// State_FindSignificantBits.h
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
-#ifndef clfsm_bcd_State_SeparateInput_h
-#define clfsm_bcd_State_SeparateInput_h
+#ifndef clfsm_bcd_State_FindSignificantBits_h
+#define clfsm_bcd_State_FindSignificantBits_h
 
 #include "CLState.h"
 #include "CLAction.h"
@@ -18,7 +18,7 @@ namespace FSM
       {
         namespace State
         {
-            class SeparateInput: public CLState
+            class FindSignificantBits: public CLState
             {
                 class OnEntry: public CLAction
                 {
@@ -35,21 +35,25 @@ namespace FSM
                     virtual void perform(CLMachine *, CLState *) const;
                 };
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wzero-length-array"
-                CLTransition *_transitions[0];
-#pragma clang diagnostic pop
+                class Transition_0: public CLTransition
+                {
+                public:
+                    Transition_0(int toState = 4): CLTransition(toState) {}
 
+                    virtual bool check(CLMachine *, CLState *) const;
+                };
+
+                CLTransition *_transitions[1];
 
                 public:
-                    SeparateInput(const char *name = "SeparateInput");
-                    virtual ~SeparateInput();
+                    FindSignificantBits(const char *name = "FindSignificantBits");
+                    virtual ~FindSignificantBits();
 
                     virtual CLTransition * const *transitions() const { return _transitions; }
-                    virtual int numberOfTransitions() const { return 0; }
+                    virtual int numberOfTransitions() const { return 1; }
 
-#                   include "State_SeparateInput_Variables.h"
-#                   include "State_SeparateInput_Methods.h"
+#                   include "State_FindSignificantBits_Variables.h"
+#                   include "State_FindSignificantBits_Methods.h"
             };
         }
       }

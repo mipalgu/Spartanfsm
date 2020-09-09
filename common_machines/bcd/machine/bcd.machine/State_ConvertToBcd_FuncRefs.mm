@@ -1,5 +1,5 @@
 //
-// State_SeparateInput_FuncRefs.mm
+// State_ConvertToBcd_FuncRefs.mm
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
