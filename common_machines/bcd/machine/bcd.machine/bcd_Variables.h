@@ -9,6 +9,6 @@
 #extern	bcd: out std_logic_vector(digits * 4 - 1 downto 0);	///<
 #machine	shared variable divisor: integer range 0 to 10 ** (digits - 1) := 10 ** (digits - 1);	///<
 #machine	signal unsignedBinary: unsigned(N-1 downto 0);	///<
-#machine	signal data: unsigned(3 downto 0);	///<
+#machine	shared variable data: integer range 0 to 2**N - 1;	///<
 #machine	signal tempBcd: unsigned(digits * 4 - 1 downto 0);	///<
 #machine	shared variable exponent: integer range -1 to digits - 1 := digits - 1;	///<

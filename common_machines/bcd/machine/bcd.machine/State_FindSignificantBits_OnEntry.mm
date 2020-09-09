@@ -1,1 +1,1 @@
-data <= resize(unsignedBinary / divisor, 4);
+data := to_integer(unsignedBinary) / divisor;
