@@ -50,7 +50,28 @@ architecture LLFSM of ParentMachine is
     signal resumeChild: std_logic;
     signal suspendedChild: std_logic;
     signal childsLed: std_logic;
+	 
+	 component SuspensibleHelloWorld is
+		port (
+			clk: in std_logic;
+			restart: in std_logic;
+			resume: in std_logic;
+			suspend: in std_logic;
+			suspended: out std_logic;
+			EXTERNAL_LED: out std_logic
+		);
+	 end component;
+	 
 begin
+
+	 helloWorld_gen: SuspensibleHelloWorld port map (
+		clk => clk,
+		restart => '1',
+		resume => resumeChild,
+		suspend => suspendChild,
+		suspended => suspendedChild,
+		EXTERNAL_LED => childsLed
+	 );
 process (clk)
     begin
         if (rising_edge(clk)) then
