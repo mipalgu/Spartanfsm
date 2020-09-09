@@ -201,7 +201,7 @@ createArchitectureVariables size states vars firstState =
     ++ createAllStates (numberOfBits $ length states) (getBins states) states
     ++ (createCurrentState (firstState) (numberOfBits (length states)))
     ++ createTargetState (numberOfBits $ length states)
-    ++ createPreviousRinglet (numberOfBits $ length states) (states!!0)
+    ++ createPreviousRinglet (numberOfBits $ length states) firstState
     ++ createSuspendedFrom (numberOfBits $ length states) firstState
 --    ++ createPreviousInternal
     ++ createArchitectureSnapshots (getExternalVars vars)
