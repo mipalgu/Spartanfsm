@@ -14,5 +14,7 @@ ParentMachine *_m = static_cast<ParentMachine *>(_machine);
 #machine	&signal suspendChild: std_logic = _m->signal suspendChild: std_logic;	///<
 #extern	&LED: out std_logic = _m->LED: out std_logic;	///<
 #machine	&signal resumeChild: std_logic = _m->signal resumeChild: std_logic;	///<
+#machine	&signal suspendedChild: std_logic = _m->signal suspendedChild: std_logic;	///<
+#machine	&signal childsLed: std_logic = _m->signal childsLed: std_logic;	///<
 
 #pragma clang diagnostic pop

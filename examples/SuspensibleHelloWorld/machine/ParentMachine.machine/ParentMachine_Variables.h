@@ -8,3 +8,5 @@
 #machine	signal suspendChild: std_logic;	///<
 #extern	LED: out std_logic;	///<
 #machine	signal resumeChild: std_logic;	///<
+#machine	signal suspendedChild: std_logic;	///<
+#machine	signal childsLed: std_logic;	///<

@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-10 02:41 AEST
+--Date Generated: 2020-09-10 02:53 AEST
 --
 
 library IEEE;
@@ -48,6 +48,8 @@ architecture LLFSM of ParentMachine is
     signal i: unsigned(23 downto 0);
     signal suspendChild: std_logic;
     signal resumeChild: std_logic;
+    signal suspendedChild: std_logic;
+    signal childsLed: std_logic;
 begin
 process (clk)
     begin
@@ -134,8 +136,10 @@ process (clk)
                     case currentState is
                         when STATE_LightOn =>
                             i <= i + 1;
+                            led <= childsLed;
                         when STATE_LightOff =>
                             i <= i + 1;
+                            led <= childsLed;
                         when others =>
                             null;
                     end case;
