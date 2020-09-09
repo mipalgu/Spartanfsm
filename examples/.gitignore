@@ -89,3 +89,4 @@ incremental_db
 simulation
 *.stp
 *.vwf
+*.cdf
