@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-10 04:19 AEST
+--Date Generated: 2020-09-10 04:27 AEST
 --
 
 library IEEE;
@@ -91,10 +91,10 @@ process (clk)
                         when STATE_FindSignificantBits =>
                             data <= unsignedBinary / (10 ** exponent);
                         when STATE_ConvertToBcd =>
-                            tempBcd(exponent * 4 + 3 downto exponent * 4) <= to_unsigned(data, 4);
-                            exponent <= exponent - 1;
+                            tempBcd(exponent * 4 + 3 downto exponent * 4) <= data;
+                            exponent := exponent - 1;
                         when STATE_UpdateBcdVariable =>
-                            bcd <= tempBcd;
+                            bcd <= std_logic_vector(tempBcd);
                         when others =>
                             null;
                     end case;
@@ -155,7 +155,7 @@ process (clk)
                         when STATE_Initial =>
                             unsignedBinary <= unsigned(binary);
                             tempBcd <= (others => '0');
-                            exponent <= digits - 1;
+                            exponent := digits - 1;
                         when STATE_FindSignificantBits =>
                             unsignedBinary <= unsignedBinary - data * (10 ** exponent);
                         when others =>
