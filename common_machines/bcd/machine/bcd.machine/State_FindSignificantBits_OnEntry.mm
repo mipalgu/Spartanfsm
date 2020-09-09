@@ -1,1 +1,1 @@
-data <= unsignedBinary / divisor;
+data <= resize(unsignedBinary / divisor, 4);

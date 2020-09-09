@@ -16,7 +16,7 @@ bcd *_m = static_cast<bcd *>(_machine);
 #machine	&shared variable divisor: integer range 0 to 10 ** (digits - 1) := 10 ** (digits - 1) = _m->shared variable divisor: integer range 0 to 10 ** (digits - 1) := 10 ** (digits - 1);	///<
 #machine	&signal unsignedBinary: unsigned(N-1 downto 0) = _m->signal unsignedBinary: unsigned(N-1 downto 0);	///<
 #machine	&signal data: unsigned(3 downto 0) = _m->signal data: unsigned(3 downto 0);	///<
-#machine	&signal tempBcd: unsigned(N * 4 - 1 downto 0) = _m->signal tempBcd: unsigned(N * 4 - 1 downto 0);	///<
+#machine	&signal tempBcd: unsigned(digits * 4 - 1 downto 0) = _m->signal tempBcd: unsigned(digits * 4 - 1 downto 0);	///<
 #machine	&shared variable exponent: integer range -1 to digits - 1 := digits - 1 = _m->shared variable exponent: integer range -1 to digits - 1 := digits - 1;	///<
 
 #pragma clang diagnostic pop

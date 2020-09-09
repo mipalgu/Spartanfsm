@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-10 04:53 AEST
+--Date Generated: 2020-09-10 04:57 AEST
 --
 
 library IEEE;
@@ -54,7 +54,7 @@ architecture LLFSM of bcd is
     shared variable divisor: integer range 0 to 10 ** (digits - 1) := 10 ** (digits - 1);
     signal unsignedBinary: unsigned(N-1 downto 0);
     signal data: unsigned(3 downto 0);
-    signal tempBcd: unsigned(N * 4 - 1 downto 0);
+    signal tempBcd: unsigned(digits * 4 - 1 downto 0);
     shared variable exponent: integer range -1 to digits - 1 := digits - 1;
 begin
 process (clk)
@@ -90,7 +90,7 @@ process (clk)
                 when OnEntry =>
                     case currentState is
                         when STATE_FindSignificantBits =>
-                            data <= unsignedBinary / divisor;
+                            data <= resize(unsignedBinary / divisor, 4);
                         when STATE_ConvertToBcd =>
                             tempBcd(exponent * 4 + 3 downto exponent * 4) <= data;
                             exponent := exponent - 1;
