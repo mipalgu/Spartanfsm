@@ -1,0 +1,1 @@
+tens <= unsignedBinary / x"A";
