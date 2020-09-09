@@ -1,2 +1,2 @@
-tempBcd(exponent * 4 + 3 downto exponent * 4) <= to_unsigned(data, 4);
-exponent <= exponent - 1;
+tempBcd(exponent * 4 + 3 downto exponent * 4) <= data;
+exponent := exponent - 1;
