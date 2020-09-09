@@ -1,1 +1,1 @@
-unsignedBinary <= unsignedBinary - data * (10 ** exponent);
+unsignedBinary <= unsignedBinary - data * divisor;

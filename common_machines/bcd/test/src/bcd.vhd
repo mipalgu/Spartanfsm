@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-10 04:27 AEST
+--Date Generated: 2020-09-10 04:53 AEST
 --
 
 library IEEE;
@@ -51,10 +51,11 @@ architecture LLFSM of bcd is
     signal binary: std_logic_vector(N - 1 downto 0);
     signal bcd: std_logic_vector(digits * 4 - 1 downto 0);
     --Machine Variables
-    variable exponent: integer range -1 to digits - 1 := digits - 1;
+    shared variable divisor: integer range 0 to 10 ** (digits - 1) := 10 ** (digits - 1);
     signal unsignedBinary: unsigned(N-1 downto 0);
     signal data: unsigned(3 downto 0);
     signal tempBcd: unsigned(N * 4 - 1 downto 0);
+    shared variable exponent: integer range -1 to digits - 1 := digits - 1;
 begin
 process (clk)
     begin
@@ -89,10 +90,11 @@ process (clk)
                 when OnEntry =>
                     case currentState is
                         when STATE_FindSignificantBits =>
-                            data <= unsignedBinary / (10 ** exponent);
+                            data <= unsignedBinary / divisor;
                         when STATE_ConvertToBcd =>
                             tempBcd(exponent * 4 + 3 downto exponent * 4) <= data;
                             exponent := exponent - 1;
+                            divisor := divisor / 10;
                         when STATE_UpdateBcdVariable =>
                             bcd <= std_logic_vector(tempBcd);
                         when others =>
@@ -157,7 +159,7 @@ process (clk)
                             tempBcd <= (others => '0');
                             exponent := digits - 1;
                         when STATE_FindSignificantBits =>
-                            unsignedBinary <= unsignedBinary - data * (10 ** exponent);
+                            unsignedBinary <= unsignedBinary - data * divisor;
                         when others =>
                             null;
                     end case;
