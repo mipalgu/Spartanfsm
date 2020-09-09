@@ -219,7 +219,7 @@ suspendedFromVariable :: String
 suspendedFromVariable = "suspendedFrom"
 
 suspensionLogic :: String -> String
-suspensionLogic initialState = "if (restart = '1') then"
+suspensionLogic initialState = "if (restart = '0') then"
     +\-> "currentState <= " ++ toStateName initialState ++ ";"
     +\-> "suspended <= '0';"
     +\-> suspendedFromVariable ++ " <= " ++ toStateName initialState ++ ";"
