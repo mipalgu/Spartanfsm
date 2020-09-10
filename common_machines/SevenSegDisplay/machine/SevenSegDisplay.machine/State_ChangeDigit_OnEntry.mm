@@ -1,0 +1,1 @@
+currentDigit := currentDigit + 1;

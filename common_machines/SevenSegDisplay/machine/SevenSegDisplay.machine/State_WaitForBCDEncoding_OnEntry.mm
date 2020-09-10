@@ -1,0 +1,1 @@
+restartBcd <= '1';
