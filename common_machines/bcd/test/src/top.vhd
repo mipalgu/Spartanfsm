@@ -17,8 +17,8 @@ end top;
 
 architecture Behavioral of top is
 	
-	signal number: std_logic_vector(7 downto 0) := x"7B";
-	signal bcdOut: std_logic_vector(11 downto 0);
+	signal number: std_logic_vector(23 downto 0) := x"BC614E"; -- The number is 12345678
+	signal bcdOut: std_logic_vector(31 downto 0);
 	signal suspended: std_logic;
 	signal restart: std_logic := '1';
 	
@@ -49,8 +49,8 @@ end component;
 begin
 	
 	bcd_gen: bcd generic map(
-		N => 8,
-		digits => 3
+		N => 24,
+		digits => 8
 	)
 	port map (
 		clk => CLOCK_50,
@@ -78,6 +78,36 @@ begin
 		clk => CLOCK_50,
 		EXTERNAL_count=> bcdOut(11 downto 8),
 		EXTERNAL_output=> HEX2
+	);
+	
+	digit3: SevenSegDigit port map (
+		clk => CLOCK_50,
+		EXTERNAL_count=> bcdOut(15 downto 12),
+		EXTERNAL_output=> HEX3
+	);
+	
+	digit4: SevenSegDigit port map (
+		clk => CLOCK_50,
+		EXTERNAL_count=> bcdOut(19 downto 16),
+		EXTERNAL_output=> HEX4
+	);
+	
+	digit5: SevenSegDigit port map (
+		clk => CLOCK_50,
+		EXTERNAL_count=> bcdOut(23 downto 20),
+		EXTERNAL_output=> HEX5
+	);
+	
+	digit6: SevenSegDigit port map (
+		clk => CLOCK_50,
+		EXTERNAL_count=> bcdOut(27 downto 24),
+		EXTERNAL_output=> HEX6
+	);
+	
+	digit7: SevenSegDigit port map (
+		clk => CLOCK_50,
+		EXTERNAL_count=> bcdOut(31 downto 28),
+		EXTERNAL_output=> HEX7
 	);
 
 process(CLOCK_50)
