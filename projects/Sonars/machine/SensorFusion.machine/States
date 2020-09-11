@@ -1,9 +1,10 @@
 Initial
 SUSPENDED
 InitialPseudoState
-FindSmallestUnsigned
+ConvertToUnsigned
 changeCurrentSensor
-FindSmallestSigned
+ConvertToSigned
 SetSmallestOutput
 SignedOutput
 UnsignedOutput
+ChangeOutput

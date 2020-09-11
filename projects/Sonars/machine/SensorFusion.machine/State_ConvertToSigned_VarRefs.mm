@@ -1,5 +1,5 @@
 //
-// State_FindSmallestUnsigned_VarRefs.mm
+// State_ConvertToSigned_VarRefs.mm
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
@@ -7,7 +7,7 @@
 #pragma clang diagnostic ignored "-Wunused-variable"
 #pragma clang diagnostic ignored "-Wshadow"
 
-FindSmallestUnsigned *_s = static_cast<FindSmallestUnsigned *>(_state);
+ConvertToSigned *_s = static_cast<ConvertToSigned *>(_state);
 
 
 #pragma clang diagnostic pop

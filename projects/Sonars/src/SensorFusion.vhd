@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-11 22:49 AEST
+--Date Generated: 2020-09-11 23:11 AEST
 --
 
 library IEEE;
@@ -41,12 +41,13 @@ architecture LLFSM of SensorFusion is
     constant STATE_Initial: std_logic_vector(3 downto 0) := "0000";
     constant STATE_SUSPENDED: std_logic_vector(3 downto 0) := "0001";
     constant STATE_InitialPseudoState: std_logic_vector(3 downto 0) := "0010";
-    constant STATE_FindSmallestUnsigned: std_logic_vector(3 downto 0) := "0011";
+    constant STATE_ConvertToUnsigned: std_logic_vector(3 downto 0) := "0011";
     constant STATE_changeCurrentSensor: std_logic_vector(3 downto 0) := "0100";
-    constant STATE_FindSmallestSigned: std_logic_vector(3 downto 0) := "0101";
+    constant STATE_ConvertToSigned: std_logic_vector(3 downto 0) := "0101";
     constant STATE_SetSmallestOutput: std_logic_vector(3 downto 0) := "0110";
     constant STATE_SignedOutput: std_logic_vector(3 downto 0) := "0111";
     constant STATE_UnsignedOutput: std_logic_vector(3 downto 0) := "1000";
+    constant STATE_ChangeOutput: std_logic_vector(3 downto 0) := "1001";
     signal currentState: std_logic_vector(3 downto 0) := STATE_Initial;
     signal targetState: std_logic_vector(3 downto 0) := currentState;
     signal previousRinglet: std_logic_vector(3 downto 0) := STATE_Initial xor "1111";
@@ -57,6 +58,8 @@ architecture LLFSM of SensorFusion is
     --Machine Variables
     shared variable currentSensor: integer range 0 to numberOfSensors := 0;
     shared variable singleOutput: Integer;
+    shared variable currentOutput: Integer;
+    constant maxValue: std_logic_vector(sensorOutputSize - 1 downto 0) := (others => '1');
 begin
 process (clk)
     begin
@@ -90,22 +93,18 @@ process (clk)
                     end if;
                 when OnEntry =>
                     case currentState is
-                        when STATE_FindSmallestUnsigned =>
-                            singleOutput := minimum(
-                            	to_integer(unsigned(sensorOutputs(currentSensor * (sensorOutputSize + 1) - 1 downto currentSensor * sensorOutputSize))),
-                            	to_integer(unsigned(singleOutput))
-                            );
+                        when STATE_ConvertToUnsigned =>
+                            currentOutput := to_integer(unsigned(sensorOutputs(currentSensor * (sensorOutputSize + 1) - 1 downto currentSensor * sensorOutputSize)));
                         when STATE_changeCurrentSensor =>
                             currentSensor := currentSensor + 1;
-                        when STATE_FindSmallestSigned =>
-                            singleOutput := minimum(
-                            	to_integer(signed(sensorOutputs(currentSensor * (sensorOutputSize + 1) - 1 downto currentSensor * sensorOutputSize))),
-                            	to_integer(signed(singleOutput))
-                            );
+                        when STATE_ConvertToSigned =>
+                            currentOutput := to_integer(signed(sensorOutputs(currentSensor * (sensorOutputSize + 1) - 1 downto currentSensor * sensorOutputSize)));
                         when STATE_SignedOutput =>
                             smallestOutput <= std_logic_vector(to_signed(singleOutput, sensorOutputSize));
                         when STATE_UnsignedOutput =>
                             smallestOutput <= std_logic_vector(to_unsigned(singleOutput, sensorOutputSize));
+                        when STATE_ChangeOutput =>
+                            singleOutput := currentOutput;
                         when others =>
                             null;
                     end case;
@@ -114,10 +113,10 @@ process (clk)
                     case currentState is
                         when STATE_Initial =>
                             if (signedOutput) then
-                                targetState <= STATE_FindSmallestSigned;
+                                targetState <= STATE_ConvertToSigned;
                                 internalState <= OnExit;
                             elsif (true) and (not (signedOutput)) then
-                                targetState <= STATE_FindSmallestUnsigned;
+                                targetState <= STATE_ConvertToUnsigned;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
@@ -131,8 +130,11 @@ process (clk)
                             else
                                 internalState <= Internal;
                             end if;
-                        when STATE_FindSmallestUnsigned =>
-                            if (true) then
+                        when STATE_ConvertToUnsigned =>
+                            if (currentOutput < singleOutput) then
+                                targetState <= STATE_ChangeOutput;
+                                internalState <= OnExit;
+                            elsif (true) and (not (currentOutput < singleOutput)) then
                                 targetState <= STATE_changeCurrentSensor;
                                 internalState <= OnExit;
                             else
@@ -143,16 +145,19 @@ process (clk)
                                 targetState <= STATE_SetSmallestOutput;
                                 internalState <= OnExit;
                             elsif (signedOutput) and (not (currentSensor = numberOfSensors)) then
-                                targetState <= STATE_FindSmallestSigned;
+                                targetState <= STATE_ConvertToSigned;
                                 internalState <= OnExit;
                             elsif (true) and (not (signedOutput)) and (not (currentSensor = numberOfSensors)) then
-                                targetState <= STATE_FindSmallestUnsigned;
+                                targetState <= STATE_ConvertToUnsigned;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
                             end if;
-                        when STATE_FindSmallestSigned =>
-                            if (true) then
+                        when STATE_ConvertToSigned =>
+                            if (currentOutput < singleOutput) then
+                                targetState <= STATE_ChangeOutput;
+                                internalState <= OnExit;
+                            elsif (true) and (not (currentOutput < singleOutput)) then
                                 targetState <= STATE_changeCurrentSensor;
                                 internalState <= OnExit;
                             else
@@ -182,6 +187,13 @@ process (clk)
                             else
                                 internalState <= Internal;
                             end if;
+                        when STATE_ChangeOutput =>
+                            if (true) then
+                                targetState <= STATE_changeCurrentSensor;
+                                internalState <= OnExit;
+                            else
+                                internalState <= Internal;
+                            end if;
                         when others =>
                             null;
                     end case;
@@ -193,6 +205,8 @@ process (clk)
                     internalState <= WriteSnapshot;
                 when OnExit =>
                     case currentState is
+                        when STATE_Initial =>
+                            singleOutput := to_integer(signed(maxValue)) when signedOutput else to_integer(unsigned(maxValue));
                         when others =>
                             null;
                     end case;

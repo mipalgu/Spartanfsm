@@ -1,10 +1,10 @@
 //
-// State_FindSmallestUnsigned.h
+// State_ChangeOutput.h
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
-#ifndef clfsm_SensorFusion_State_FindSmallestUnsigned_h
-#define clfsm_SensorFusion_State_FindSmallestUnsigned_h
+#ifndef clfsm_SensorFusion_State_ChangeOutput_h
+#define clfsm_SensorFusion_State_ChangeOutput_h
 
 #include "CLState.h"
 #include "CLAction.h"
@@ -18,7 +18,7 @@ namespace FSM
       {
         namespace State
         {
-            class FindSmallestUnsigned: public CLState
+            class ChangeOutput: public CLState
             {
                 class OnEntry: public CLAction
                 {
@@ -46,14 +46,14 @@ namespace FSM
                 CLTransition *_transitions[1];
 
                 public:
-                    FindSmallestUnsigned(const char *name = "FindSmallestUnsigned");
-                    virtual ~FindSmallestUnsigned();
+                    ChangeOutput(const char *name = "ChangeOutput");
+                    virtual ~ChangeOutput();
 
                     virtual CLTransition * const *transitions() const { return _transitions; }
                     virtual int numberOfTransitions() const { return 1; }
 
-#                   include "State_FindSmallestUnsigned_Variables.h"
-#                   include "State_FindSmallestUnsigned_Methods.h"
+#                   include "State_ChangeOutput_Variables.h"
+#                   include "State_ChangeOutput_Methods.h"
             };
         }
       }

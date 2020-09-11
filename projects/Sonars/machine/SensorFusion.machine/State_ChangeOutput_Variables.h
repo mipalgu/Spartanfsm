@@ -1,5 +1,5 @@
 //
-// State_FindSmallestUnsigned_Variables.h
+// State_ChangeOutput_Variables.h
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //

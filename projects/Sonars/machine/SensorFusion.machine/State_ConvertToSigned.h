@@ -1,10 +1,10 @@
 //
-// State_FindSmallestSigned.h
+// State_ConvertToSigned.h
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
-#ifndef clfsm_SensorFusion_State_FindSmallestSigned_h
-#define clfsm_SensorFusion_State_FindSmallestSigned_h
+#ifndef clfsm_SensorFusion_State_ConvertToSigned_h
+#define clfsm_SensorFusion_State_ConvertToSigned_h
 
 #include "CLState.h"
 #include "CLAction.h"
@@ -18,7 +18,7 @@ namespace FSM
       {
         namespace State
         {
-            class FindSmallestSigned: public CLState
+            class ConvertToSigned: public CLState
             {
                 class OnEntry: public CLAction
                 {
@@ -38,22 +38,30 @@ namespace FSM
                 class Transition_0: public CLTransition
                 {
                 public:
-                    Transition_0(int toState = 4): CLTransition(toState) {}
+                    Transition_0(int toState = 9): CLTransition(toState) {}
 
                     virtual bool check(CLMachine *, CLState *) const;
                 };
 
-                CLTransition *_transitions[1];
+                class Transition_1: public CLTransition
+                {
+                public:
+                    Transition_1(int toState = 4): CLTransition(toState) {}
+
+                    virtual bool check(CLMachine *, CLState *) const;
+                };
+
+                CLTransition *_transitions[2];
 
                 public:
-                    FindSmallestSigned(const char *name = "FindSmallestSigned");
-                    virtual ~FindSmallestSigned();
+                    ConvertToSigned(const char *name = "ConvertToSigned");
+                    virtual ~ConvertToSigned();
 
                     virtual CLTransition * const *transitions() const { return _transitions; }
-                    virtual int numberOfTransitions() const { return 1; }
+                    virtual int numberOfTransitions() const { return 2; }
 
-#                   include "State_FindSmallestSigned_Variables.h"
-#                   include "State_FindSmallestSigned_Methods.h"
+#                   include "State_ConvertToSigned_Variables.h"
+#                   include "State_ConvertToSigned_Methods.h"
             };
         }
       }
