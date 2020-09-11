@@ -1,0 +1,1 @@
+sensorFusionRestart <= '1';
