@@ -1,1 +1,1 @@
-restartBcd <= '1';
+bcdRestart <= '1';
