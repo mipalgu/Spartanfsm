@@ -68,7 +68,9 @@ architecture LLFSM of SonarPlatform is
 		 generic (
 			  numberOfSensors: positive;
 			  sensorOutputSize: positive;
-			  signedOutput: boolean
+			  signedOutput: boolean;
+			  maxValue: Integer;
+			  minValue: Integer
 		 );
 		 port (
 			  clk: in std_logic;
@@ -99,7 +101,9 @@ begin
 	sensor_fusion: Sensorfusion generic map (
 		numberOfSensors => 1,
 		sensorOutputSize => 16,
-		signedOutput => false
+		signedOutput => false,
+		maxValue => 65535,
+		minValue => 0
 	)
 	port map (
 		clk => clk,
