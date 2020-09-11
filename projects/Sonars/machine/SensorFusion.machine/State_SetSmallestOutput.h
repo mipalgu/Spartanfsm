@@ -1,0 +1,63 @@
+//
+// State_SetSmallestOutput.h
+//
+// Automatically created through MiPalCASE -- do not change manually!
+//
+#ifndef clfsm_SensorFusion_State_SetSmallestOutput_h
+#define clfsm_SensorFusion_State_SetSmallestOutput_h
+
+#include "CLState.h"
+#include "CLAction.h"
+#include "CLTransition.h"
+
+namespace FSM
+{
+    namespace CLM
+    {
+      namespace FSMSensorFusion
+      {
+        namespace State
+        {
+            class SetSmallestOutput: public CLState
+            {
+                class OnEntry: public CLAction
+                {
+                    virtual void perform(CLMachine *, CLState *) const;
+                };
+
+                class OnExit: public CLAction
+                {
+                    virtual void perform(CLMachine *, CLState *) const;
+                };
+
+                class Internal: public CLAction
+                {
+                    virtual void perform(CLMachine *, CLState *) const;
+                };
+
+                class Transition_0: public CLTransition
+                {
+                public:
+                    Transition_0(int toState = 1): CLTransition(toState) {}
+
+                    virtual bool check(CLMachine *, CLState *) const;
+                };
+
+                CLTransition *_transitions[1];
+
+                public:
+                    SetSmallestOutput(const char *name = "SetSmallestOutput");
+                    virtual ~SetSmallestOutput();
+
+                    virtual CLTransition * const *transitions() const { return _transitions; }
+                    virtual int numberOfTransitions() const { return 1; }
+
+#                   include "State_SetSmallestOutput_Variables.h"
+#                   include "State_SetSmallestOutput_Methods.h"
+            };
+        }
+      }
+    }
+}
+
+#endif

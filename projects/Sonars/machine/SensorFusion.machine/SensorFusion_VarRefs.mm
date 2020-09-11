@@ -1,0 +1,20 @@
+//
+// SensorFusion_VarRefs.mm
+//
+// Automatically created through MiPalCASE -- do not change manually!
+//
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-variable"
+#pragma clang diagnostic ignored "-Wshadow"
+
+SensorFusion *_m = static_cast<SensorFusion *>(_machine);
+
+#extern	&smallestOutput: out std_logic_vector(sensorOutputSize - 1 downto 0) = _m->smallestOutput: out std_logic_vector(sensorOutputSize - 1 downto 0);	///<
+#param	&numberOfSensors: positive = _m->numberOfSensors: positive;	///<
+#param	&sensorOutputSize: positive = _m->sensorOutputSize: positive;	///<
+#extern	&sensorOutputs: in std_logic_vector(numberOfSensors * sensorOutputSize - 1 downto 0) = _m->sensorOutputs: in std_logic_vector(numberOfSensors * sensorOutputSize - 1 downto 0);	///<
+#machine	&shared variable currentSensor: integer range 0 to numberOfSensors := 0 = _m->shared variable currentSensor: integer range 0 to numberOfSensors := 0;	///<
+#machine	&signal singleOutput: std_logic_vector(sensorOutputSize - 1 downto 0) = _m->signal singleOutput: std_logic_vector(sensorOutputSize - 1 downto 0);	///<
+#param	&signedOutput: boolean = _m->signedOutput: boolean;	///<
+
+#pragma clang diagnostic pop

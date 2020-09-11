@@ -1,0 +1,1 @@
+currentSensor := currentSensor + 1;
