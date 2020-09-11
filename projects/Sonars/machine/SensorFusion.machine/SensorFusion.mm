@@ -16,6 +16,8 @@
 #include "State_SignedOutput.h"
 #include "State_UnsignedOutput.h"
 #include "State_ChangeOutput.h"
+#include "State_SetInitialUnsigned.h"
+#include "State_SetInitialSigned.h"
 
 using namespace FSM;
 using namespace CLM;
@@ -40,6 +42,8 @@ SensorFusion::SensorFusion(int mid, const char *name): CLMachine(mid, name)
 	_states[7] = new FSMSensorFusion::State::SignedOutput;
 	_states[8] = new FSMSensorFusion::State::UnsignedOutput;
 	_states[9] = new FSMSensorFusion::State::ChangeOutput;
+	_states[10] = new FSMSensorFusion::State::SetInitialUnsigned;
+	_states[11] = new FSMSensorFusion::State::SetInitialSigned;
 
 	setSuspendState(_states[1]);            // set suspend state
 	setInitialState(_states[0]);            // set initial state
@@ -57,4 +61,6 @@ SensorFusion::~SensorFusion()
 	delete _states[7];
 	delete _states[8];
 	delete _states[9];
+	delete _states[10];
+	delete _states[11];
 }

@@ -8,3 +8,5 @@ SetSmallestOutput
 SignedOutput
 UnsignedOutput
 ChangeOutput
+SetInitialUnsigned
+SetInitialSigned

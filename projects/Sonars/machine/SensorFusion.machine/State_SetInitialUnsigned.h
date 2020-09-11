@@ -1,10 +1,10 @@
 //
-// State_Initial.h
+// State_SetInitialUnsigned.h
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
-#ifndef clfsm_SensorFusion_State_Initial_h
-#define clfsm_SensorFusion_State_Initial_h
+#ifndef clfsm_SensorFusion_State_SetInitialUnsigned_h
+#define clfsm_SensorFusion_State_SetInitialUnsigned_h
 
 #include "CLState.h"
 #include "CLAction.h"
@@ -18,7 +18,7 @@ namespace FSM
       {
         namespace State
         {
-            class Initial: public CLState
+            class SetInitialUnsigned: public CLState
             {
                 class OnEntry: public CLAction
                 {
@@ -38,30 +38,22 @@ namespace FSM
                 class Transition_0: public CLTransition
                 {
                 public:
-                    Transition_0(int toState = 11): CLTransition(toState) {}
+                    Transition_0(int toState = 3): CLTransition(toState) {}
 
                     virtual bool check(CLMachine *, CLState *) const;
                 };
 
-                class Transition_1: public CLTransition
-                {
-                public:
-                    Transition_1(int toState = 10): CLTransition(toState) {}
-
-                    virtual bool check(CLMachine *, CLState *) const;
-                };
-
-                CLTransition *_transitions[2];
+                CLTransition *_transitions[1];
 
                 public:
-                    Initial(const char *name = "Initial");
-                    virtual ~Initial();
+                    SetInitialUnsigned(const char *name = "SetInitialUnsigned");
+                    virtual ~SetInitialUnsigned();
 
                     virtual CLTransition * const *transitions() const { return _transitions; }
-                    virtual int numberOfTransitions() const { return 2; }
+                    virtual int numberOfTransitions() const { return 1; }
 
-#                   include "State_Initial_Variables.h"
-#                   include "State_Initial_Methods.h"
+#                   include "State_SetInitialUnsigned_Variables.h"
+#                   include "State_SetInitialUnsigned_Methods.h"
             };
         }
       }
