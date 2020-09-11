@@ -6,7 +6,6 @@
 #include "SevenSegDigit_Includes.h"
 #include "SevenSegDigit.h"
 
-#include "State_Initial.h"
 #include "State_SUSPENDED.h"
 #include "State_InitialPseudoState.h"
 #include "State_Zero.h"
@@ -24,7 +23,7 @@
 #include "State_C.h"
 #include "State_D.h"
 #include "State_E.h"
-#include "State_Check.h"
+#include "State_Initial.h"
 #include "State_F.h"
 
 using namespace FSM;
@@ -40,28 +39,27 @@ extern "C"
 
 SevenSegDigit::SevenSegDigit(int mid, const char *name): CLMachine(mid, name)
 {
-	_states[0] = new FSMSevenSegDigit::State::Initial;
-	_states[1] = new FSMSevenSegDigit::State::SUSPENDED;
-	_states[2] = new FSMSevenSegDigit::State::InitialPseudoState;
-	_states[3] = new FSMSevenSegDigit::State::Zero;
-	_states[4] = new FSMSevenSegDigit::State::One;
-	_states[5] = new FSMSevenSegDigit::State::Two;
-	_states[6] = new FSMSevenSegDigit::State::Three;
-	_states[7] = new FSMSevenSegDigit::State::Four;
-	_states[8] = new FSMSevenSegDigit::State::Five;
-	_states[9] = new FSMSevenSegDigit::State::Six;
-	_states[10] = new FSMSevenSegDigit::State::Seven;
-	_states[11] = new FSMSevenSegDigit::State::Eight;
-	_states[12] = new FSMSevenSegDigit::State::Nine;
-	_states[13] = new FSMSevenSegDigit::State::A;
-	_states[14] = new FSMSevenSegDigit::State::B;
-	_states[15] = new FSMSevenSegDigit::State::C;
-	_states[16] = new FSMSevenSegDigit::State::D;
-	_states[17] = new FSMSevenSegDigit::State::E;
-	_states[18] = new FSMSevenSegDigit::State::Check;
-	_states[19] = new FSMSevenSegDigit::State::F;
+	_states[0] = new FSMSevenSegDigit::State::SUSPENDED;
+	_states[1] = new FSMSevenSegDigit::State::InitialPseudoState;
+	_states[2] = new FSMSevenSegDigit::State::Zero;
+	_states[3] = new FSMSevenSegDigit::State::One;
+	_states[4] = new FSMSevenSegDigit::State::Two;
+	_states[5] = new FSMSevenSegDigit::State::Three;
+	_states[6] = new FSMSevenSegDigit::State::Four;
+	_states[7] = new FSMSevenSegDigit::State::Five;
+	_states[8] = new FSMSevenSegDigit::State::Six;
+	_states[9] = new FSMSevenSegDigit::State::Seven;
+	_states[10] = new FSMSevenSegDigit::State::Eight;
+	_states[11] = new FSMSevenSegDigit::State::Nine;
+	_states[12] = new FSMSevenSegDigit::State::A;
+	_states[13] = new FSMSevenSegDigit::State::B;
+	_states[14] = new FSMSevenSegDigit::State::C;
+	_states[15] = new FSMSevenSegDigit::State::D;
+	_states[16] = new FSMSevenSegDigit::State::E;
+	_states[17] = new FSMSevenSegDigit::State::Initial;
+	_states[18] = new FSMSevenSegDigit::State::F;
 
-	setSuspendState(_states[1]);            // set suspend state
+	setSuspendState(_states[0]);            // set suspend state
 	setInitialState(_states[0]);            // set initial state
 }
 
@@ -86,5 +84,4 @@ SevenSegDigit::~SevenSegDigit()
 	delete _states[16];
 	delete _states[17];
 	delete _states[18];
-	delete _states[19];
 }

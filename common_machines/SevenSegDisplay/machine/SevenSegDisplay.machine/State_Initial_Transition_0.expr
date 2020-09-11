@@ -1,1 +1,1 @@
-true
+digitsSuspended = allSuspended and bcdSuspended = '1'

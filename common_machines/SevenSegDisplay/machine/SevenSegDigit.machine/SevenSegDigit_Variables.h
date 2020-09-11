@@ -3,5 +3,5 @@
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
-#extern	count: in std_logic_vector(3 downto 0);	///<
+#extern	bcd: in std_logic_vector(3 downto 0);	///<
 #extern	output: out std_logic_vector(6 downto 0);	///<

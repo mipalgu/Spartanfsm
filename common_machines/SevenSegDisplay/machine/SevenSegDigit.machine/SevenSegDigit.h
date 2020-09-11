@@ -16,12 +16,12 @@ namespace FSM
     {
         class SevenSegDigit: public CLMachine
         {
-            CLState *_states[20];
+            CLState *_states[19];
         public:
             SevenSegDigit(int mid  = 0, const char *name = "SevenSegDigit");
             virtual ~SevenSegDigit();
             virtual CLState * const * states() const { return _states; }
-            virtual int numberOfStates() const { return 20; }
+            virtual int numberOfStates() const { return 19; }
 #           include "SevenSegDigit_Variables.h"
 #           include "SevenSegDigit_Methods.h"
         };

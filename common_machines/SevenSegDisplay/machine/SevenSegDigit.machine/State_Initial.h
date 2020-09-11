@@ -38,19 +38,139 @@ namespace FSM
                 class Transition_0: public CLTransition
                 {
                 public:
-                    Transition_0(int toState = 18): CLTransition(toState) {}
+                    Transition_0(int toState = 2): CLTransition(toState) {}
 
                     virtual bool check(CLMachine *, CLState *) const;
                 };
 
-                CLTransition *_transitions[1];
+                class Transition_1: public CLTransition
+                {
+                public:
+                    Transition_1(int toState = 3): CLTransition(toState) {}
+
+                    virtual bool check(CLMachine *, CLState *) const;
+                };
+
+                class Transition_2: public CLTransition
+                {
+                public:
+                    Transition_2(int toState = 4): CLTransition(toState) {}
+
+                    virtual bool check(CLMachine *, CLState *) const;
+                };
+
+                class Transition_3: public CLTransition
+                {
+                public:
+                    Transition_3(int toState = 5): CLTransition(toState) {}
+
+                    virtual bool check(CLMachine *, CLState *) const;
+                };
+
+                class Transition_4: public CLTransition
+                {
+                public:
+                    Transition_4(int toState = 6): CLTransition(toState) {}
+
+                    virtual bool check(CLMachine *, CLState *) const;
+                };
+
+                class Transition_5: public CLTransition
+                {
+                public:
+                    Transition_5(int toState = 7): CLTransition(toState) {}
+
+                    virtual bool check(CLMachine *, CLState *) const;
+                };
+
+                class Transition_6: public CLTransition
+                {
+                public:
+                    Transition_6(int toState = 8): CLTransition(toState) {}
+
+                    virtual bool check(CLMachine *, CLState *) const;
+                };
+
+                class Transition_7: public CLTransition
+                {
+                public:
+                    Transition_7(int toState = 9): CLTransition(toState) {}
+
+                    virtual bool check(CLMachine *, CLState *) const;
+                };
+
+                class Transition_8: public CLTransition
+                {
+                public:
+                    Transition_8(int toState = 10): CLTransition(toState) {}
+
+                    virtual bool check(CLMachine *, CLState *) const;
+                };
+
+                class Transition_9: public CLTransition
+                {
+                public:
+                    Transition_9(int toState = 11): CLTransition(toState) {}
+
+                    virtual bool check(CLMachine *, CLState *) const;
+                };
+
+                class Transition_10: public CLTransition
+                {
+                public:
+                    Transition_10(int toState = 12): CLTransition(toState) {}
+
+                    virtual bool check(CLMachine *, CLState *) const;
+                };
+
+                class Transition_11: public CLTransition
+                {
+                public:
+                    Transition_11(int toState = 13): CLTransition(toState) {}
+
+                    virtual bool check(CLMachine *, CLState *) const;
+                };
+
+                class Transition_12: public CLTransition
+                {
+                public:
+                    Transition_12(int toState = 14): CLTransition(toState) {}
+
+                    virtual bool check(CLMachine *, CLState *) const;
+                };
+
+                class Transition_13: public CLTransition
+                {
+                public:
+                    Transition_13(int toState = 15): CLTransition(toState) {}
+
+                    virtual bool check(CLMachine *, CLState *) const;
+                };
+
+                class Transition_14: public CLTransition
+                {
+                public:
+                    Transition_14(int toState = 16): CLTransition(toState) {}
+
+                    virtual bool check(CLMachine *, CLState *) const;
+                };
+
+                class Transition_15: public CLTransition
+                {
+                public:
+                    Transition_15(int toState = 18): CLTransition(toState) {}
+
+                    virtual bool check(CLMachine *, CLState *) const;
+                };
+
+                CLTransition *_transitions[16];
 
                 public:
                     Initial(const char *name = "Initial");
                     virtual ~Initial();
 
                     virtual CLTransition * const *transitions() const { return _transitions; }
-                    virtual int numberOfTransitions() const { return 1; }
+                    virtual int numberOfTransitions() const { return 16; }
 
 #                   include "State_Initial_Variables.h"
 #                   include "State_Initial_Methods.h"

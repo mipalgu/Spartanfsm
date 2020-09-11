@@ -1,1 +1,1 @@
-output <= (others => '0');
+

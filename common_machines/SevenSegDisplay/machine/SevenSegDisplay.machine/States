@@ -1,6 +1,6 @@
 Initial
 SUSPENDED
 InitialPseudoState
-WaitForBCDEncoding
-SendToDisplays
-ChangeDigit
+BcdEncode
+StartSevSeg
+WaitForFinish

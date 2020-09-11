@@ -1,0 +1,1 @@
+digitsRestart <= '1';

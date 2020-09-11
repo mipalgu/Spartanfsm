@@ -9,9 +9,9 @@
 #include "State_Initial.h"
 #include "State_SUSPENDED.h"
 #include "State_InitialPseudoState.h"
-#include "State_WaitForBCDEncoding.h"
-#include "State_SendToDisplays.h"
-#include "State_ChangeDigit.h"
+#include "State_BcdEncode.h"
+#include "State_StartSevSeg.h"
+#include "State_WaitForFinish.h"
 
 using namespace FSM;
 using namespace CLM;
@@ -29,9 +29,9 @@ SevenSegDisplay::SevenSegDisplay(int mid, const char *name): CLMachine(mid, name
 	_states[0] = new FSMSevenSegDisplay::State::Initial;
 	_states[1] = new FSMSevenSegDisplay::State::SUSPENDED;
 	_states[2] = new FSMSevenSegDisplay::State::InitialPseudoState;
-	_states[3] = new FSMSevenSegDisplay::State::WaitForBCDEncoding;
-	_states[4] = new FSMSevenSegDisplay::State::SendToDisplays;
-	_states[5] = new FSMSevenSegDisplay::State::ChangeDigit;
+	_states[3] = new FSMSevenSegDisplay::State::BcdEncode;
+	_states[4] = new FSMSevenSegDisplay::State::StartSevSeg;
+	_states[5] = new FSMSevenSegDisplay::State::WaitForFinish;
 
 	setSuspendState(_states[1]);            // set suspend state
 	setInitialState(_states[0]);            // set initial state
