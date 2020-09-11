@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-11 22:46 AEST
+--Date Generated: 2020-09-11 22:49 AEST
 --
 
 library IEEE;
@@ -38,17 +38,19 @@ architecture LLFSM of SensorFusion is
     constant CheckForSuspension: std_logic_vector(2 downto 0) := "111";
     signal internalState: std_logic_vector(2 downto 0) := ReadSnapshot;
     --State Representation Bits
-    constant STATE_Initial: std_logic_vector(2 downto 0) := "000";
-    constant STATE_SUSPENDED: std_logic_vector(2 downto 0) := "001";
-    constant STATE_InitialPseudoState: std_logic_vector(2 downto 0) := "010";
-    constant STATE_FindSmallestUnsigned: std_logic_vector(2 downto 0) := "011";
-    constant STATE_changeCurrentSensor: std_logic_vector(2 downto 0) := "100";
-    constant STATE_FindSmallestSigned: std_logic_vector(2 downto 0) := "101";
-    constant STATE_SetSmallestOutput: std_logic_vector(2 downto 0) := "110";
-    signal currentState: std_logic_vector(2 downto 0) := STATE_Initial;
-    signal targetState: std_logic_vector(2 downto 0) := currentState;
-    signal previousRinglet: std_logic_vector(2 downto 0) := STATE_Initial xor "111";
-    signal suspendedFrom: std_logic_vector(2 downto 0) := STATE_Initial;
+    constant STATE_Initial: std_logic_vector(3 downto 0) := "0000";
+    constant STATE_SUSPENDED: std_logic_vector(3 downto 0) := "0001";
+    constant STATE_InitialPseudoState: std_logic_vector(3 downto 0) := "0010";
+    constant STATE_FindSmallestUnsigned: std_logic_vector(3 downto 0) := "0011";
+    constant STATE_changeCurrentSensor: std_logic_vector(3 downto 0) := "0100";
+    constant STATE_FindSmallestSigned: std_logic_vector(3 downto 0) := "0101";
+    constant STATE_SetSmallestOutput: std_logic_vector(3 downto 0) := "0110";
+    constant STATE_SignedOutput: std_logic_vector(3 downto 0) := "0111";
+    constant STATE_UnsignedOutput: std_logic_vector(3 downto 0) := "1000";
+    signal currentState: std_logic_vector(3 downto 0) := STATE_Initial;
+    signal targetState: std_logic_vector(3 downto 0) := currentState;
+    signal previousRinglet: std_logic_vector(3 downto 0) := STATE_Initial xor "1111";
+    signal suspendedFrom: std_logic_vector(3 downto 0) := STATE_Initial;
     --Snapshot of External Variables
     signal smallestOutput: std_logic_vector(sensorOutputSize - 1 downto 0);
     signal sensorOutputs: std_logic_vector(numberOfSensors * sensorOutputSize - 1 downto 0);
@@ -97,11 +99,13 @@ process (clk)
                             currentSensor := currentSensor + 1;
                         when STATE_FindSmallestSigned =>
                             singleOutput := minimum(
-                            	to_integer(signed(sensorOutputs(currentSensor * (sensorOutputSize + 1) - 1 downto currentSensor * sensorOutputSize)))),
+                            	to_integer(signed(sensorOutputs(currentSensor * (sensorOutputSize + 1) - 1 downto currentSensor * sensorOutputSize))),
                             	to_integer(signed(singleOutput))
                             );
-                        when STATE_SetSmallestOutput =>
-                            smallestOutput <= singleOutput;
+                        when STATE_SignedOutput =>
+                            smallestOutput <= std_logic_vector(to_signed(singleOutput, sensorOutputSize));
+                        when STATE_UnsignedOutput =>
+                            smallestOutput <= std_logic_vector(to_unsigned(singleOutput, sensorOutputSize));
                         when others =>
                             null;
                     end case;
@@ -155,6 +159,23 @@ process (clk)
                                 internalState <= Internal;
                             end if;
                         when STATE_SetSmallestOutput =>
+                            if (signedOutput) then
+                                targetState <= STATE_SignedOutput;
+                                internalState <= OnExit;
+                            elsif (true) and (not (signedOutput)) then
+                                targetState <= STATE_UnsignedOutput;
+                                internalState <= OnExit;
+                            else
+                                internalState <= Internal;
+                            end if;
+                        when STATE_SignedOutput =>
+                            if (true) then
+                                targetState <= STATE_SUSPENDED;
+                                internalState <= OnExit;
+                            else
+                                internalState <= Internal;
+                            end if;
+                        when STATE_UnsignedOutput =>
                             if (true) then
                                 targetState <= STATE_SUSPENDED;
                                 internalState <= OnExit;

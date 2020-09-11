@@ -17,6 +17,7 @@ using namespace State;
 SetSmallestOutput::SetSmallestOutput(const char *name): CLState(name, *new SetSmallestOutput::OnEntry, *new SetSmallestOutput::OnExit, *new SetSmallestOutput::Internal)
 {
 	_transitions[0] = new Transition_0();
+	_transitions[1] = new Transition_1();
 }
 
 SetSmallestOutput::~SetSmallestOutput()
@@ -26,6 +27,7 @@ SetSmallestOutput::~SetSmallestOutput()
 	delete &internalAction();
 
 	delete _transitions[0];
+	delete _transitions[1];
 }
 
 void SetSmallestOutput::OnEntry::perform(CLMachine *_machine, CLState *_state) const
@@ -65,5 +67,17 @@ bool SetSmallestOutput::Transition_0::check(CLMachine *_machine, CLState *_state
 	return
 	(
 #		include "State_SetSmallestOutput_Transition_0.expr"
+	);
+}
+bool SetSmallestOutput::Transition_1::check(CLMachine *_machine, CLState *_state) const
+{
+#	include "SensorFusion_VarRefs.mm"
+#	include "State_SetSmallestOutput_VarRefs.mm"
+#	include "SensorFusion_FuncRefs.mm"
+#	include "State_SetSmallestOutput_FuncRefs.mm"
+
+	return
+	(
+#		include "State_SetSmallestOutput_Transition_1.expr"
 	);
 }

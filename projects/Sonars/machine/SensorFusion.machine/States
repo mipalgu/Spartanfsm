@@ -5,3 +5,5 @@ FindSmallestUnsigned
 changeCurrentSensor
 FindSmallestSigned
 SetSmallestOutput
+SignedOutput
+UnsignedOutput

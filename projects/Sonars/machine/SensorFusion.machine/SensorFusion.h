@@ -16,12 +16,12 @@ namespace FSM
     {
         class SensorFusion: public CLMachine
         {
-            CLState *_states[7];
+            CLState *_states[9];
         public:
             SensorFusion(int mid  = 0, const char *name = "SensorFusion");
             virtual ~SensorFusion();
             virtual CLState * const * states() const { return _states; }
-            virtual int numberOfStates() const { return 7; }
+            virtual int numberOfStates() const { return 9; }
 #           include "SensorFusion_Variables.h"
 #           include "SensorFusion_Methods.h"
         };

@@ -13,6 +13,8 @@
 #include "State_changeCurrentSensor.h"
 #include "State_FindSmallestSigned.h"
 #include "State_SetSmallestOutput.h"
+#include "State_SignedOutput.h"
+#include "State_UnsignedOutput.h"
 
 using namespace FSM;
 using namespace CLM;
@@ -34,6 +36,8 @@ SensorFusion::SensorFusion(int mid, const char *name): CLMachine(mid, name)
 	_states[4] = new FSMSensorFusion::State::changeCurrentSensor;
 	_states[5] = new FSMSensorFusion::State::FindSmallestSigned;
 	_states[6] = new FSMSensorFusion::State::SetSmallestOutput;
+	_states[7] = new FSMSensorFusion::State::SignedOutput;
+	_states[8] = new FSMSensorFusion::State::UnsignedOutput;
 
 	setSuspendState(_states[1]);            // set suspend state
 	setInitialState(_states[0]);            // set initial state
@@ -48,4 +52,6 @@ SensorFusion::~SensorFusion()
 	delete _states[4];
 	delete _states[5];
 	delete _states[6];
+	delete _states[7];
+	delete _states[8];
 }

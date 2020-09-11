@@ -1,10 +1,10 @@
 //
-// State_SetSmallestOutput.h
+// State_SignedOutput.h
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
-#ifndef clfsm_SensorFusion_State_SetSmallestOutput_h
-#define clfsm_SensorFusion_State_SetSmallestOutput_h
+#ifndef clfsm_SensorFusion_State_SignedOutput_h
+#define clfsm_SensorFusion_State_SignedOutput_h
 
 #include "CLState.h"
 #include "CLAction.h"
@@ -18,7 +18,7 @@ namespace FSM
       {
         namespace State
         {
-            class SetSmallestOutput: public CLState
+            class SignedOutput: public CLState
             {
                 class OnEntry: public CLAction
                 {
@@ -38,30 +38,22 @@ namespace FSM
                 class Transition_0: public CLTransition
                 {
                 public:
-                    Transition_0(int toState = 7): CLTransition(toState) {}
+                    Transition_0(int toState = 1): CLTransition(toState) {}
 
                     virtual bool check(CLMachine *, CLState *) const;
                 };
 
-                class Transition_1: public CLTransition
-                {
-                public:
-                    Transition_1(int toState = 8): CLTransition(toState) {}
-
-                    virtual bool check(CLMachine *, CLState *) const;
-                };
-
-                CLTransition *_transitions[2];
+                CLTransition *_transitions[1];
 
                 public:
-                    SetSmallestOutput(const char *name = "SetSmallestOutput");
-                    virtual ~SetSmallestOutput();
+                    SignedOutput(const char *name = "SignedOutput");
+                    virtual ~SignedOutput();
 
                     virtual CLTransition * const *transitions() const { return _transitions; }
-                    virtual int numberOfTransitions() const { return 2; }
+                    virtual int numberOfTransitions() const { return 1; }
 
-#                   include "State_SetSmallestOutput_Variables.h"
-#                   include "State_SetSmallestOutput_Methods.h"
+#                   include "State_SignedOutput_Variables.h"
+#                   include "State_SignedOutput_Methods.h"
             };
         }
       }
