@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-11 23:14 AEST
+--Date Generated: 2020-09-11 23:42 AEST
 --
 
 library IEEE;
@@ -13,7 +13,9 @@ entity SensorFusion is
     generic (
         numberOfSensors: positive;
         sensorOutputSize: positive;
-        signedOutput: boolean
+        signedOutput: boolean;
+        maxValue: Integer;
+        minValue: Integer
     );
     port (
         clk: in std_logic;
@@ -48,8 +50,6 @@ architecture LLFSM of SensorFusion is
     constant STATE_SignedOutput: std_logic_vector(3 downto 0) := "0111";
     constant STATE_UnsignedOutput: std_logic_vector(3 downto 0) := "1000";
     constant STATE_ChangeOutput: std_logic_vector(3 downto 0) := "1001";
-    constant STATE_SetInitialUnsigned: std_logic_vector(3 downto 0) := "1010";
-    constant STATE_SetInitialSigned: std_logic_vector(3 downto 0) := "1011";
     signal currentState: std_logic_vector(3 downto 0) := STATE_Initial;
     signal targetState: std_logic_vector(3 downto 0) := currentState;
     signal previousRinglet: std_logic_vector(3 downto 0) := STATE_Initial xor "1111";
@@ -59,9 +59,8 @@ architecture LLFSM of SensorFusion is
     signal sensorOutputs: std_logic_vector(numberOfSensors * sensorOutputSize - 1 downto 0);
     --Machine Variables
     shared variable currentSensor: integer range 0 to numberOfSensors := 0;
-    shared variable singleOutput: Integer;
-    shared variable currentOutput: Integer;
-    constant maxValue: std_logic_vector(sensorOutputSize - 1 downto 0) := (others => '1');
+    shared variable singleOutput: Integer range minValue to maxValue := maxValue;
+    shared variable currentOutput: Integer range minValue to maxValue;
 begin
 process (clk)
     begin
@@ -107,10 +106,6 @@ process (clk)
                             smallestOutput <= std_logic_vector(to_unsigned(singleOutput, sensorOutputSize));
                         when STATE_ChangeOutput =>
                             singleOutput := currentOutput;
-                        when STATE_SetInitialUnsigned =>
-                            singleOutput := to_integer(unsigned(maxValue));
-                        when STATE_SetInitialSigned =>
-                            singleOutput := to_integer(signed(maxValue));
                         when others =>
                             null;
                     end case;
@@ -119,10 +114,10 @@ process (clk)
                     case currentState is
                         when STATE_Initial =>
                             if (signedOutput) then
-                                targetState <= STATE_SetInitialSigned;
+                                targetState <= STATE_ConvertToSigned;
                                 internalState <= OnExit;
                             elsif (true) and (not (signedOutput)) then
-                                targetState <= STATE_SetInitialUnsigned;
+                                targetState <= STATE_ConvertToUnsigned;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
@@ -200,20 +195,6 @@ process (clk)
                             else
                                 internalState <= Internal;
                             end if;
-                        when STATE_SetInitialUnsigned =>
-                            if (true) then
-                                targetState <= STATE_ConvertToUnsigned;
-                                internalState <= OnExit;
-                            else
-                                internalState <= Internal;
-                            end if;
-                        when STATE_SetInitialSigned =>
-                            if (true) then
-                                targetState <= STATE_ConvertToSigned;
-                                internalState <= OnExit;
-                            else
-                                internalState <= Internal;
-                            end if;
                         when others =>
                             null;
                     end case;
@@ -225,6 +206,8 @@ process (clk)
                     internalState <= WriteSnapshot;
                 when OnExit =>
                     case currentState is
+                        when STATE_Initial =>
+                            singleOutput := maxValue;
                         when others =>
                             null;
                     end case;

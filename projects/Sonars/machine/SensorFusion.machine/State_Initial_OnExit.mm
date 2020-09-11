@@ -1,1 +1,1 @@
-
+singleOutput := maxValue;
