@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-11 22:23 AEST
+--Date Generated: 2020-09-11 23:22 AEST
 --
 
 library IEEE;
@@ -62,6 +62,7 @@ architecture LLFSM of SonarPlatform is
     signal sensorFusionSuspend: std_logic;
     signal sensorSuspend: std_logic;
     signal sensorFusionSuspended: std_logic;
+    signal allOutputs: std_logic_vector(numberOfSensors * sensorOutputSize - 1 downto 0);
 begin
 process (clk)
     begin

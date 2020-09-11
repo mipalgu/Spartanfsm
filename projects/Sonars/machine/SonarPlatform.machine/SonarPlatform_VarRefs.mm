@@ -21,5 +21,6 @@ SonarPlatform *_m = static_cast<SonarPlatform *>(_machine);
 #machine	&signal sensorFusionSuspend: std_logic = _m->signal sensorFusionSuspend: std_logic;	///<
 #machine	&signal sensorSuspend: std_logic = _m->signal sensorSuspend: std_logic;	///<
 #machine	&signal sensorFusionSuspended: std_logic = _m->signal sensorFusionSuspended: std_logic;	///<
+#machine	&signal allOutputs: std_logic_vector(numberOfSensors * sensorOutputSize - 1 downto 0) = _m->signal allOutputs: std_logic_vector(numberOfSensors * sensorOutputSize - 1 downto 0);	///<
 
 #pragma clang diagnostic pop
