@@ -1,9 +1,6 @@
 library IEEE;
 use IEEE.std_logic_1164.All;
 
-library altera; 
-use altera.altera_primitives_components.all; 
-
 entity top is
     port (
         CLOCK_50: in std_logic;
