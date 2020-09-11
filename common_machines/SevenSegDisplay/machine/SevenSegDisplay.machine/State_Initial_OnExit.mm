@@ -1,3 +1,2 @@
-currentDigit := 0;
-restartBcd <= '0';
+bcdRestart <= '0';
 bcdSuspend <= '0';

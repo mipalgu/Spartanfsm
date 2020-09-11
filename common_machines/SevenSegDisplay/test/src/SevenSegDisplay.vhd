@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-11 20:46 AEST
+--Date Generated: 2020-09-11 21:02 AEST
 --
 
 library IEEE;
@@ -100,7 +100,7 @@ process (clk)
                             bcdRestart <= '1';
                             bcdSuspend <= '1';
                         when STATE_BcdEncode =>
-                            restartBcd <= '1';
+                            bcdRestart <= '1';
                         when STATE_StartSevSeg =>
                             digitsRestart <= '0';
                             digitsSuspend <= '0';
@@ -166,8 +166,7 @@ process (clk)
                 when OnExit =>
                     case currentState is
                         when STATE_Initial =>
-                            currentDigit := 0;
-                            restartBcd <= '0';
+                            bcdRestart <= '0';
                             bcdSuspend <= '0';
                         when others =>
                             null;
