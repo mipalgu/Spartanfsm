@@ -1,4 +1,2 @@
---lostState <= currentState;
-echoOut <= '0';
-sendEcho <= '1';
+echo <= '0';
 triggerPin <= '0';

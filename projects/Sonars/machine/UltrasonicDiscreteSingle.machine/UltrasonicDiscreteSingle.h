@@ -16,12 +16,12 @@ namespace FSM
     {
         class UltrasonicDiscreteSingle: public CLMachine
         {
-            CLState *_states[12];
+            CLState *_states[11];
         public:
             UltrasonicDiscreteSingle(int mid  = 0, const char *name = "UltrasonicDiscreteSingle");
             virtual ~UltrasonicDiscreteSingle();
             virtual CLState * const * states() const { return _states; }
-            virtual int numberOfStates() const { return 12; }
+            virtual int numberOfStates() const { return 11; }
 #           include "UltrasonicDiscreteSingle_Variables.h"
 #           include "UltrasonicDiscreteSingle_Methods.h"
         };
