@@ -18,13 +18,13 @@
 					<key>controlPoint2Y</key>
 					<real>336</real>
 					<key>dstPointX</key>
-					<real>614.26499018873858</real>
+					<real>600.54137229774835</real>
 					<key>dstPointY</key>
-					<real>296.80125735844609</real>
+					<real>289.97481832660168</real>
 					<key>srcPointX</key>
-					<real>326.73605639486891</real>
+					<real>345.49837512186485</real>
 					<key>srcPointY</key>
-					<real>267.03809869102059</real>
+					<real>261.99905007124408</real>
 				</dict>
 			</array>
 			<key>bgColour</key>
@@ -39,7 +39,7 @@
 				<real>0.92000000000000004</real>
 			</dict>
 			<key>editingMode</key>
-			<false/>
+			<true/>
 			<key>expanded</key>
 			<false/>
 			<key>h</key>
@@ -51,7 +51,7 @@
 			<key>onExitHeight</key>
 			<real>0.0</real>
 			<key>stateSelected</key>
-			<false/>
+			<true/>
 			<key>strokeColour</key>
 			<dict>
 				<key>alpha</key>
@@ -90,13 +90,13 @@
 					<key>controlPoint2Y</key>
 					<real>243</real>
 					<key>dstPointX</key>
-					<real>690.12248379932021</real>
+					<real>686.44015837042468</real>
 					<key>dstPointY</key>
-					<real>269.21349587445485</real>
+					<real>264.54277167012486</real>
 					<key>srcPointX</key>
-					<real>712.95725150090288</real>
+					<real>710.68660286377133</real>
 					<key>srcPointY</key>
-					<real>116.84798246447919</real>
+					<real>119.16018842599821</real>
 				</dict>
 			</array>
 			<key>bgColour</key>
@@ -162,9 +162,9 @@
 					<key>controlPoint2Y</key>
 					<real>197</real>
 					<key>dstPointX</key>
-					<real>269.58784289377707</real>
+					<real>274.36368727373826</real>
 					<key>dstPointY</key>
-					<real>230.59652654107916</real>
+					<real>227.13151441599967</real>
 					<key>srcPointX</key>
 					<real>266.33710712338802</real>
 					<key>srcPointY</key>
@@ -449,9 +449,9 @@
 					<key>controlPoint2Y</key>
 					<real>402.33226822387252</real>
 					<key>dstPointX</key>
-					<real>645.64439460550022</real>
+					<real>642.79836336582969</real>
 					<key>dstPointY</key>
-					<real>438.44153583943813</real>
+					<real>438.75582511484629</real>
 					<key>srcPointX</key>
 					<real>640.98723204060377</real>
 					<key>srcPointY</key>

@@ -14,7 +14,7 @@ SensorFusion *_m = static_cast<SensorFusion *>(_machine);
 #param	&sensorOutputSize: positive = _m->sensorOutputSize: positive;	///<
 #extern	&sensorOutputs: in std_logic_vector(numberOfSensors * sensorOutputSize - 1 downto 0) = _m->sensorOutputs: in std_logic_vector(numberOfSensors * sensorOutputSize - 1 downto 0);	///<
 #machine	&shared variable currentSensor: integer range 0 to numberOfSensors := 0 = _m->shared variable currentSensor: integer range 0 to numberOfSensors := 0;	///<
-#machine	&signal singleOutput: std_logic_vector(sensorOutputSize - 1 downto 0) = _m->signal singleOutput: std_logic_vector(sensorOutputSize - 1 downto 0);	///<
+#machine	&shared variable singleOutput: Integer = _m->shared variable singleOutput: Integer;	///<
 #param	&signedOutput: boolean = _m->signedOutput: boolean;	///<
 
 #pragma clang diagnostic pop

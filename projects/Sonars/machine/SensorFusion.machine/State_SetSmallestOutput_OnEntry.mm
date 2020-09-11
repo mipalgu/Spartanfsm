@@ -1,1 +1,1 @@
-smallestOutput <= singleOutput
+smallestOutput <= singleOutput;

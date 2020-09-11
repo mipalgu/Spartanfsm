@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-11 22:02 AEST
+--Date Generated: 2020-09-11 22:46 AEST
 --
 
 library IEEE;
@@ -54,7 +54,7 @@ architecture LLFSM of SensorFusion is
     signal sensorOutputs: std_logic_vector(numberOfSensors * sensorOutputSize - 1 downto 0);
     --Machine Variables
     shared variable currentSensor: integer range 0 to numberOfSensors := 0;
-    signal singleOutput: std_logic_vector(sensorOutputSize - 1 downto 0);
+    shared variable singleOutput: Integer;
 begin
 process (clk)
     begin
@@ -89,19 +89,19 @@ process (clk)
                 when OnEntry =>
                     case currentState is
                         when STATE_FindSmallestUnsigned =>
-                            singleOutput <= minimum(
+                            singleOutput := minimum(
                             	to_integer(unsigned(sensorOutputs(currentSensor * (sensorOutputSize + 1) - 1 downto currentSensor * sensorOutputSize))),
                             	to_integer(unsigned(singleOutput))
                             );
                         when STATE_changeCurrentSensor =>
                             currentSensor := currentSensor + 1;
                         when STATE_FindSmallestSigned =>
-                            singleOutput <= minimum(
-                            	to_integer(signed(sensorOutputs(currentSensor * (sensorOutputSize + 1) - 1 downto currentSensor * sensorOutputSize))),
+                            singleOutput := minimum(
+                            	to_integer(signed(sensorOutputs(currentSensor * (sensorOutputSize + 1) - 1 downto currentSensor * sensorOutputSize)))),
                             	to_integer(signed(singleOutput))
                             );
                         when STATE_SetSmallestOutput =>
-                            smallestOutput <= singleOutput
+                            smallestOutput <= singleOutput;
                         when others =>
                             null;
                     end case;

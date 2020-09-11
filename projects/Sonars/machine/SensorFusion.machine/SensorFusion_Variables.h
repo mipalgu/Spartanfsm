@@ -8,5 +8,5 @@
 #param	sensorOutputSize: positive;	///<
 #extern	sensorOutputs: in std_logic_vector(numberOfSensors * sensorOutputSize - 1 downto 0);	///<
 #machine	shared variable currentSensor: integer range 0 to numberOfSensors := 0;	///<
-#machine	signal singleOutput: std_logic_vector(sensorOutputSize - 1 downto 0);	///<
+#machine	shared variable singleOutput: Integer;	///<
 #param	signedOutput: boolean;	///<
