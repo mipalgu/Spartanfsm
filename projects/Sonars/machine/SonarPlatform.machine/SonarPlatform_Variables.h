@@ -15,3 +15,4 @@
 #machine	signal sensorFusionSuspend: std_logic;	///<
 #machine	signal sensorSuspend: std_logic;	///<
 #machine	signal sensorFusionSuspended: std_logic;	///<
+#machine	signal allOutputs: std_logic_vector(numberOfSensors * sensorOutputSize - 1 downto 0);	///<

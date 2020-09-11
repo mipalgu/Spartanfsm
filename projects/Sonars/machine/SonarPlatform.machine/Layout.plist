@@ -18,13 +18,13 @@
 					<key>controlPoint2Y</key>
 					<real>294</real>
 					<key>dstPointX</key>
-					<real>589.36067977499783</real>
+					<real>611.72135954999578</real>
 					<key>dstPointY</key>
-					<real>307.63932022500211</real>
+					<real>318.81966011250108</real>
 					<key>srcPointX</key>
-					<real>734.09470355075825</real>
+					<real>733.99353344235453</real>
 					<key>srcPointY</key>
-					<real>265.20269111162145</real>
+					<real>264.95898768738078</real>
 				</dict>
 			</array>
 			<key>bgColour</key>
@@ -90,9 +90,9 @@
 					<key>controlPoint2Y</key>
 					<real>113</real>
 					<key>dstPointX</key>
-					<real>731.01334128767235</real>
+					<real>731.00660851179202</real>
 					<key>dstPointY</key>
-					<real>114.42251606574723</real>
+					<real>114.5935496626975</real>
 					<key>srcPointX</key>
 					<real>416.96212007485963</real>
 					<key>srcPointY</key>
@@ -287,13 +287,13 @@
 					<key>controlPoint2Y</key>
 					<real>251.16842026100514</real>
 					<key>dstPointX</key>
-					<real>331.99662013721854</real>
+					<real>330.77101226129605</real>
 					<key>dstPointY</key>
-					<real>229.29067802405359</real>
+					<real>234.50881936099987</real>
 					<key>srcPointX</key>
-					<real>524.53573373554786</real>
+					<real>520.37254761964334</real>
 					<key>srcPointY</key>
-					<real>316.80164697185944</real>
+					<real>320.9739171769038</real>
 				</dict>
 			</array>
 			<key>bgColour</key>
@@ -320,7 +320,7 @@
 			<key>onExitHeight</key>
 			<real>0.0</real>
 			<key>stateSelected</key>
-			<true/>
+			<false/>
 			<key>strokeColour</key>
 			<dict>
 				<key>alpha</key>
@@ -431,13 +431,13 @@
 					<key>controlPoint2Y</key>
 					<real>102</real>
 					<key>dstPointX</key>
-					<real>1034.8058067569093</real>
+					<real>1017.3669537051589</real>
 					<key>dstPointY</key>
-					<real>200.48548310772699</real>
+					<real>200.29303436143556</real>
 					<key>srcPointX</key>
-					<real>830.60507231079987</real>
+					<real>830.89245728995229</real>
 					<key>srcPointY</key>
-					<real>111.86404715276551</real>
+					<real>113.36119665835925</real>
 				</dict>
 			</array>
 			<key>bgColour</key>
@@ -524,7 +524,7 @@
 				<real>0.92000000000000004</real>
 			</dict>
 			<key>editingMode</key>
-			<false/>
+			<true/>
 			<key>expanded</key>
 			<false/>
 			<key>h</key>
@@ -536,7 +536,7 @@
 			<key>onExitHeight</key>
 			<real>0.0</real>
 			<key>stateSelected</key>
-			<false/>
+			<true/>
 			<key>strokeColour</key>
 			<dict>
 				<key>alpha</key>
