@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-13 05:00 AEST
+--Date Generated: 2020-09-13 05:17 AEST
 --
 
 library IEEE;
@@ -27,7 +27,7 @@ architecture LLFSM of SuspensibleHelloWorld is
     constant ReadSnapshot: std_logic_vector(2 downto 0) := "100";
     constant WriteSnapshot: std_logic_vector(2 downto 0) := "101";
     constant NoOnEntry: std_logic_vector(2 downto 0) := "110";
-    constant CheckForSuspension: std_logic_vector(2 downto 0) := "111";
+    
     signal internalState: std_logic_vector(2 downto 0) := ReadSnapshot;
     --State Representation Bits
     constant STATE_Initial: std_logic_vector(1 downto 0) := "00";
@@ -138,7 +138,7 @@ process (clk)
                     internalState <= CheckTransition;
                 when WriteSnapshot =>
                     EXTERNAL_LED <= LED;
-                    internalState <= CheckForSuspension;
+                    internalState <= ReadSnapshot;
                     previousRinglet <= currentState;
                     currentState <= targetState;
                 when others =>
