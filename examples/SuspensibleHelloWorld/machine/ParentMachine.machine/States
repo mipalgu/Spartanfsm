@@ -3,3 +3,5 @@ SUSPENDED
 InitialPseudoState
 LightOn
 LightOff
+SuspendChild
+RestartMachine

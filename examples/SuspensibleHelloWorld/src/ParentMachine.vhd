@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-13 05:17 AEST
+--Date Generated: 2020-09-13 05:32 AEST
 --
 
 library IEEE;
@@ -35,6 +35,8 @@ architecture LLFSM of ParentMachine is
     constant STATE_InitialPseudoState: std_logic_vector(2 downto 0) := "010";
     constant STATE_LightOn: std_logic_vector(2 downto 0) := "011";
     constant STATE_LightOff: std_logic_vector(2 downto 0) := "100";
+    constant STATE_SuspendChild: std_logic_vector(2 downto 0) := "101";
+    constant STATE_RestartMachine: std_logic_vector(2 downto 0) := "110";
     signal currentState: std_logic_vector(2 downto 0) := STATE_Initial;
     signal targetState: std_logic_vector(2 downto 0) := currentState;
     signal previousRinglet: std_logic_vector(2 downto 0) := STATE_Initial xor "111";
@@ -42,6 +44,7 @@ architecture LLFSM of ParentMachine is
     constant COMMAND_RESTART: std_logic_vector(1 downto 0) := "00";
     constant COMMAND_SUSPEND: std_logic_vector(1 downto 0) := "01";
     constant COMMAND_RESUME: std_logic_vector(1 downto 0) := "10";
+    constant COMMAND_NULL: std_logic_vector(1 downto 0) := "11";
     --Snapshot of External Variables
     signal LED: std_logic;
     --Machine Variables
@@ -100,11 +103,13 @@ process (clk)
                             LED <= '0';
                             i <= (others => '0');
                         when STATE_LightOn =>
-                            childCommand <= COMMAND_RESTART;
                             i <= (others => '0');
                         when STATE_LightOff =>
-                            childCommand <= COMMAND_SUSPEND;
                             i <= (others => '0');
+                        when STATE_SuspendChild =>
+                            childCommand <= COMMAND_SUSPEND;
+                        when STATE_RestartMachine =>
+                            childCommand <= COMMAND_RESTART;
                         when others =>
                             null;
                     end case;
@@ -129,13 +134,27 @@ process (clk)
                             end if;
                         when STATE_LightOn =>
                             if (i >= RINGLETS_PER_S) then
-                                targetState <= STATE_LightOff;
+                                targetState <= STATE_SuspendChild;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
                             end if;
                         when STATE_LightOff =>
                             if (i >= RINGLETS_PER_S) then
+                                targetState <= STATE_RestartMachine;
+                                internalState <= OnExit;
+                            else
+                                internalState <= Internal;
+                            end if;
+                        when STATE_SuspendChild =>
+                            if (true) then
+                                targetState <= STATE_LightOff;
+                                internalState <= OnExit;
+                            else
+                                internalState <= Internal;
+                            end if;
+                        when STATE_RestartMachine =>
+                            if (true) then
                                 targetState <= STATE_LightOn;
                                 internalState <= OnExit;
                             else

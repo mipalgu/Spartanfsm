@@ -1,10 +1,10 @@
 //
-// State_LightOff.h
+// State_RestartMachine.h
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
-#ifndef clfsm_ParentMachine_State_LightOff_h
-#define clfsm_ParentMachine_State_LightOff_h
+#ifndef clfsm_ParentMachine_State_RestartMachine_h
+#define clfsm_ParentMachine_State_RestartMachine_h
 
 #include "CLState.h"
 #include "CLAction.h"
@@ -18,7 +18,7 @@ namespace FSM
       {
         namespace State
         {
-            class LightOff: public CLState
+            class RestartMachine: public CLState
             {
                 class OnEntry: public CLAction
                 {
@@ -38,7 +38,7 @@ namespace FSM
                 class Transition_0: public CLTransition
                 {
                 public:
-                    Transition_0(int toState = 6): CLTransition(toState) {}
+                    Transition_0(int toState = 3): CLTransition(toState) {}
 
                     virtual bool check(CLMachine *, CLState *) const;
                 };
@@ -46,14 +46,14 @@ namespace FSM
                 CLTransition *_transitions[1];
 
                 public:
-                    LightOff(const char *name = "LightOff");
-                    virtual ~LightOff();
+                    RestartMachine(const char *name = "RestartMachine");
+                    virtual ~RestartMachine();
 
                     virtual CLTransition * const *transitions() const { return _transitions; }
                     virtual int numberOfTransitions() const { return 1; }
 
-#                   include "State_LightOff_Variables.h"
-#                   include "State_LightOff_Methods.h"
+#                   include "State_RestartMachine_Variables.h"
+#                   include "State_RestartMachine_Methods.h"
             };
         }
       }

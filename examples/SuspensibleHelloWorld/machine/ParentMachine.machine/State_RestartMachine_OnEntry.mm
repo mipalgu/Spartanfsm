@@ -1,0 +1,1 @@
+childCommand <= COMMAND_RESTART;
