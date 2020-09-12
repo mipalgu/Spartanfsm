@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-13 05:00 AEST
+--Date Generated: 2020-09-13 05:02 AEST
 --
 
 library IEEE;
@@ -48,6 +48,7 @@ architecture LLFSM of ParentMachine is
     constant RINGLETS_PER_S: unsigned(23 downto 0) := x"7F2816";
     signal i: unsigned(23 downto 0);
     signal childCommand: std_logic_vector(1 downto 0);
+    signal childsLED: std_logic;
 begin
 process (clk)
     begin
