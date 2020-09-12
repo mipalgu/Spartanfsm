@@ -1,2 +1,2 @@
-childCommand <= COMMAND_RESUME;
+childCommand <= COMMAND_RESTART;
 i <= (others => '0');
