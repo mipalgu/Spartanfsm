@@ -1,3 +1,2 @@
-suspendChild <= '1';
-resumeChild <= '0';
+childCommand <= COMMAND_SUSPEND;
 i <= (others => '0');

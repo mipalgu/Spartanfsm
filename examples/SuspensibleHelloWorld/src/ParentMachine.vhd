@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-10 02:53 AEST
+--Date Generated: 2020-09-13 04:54 AEST
 --
 
 library IEEE;
@@ -12,9 +12,7 @@ use IEEE.numeric_std.all;
 entity ParentMachine is
     port (
         clk: in std_logic;
-        restart: in std_logic;
-        resume: in std_logic;
-        suspend: in std_logic;
+        command: in std_logic_vector(1 downto 0);
         suspended: out std_logic;
         EXTERNAL_LED: out std_logic
     );
@@ -41,65 +39,59 @@ architecture LLFSM of ParentMachine is
     signal targetState: std_logic_vector(2 downto 0) := currentState;
     signal previousRinglet: std_logic_vector(2 downto 0) := STATE_Initial xor "111";
     signal suspendedFrom: std_logic_vector(2 downto 0) := STATE_Initial;
+    constant COMMAND_RESTART std_logic_vector(1 downto 0) := "00";
+    constant COMMAND_SUSPEND std_logic_vector(1 downto 0) := "01";
+    constant COMMAND_RESUME std_logic_vector(1 downto 0) := "10";
     --Snapshot of External Variables
     signal LED: std_logic;
     --Machine Variables
     constant RINGLETS_PER_S: unsigned(23 downto 0) := x"7F2816";
     signal i: unsigned(23 downto 0);
-    signal suspendChild: std_logic;
-    signal resumeChild: std_logic;
-    signal suspendedChild: std_logic;
-    signal childsLed: std_logic;
-	 
-	 component SuspensibleHelloWorld is
-		port (
-			clk: in std_logic;
-			restart: in std_logic;
-			resume: in std_logic;
-			suspend: in std_logic;
-			suspended: out std_logic;
-			EXTERNAL_LED: out std_logic
-		);
-	 end component;
-	 
+    signal childCommand: std_logic_vector(1 downto 0);
 begin
-
-	 helloWorld_gen: SuspensibleHelloWorld port map (
-		clk => clk,
-		restart => '1',
-		resume => resumeChild,
-		suspend => suspendChild,
-		suspended => suspendedChild,
-		EXTERNAL_LED => childsLed
-	 );
 process (clk)
     begin
         if (rising_edge(clk)) then
             case internalState is
-                when CheckForSuspension =>
-                    if (restart = '0') then
+                when ReadSnapshot =>
+                    if (command = COMMAND_RESTART) then
                         currentState <= STATE_Initial;
+                        if (previousRinglet /= STATE_Initial) then
+                            internalState <= OnEntry;
+                        else
+                            internalState <= NoOnEntry;
+                        end if;
                         suspended <= '0';
                         suspendedFrom <= STATE_Initial;
-                    elsif (resume = '1' and currentState = STATE_SUSPENDED and suspendedFrom /= STATE_SUSPENDED) then
+                    elsif (command = COMMAND_RESUME and currentState = STATE_SUSPENDED and suspendedFrom /= STATE_SUSPENDED) then
                         suspended <= '0';
                         currentState <= suspendedFrom;
-                    elsif (suspend = '1' and currentState /= STATE_SUSPENDED) then
+                        if (previousringlet /= suspendedFrom) then
+                            internalState <= OnEntry;
+                        else
+                            internalState <= NoOnEntry;
+                        end if;
+                    elsif (command = COMMAND_SUSPEND and currentState /= STATE_SUSPENDED) then
                         suspendedFrom <= currentState;
                         suspended <= '1';
                         currentState <= STATE_SUSPENDED;
-                    elsif (currentState = STATE_SUSPENDED) then
-                        suspended <= '1';
+                        if (previousRinglet /= STATE_SUSPENDED) then
+                            internalState <= OnEntry;
+                        else
+                            internalState <= NoOnEntry;
+                        end if;
                     else
-                        suspended <= '0';
-                        suspendedFrom <= currentState;
-                    end if;
-                    internalState <= ReadSnapshot;
-                when ReadSnapshot =>
-                    if (previousRinglet = currentState) then
-                        internalState <= NoOnEntry;
-                    else
-                        internalState <= OnEntry;
+                        if (currentState = STATE_SUSPENDED) then
+                            suspended <= '1';
+                        else
+                            suspended <= '0';
+                            suspendedFrom <= currentState;
+                        end if;
+                        if (previousRinglet /= currentState) then
+                            internalState <= OnEntry;
+                        else
+                            internalState <= NoOnEntry;
+                        end if;
                     end if;
                 when OnEntry =>
                     case currentState is
@@ -107,12 +99,10 @@ process (clk)
                             LED <= '0';
                             i <= (others => '0');
                         when STATE_LightOn =>
-                            suspendChild <= '0';
-                            resumeChild <= '1';
+                            childCommand <= COMMAND_RESUME;
                             i <= (others => '0');
                         when STATE_LightOff =>
-                            suspendChild <= '1';
-                            resumeChild <= '0';
+                            childCommand <= COMMAND_SUSPEND;
                             i <= (others => '0');
                         when others =>
                             null;
