@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-13 05:34 AEST
+--Date Generated: 2020-09-13 05:36 AEST
 --
 
 library IEEE;
@@ -103,10 +103,10 @@ process (clk)
                             LED <= '0';
                             i <= (others => '0');
                         when STATE_LightOn =>
-                            command <= COMMAND_NULL;
+                            childCommand <= COMMAND_NULL;
                             i <= (others => '0');
                         when STATE_LightOff =>
-                            command <= COMMAND_NULL;
+                            childCommand <= COMMAND_NULL;
                             i <= (others => '0');
                         when STATE_SuspendChild =>
                             childCommand <= COMMAND_SUSPEND;
