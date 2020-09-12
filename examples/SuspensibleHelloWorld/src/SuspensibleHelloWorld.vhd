@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-13 04:40 AEST
+--Date Generated: 2020-09-13 05:00 AEST
 --
 
 library IEEE;
@@ -38,9 +38,9 @@ architecture LLFSM of SuspensibleHelloWorld is
     signal targetState: std_logic_vector(1 downto 0) := currentState;
     signal previousRinglet: std_logic_vector(1 downto 0) := STATE_Initial xor "11";
     signal suspendedFrom: std_logic_vector(1 downto 0) := STATE_Initial;
-    constant COMMAND_RESTART std_logic_vector(1 downto 0) := "00";
-    constant COMMAND_SUSPEND std_logic_vector(1 downto 0) := "01";
-    constant COMMAND_RESUME std_logic_vector(1 downto 0) := "10";
+    constant COMMAND_RESTART: std_logic_vector(1 downto 0) := "00";
+    constant COMMAND_SUSPEND: std_logic_vector(1 downto 0) := "01";
+    constant COMMAND_RESUME: std_logic_vector(1 downto 0) := "10";
     --Snapshot of External Variables
     signal LED: std_logic;
     --Machine Variables

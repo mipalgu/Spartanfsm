@@ -208,7 +208,7 @@ suspend :: String
 suspend = toCommand "suspend"
 
 createCommandDeclaration :: String -> String -> String
-createCommandDeclaration cmd val = "constant" ++> cmd ++> "std_logic_vector(1 downto 0) := \"" ++ val ++ "\";"
+createCommandDeclaration cmd val = "constant" ++> cmd ++ ": std_logic_vector(1 downto 0) := \"" ++ val ++ "\";"
 
 suspensionConstants :: String
 suspensionConstants = createCommandDeclaration restart "00"
