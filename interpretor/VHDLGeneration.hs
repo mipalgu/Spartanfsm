@@ -145,7 +145,6 @@ internalStateVhdl =
     ++ "constant ReadSnapshot: std_logic_vector(2 downto 0) := \"100\";\n"
     ++ "constant WriteSnapshot: std_logic_vector(2 downto 0) := \"101\";\n"
     ++ "constant NoOnEntry: std_logic_vector(2 downto 0) := \"110\";\n"
-    ++ "constant CheckForSuspension: std_logic_vector(2 downto 0) := \"111\";"
     +\> "signal internalState: std_logic_vector(2 downto 0) := ReadSnapshot;\n"
 
 -- Get number of bits to represent the states in dir
@@ -306,7 +305,7 @@ createWriteCode vars
 
 -- Creates the transition code for the WriteSnapshot section
 createWriteTransition :: String
-createWriteTransition  = "internalState <= CheckForSuspension;\npreviousRinglet <= currentState;\ncurrentState <= targetState;"
+createWriteTransition  = "internalState <= ReadSnapshot;\npreviousRinglet <= currentState;\ncurrentState <= targetState;"
 
 -- Creates the WriteSnapshot section
 createWriteSnapshot :: String -> String
