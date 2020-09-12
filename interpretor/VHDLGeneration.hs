@@ -206,6 +206,9 @@ resume = toCommand "resume"
 suspend :: String
 suspend = toCommand "suspend"
 
+nullCommand :: String
+nullCommand = toCommand "null"
+
 createCommandDeclaration :: String -> String -> String
 createCommandDeclaration cmd val = "constant" ++> cmd ++ ": std_logic_vector(1 downto 0) := \"" ++ val ++ "\";"
 
@@ -213,6 +216,7 @@ suspensionConstants :: String
 suspensionConstants = createCommandDeclaration restart "00"
     +\> createCommandDeclaration suspend "01"
     +\> createCommandDeclaration resume "10"
+    +\> createCommandDeclaration nullCommand "11"
 
 -- Create variables in architecture block
 createArchitectureVariables :: Int -> [String] -> String -> String -> String

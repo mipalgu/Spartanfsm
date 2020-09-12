@@ -1,5 +1,5 @@
 //
-// State_RestartMachine_VarRefs.mm
+// State_RestartChild_VarRefs.mm
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
@@ -7,7 +7,7 @@
 #pragma clang diagnostic ignored "-Wunused-variable"
 #pragma clang diagnostic ignored "-Wshadow"
 
-RestartMachine *_s = static_cast<RestartMachine *>(_state);
+RestartChild *_s = static_cast<RestartChild *>(_state);
 
 
 #pragma clang diagnostic pop

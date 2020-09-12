@@ -12,7 +12,7 @@
 #include "State_LightOn.h"
 #include "State_LightOff.h"
 #include "State_SuspendChild.h"
-#include "State_RestartMachine.h"
+#include "State_RestartChild.h"
 
 using namespace FSM;
 using namespace CLM;
@@ -33,7 +33,7 @@ ParentMachine::ParentMachine(int mid, const char *name): CLMachine(mid, name)
 	_states[3] = new FSMParentMachine::State::LightOn;
 	_states[4] = new FSMParentMachine::State::LightOff;
 	_states[5] = new FSMParentMachine::State::SuspendChild;
-	_states[6] = new FSMParentMachine::State::RestartMachine;
+	_states[6] = new FSMParentMachine::State::RestartChild;
 
 	setSuspendState(_states[1]);            // set suspend state
 	setInitialState(_states[0]);            // set initial state

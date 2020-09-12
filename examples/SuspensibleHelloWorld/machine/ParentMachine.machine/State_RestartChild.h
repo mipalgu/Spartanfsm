@@ -1,10 +1,10 @@
 //
-// State_RestartMachine.h
+// State_RestartChild.h
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
-#ifndef clfsm_ParentMachine_State_RestartMachine_h
-#define clfsm_ParentMachine_State_RestartMachine_h
+#ifndef clfsm_ParentMachine_State_RestartChild_h
+#define clfsm_ParentMachine_State_RestartChild_h
 
 #include "CLState.h"
 #include "CLAction.h"
@@ -18,7 +18,7 @@ namespace FSM
       {
         namespace State
         {
-            class RestartMachine: public CLState
+            class RestartChild: public CLState
             {
                 class OnEntry: public CLAction
                 {
@@ -46,14 +46,14 @@ namespace FSM
                 CLTransition *_transitions[1];
 
                 public:
-                    RestartMachine(const char *name = "RestartMachine");
-                    virtual ~RestartMachine();
+                    RestartChild(const char *name = "RestartChild");
+                    virtual ~RestartChild();
 
                     virtual CLTransition * const *transitions() const { return _transitions; }
                     virtual int numberOfTransitions() const { return 1; }
 
-#                   include "State_RestartMachine_Variables.h"
-#                   include "State_RestartMachine_Methods.h"
+#                   include "State_RestartChild_Variables.h"
+#                   include "State_RestartChild_Methods.h"
             };
         }
       }

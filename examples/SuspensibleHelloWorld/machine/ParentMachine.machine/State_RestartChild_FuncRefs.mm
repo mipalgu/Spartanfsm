@@ -1,5 +1,5 @@
 //
-// State_RestartMachine_FuncRefs.mm
+// State_RestartChild_FuncRefs.mm
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //

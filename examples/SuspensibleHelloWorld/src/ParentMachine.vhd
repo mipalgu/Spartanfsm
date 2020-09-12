@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-13 05:32 AEST
+--Date Generated: 2020-09-13 05:34 AEST
 --
 
 library IEEE;
@@ -36,7 +36,7 @@ architecture LLFSM of ParentMachine is
     constant STATE_LightOn: std_logic_vector(2 downto 0) := "011";
     constant STATE_LightOff: std_logic_vector(2 downto 0) := "100";
     constant STATE_SuspendChild: std_logic_vector(2 downto 0) := "101";
-    constant STATE_RestartMachine: std_logic_vector(2 downto 0) := "110";
+    constant STATE_RestartChild: std_logic_vector(2 downto 0) := "110";
     signal currentState: std_logic_vector(2 downto 0) := STATE_Initial;
     signal targetState: std_logic_vector(2 downto 0) := currentState;
     signal previousRinglet: std_logic_vector(2 downto 0) := STATE_Initial xor "111";
@@ -103,12 +103,14 @@ process (clk)
                             LED <= '0';
                             i <= (others => '0');
                         when STATE_LightOn =>
+                            command <= COMMAND_NULL;
                             i <= (others => '0');
                         when STATE_LightOff =>
+                            command <= COMMAND_NULL;
                             i <= (others => '0');
                         when STATE_SuspendChild =>
                             childCommand <= COMMAND_SUSPEND;
-                        when STATE_RestartMachine =>
+                        when STATE_RestartChild =>
                             childCommand <= COMMAND_RESTART;
                         when others =>
                             null;
@@ -141,7 +143,7 @@ process (clk)
                             end if;
                         when STATE_LightOff =>
                             if (i >= RINGLETS_PER_S) then
-                                targetState <= STATE_RestartMachine;
+                                targetState <= STATE_RestartChild;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
@@ -153,7 +155,7 @@ process (clk)
                             else
                                 internalState <= Internal;
                             end if;
-                        when STATE_RestartMachine =>
+                        when STATE_RestartChild =>
                             if (true) then
                                 targetState <= STATE_LightOn;
                                 internalState <= OnExit;

@@ -4,4 +4,4 @@ InitialPseudoState
 LightOn
 LightOff
 SuspendChild
-RestartMachine
+RestartChild
