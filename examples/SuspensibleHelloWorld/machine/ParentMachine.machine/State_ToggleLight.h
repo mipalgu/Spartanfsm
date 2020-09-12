@@ -1,10 +1,10 @@
 //
-// State_LightOff.h
+// State_ToggleLight.h
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
-#ifndef clfsm_ParentMachine_State_LightOff_h
-#define clfsm_ParentMachine_State_LightOff_h
+#ifndef clfsm_ParentMachine_State_ToggleLight_h
+#define clfsm_ParentMachine_State_ToggleLight_h
 
 #include "CLState.h"
 #include "CLAction.h"
@@ -18,7 +18,7 @@ namespace FSM
       {
         namespace State
         {
-            class LightOff: public CLState
+            class ToggleLight: public CLState
             {
                 class OnEntry: public CLAction
                 {
@@ -43,17 +43,25 @@ namespace FSM
                     virtual bool check(CLMachine *, CLState *) const;
                 };
 
-                CLTransition *_transitions[1];
+                class Transition_1: public CLTransition
+                {
+                public:
+                    Transition_1(int toState = 5): CLTransition(toState) {}
+
+                    virtual bool check(CLMachine *, CLState *) const;
+                };
+
+                CLTransition *_transitions[2];
 
                 public:
-                    LightOff(const char *name = "LightOff");
-                    virtual ~LightOff();
+                    ToggleLight(const char *name = "ToggleLight");
+                    virtual ~ToggleLight();
 
                     virtual CLTransition * const *transitions() const { return _transitions; }
-                    virtual int numberOfTransitions() const { return 1; }
+                    virtual int numberOfTransitions() const { return 2; }
 
-#                   include "State_LightOff_Variables.h"
-#                   include "State_LightOff_Methods.h"
+#                   include "State_ToggleLight_Variables.h"
+#                   include "State_ToggleLight_Methods.h"
             };
         }
       }

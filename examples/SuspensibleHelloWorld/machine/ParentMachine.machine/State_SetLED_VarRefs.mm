@@ -1,5 +1,5 @@
 //
-// State_LightOn_VarRefs.mm
+// State_SetLED_VarRefs.mm
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
@@ -7,7 +7,7 @@
 #pragma clang diagnostic ignored "-Wunused-variable"
 #pragma clang diagnostic ignored "-Wshadow"
 
-LightOn *_s = static_cast<LightOn *>(_state);
+SetLED *_s = static_cast<SetLED *>(_state);
 
 
 #pragma clang diagnostic pop

@@ -9,8 +9,8 @@
 #include "State_Initial.h"
 #include "State_SUSPENDED.h"
 #include "State_InitialPseudoState.h"
-#include "State_LightOn.h"
-#include "State_LightOff.h"
+#include "State_SetLED.h"
+#include "State_ToggleLight.h"
 #include "State_SuspendChild.h"
 #include "State_RestartChild.h"
 
@@ -30,8 +30,8 @@ ParentMachine::ParentMachine(int mid, const char *name): CLMachine(mid, name)
 	_states[0] = new FSMParentMachine::State::Initial;
 	_states[1] = new FSMParentMachine::State::SUSPENDED;
 	_states[2] = new FSMParentMachine::State::InitialPseudoState;
-	_states[3] = new FSMParentMachine::State::LightOn;
-	_states[4] = new FSMParentMachine::State::LightOff;
+	_states[3] = new FSMParentMachine::State::SetLED;
+	_states[4] = new FSMParentMachine::State::ToggleLight;
 	_states[5] = new FSMParentMachine::State::SuspendChild;
 	_states[6] = new FSMParentMachine::State::RestartChild;
 

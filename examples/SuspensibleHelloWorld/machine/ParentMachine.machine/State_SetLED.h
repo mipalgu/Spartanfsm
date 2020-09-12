@@ -1,10 +1,10 @@
 //
-// State_LightOn.h
+// State_SetLED.h
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
-#ifndef clfsm_ParentMachine_State_LightOn_h
-#define clfsm_ParentMachine_State_LightOn_h
+#ifndef clfsm_ParentMachine_State_SetLED_h
+#define clfsm_ParentMachine_State_SetLED_h
 
 #include "CLState.h"
 #include "CLAction.h"
@@ -18,7 +18,7 @@ namespace FSM
       {
         namespace State
         {
-            class LightOn: public CLState
+            class SetLED: public CLState
             {
                 class OnEntry: public CLAction
                 {
@@ -38,7 +38,7 @@ namespace FSM
                 class Transition_0: public CLTransition
                 {
                 public:
-                    Transition_0(int toState = 5): CLTransition(toState) {}
+                    Transition_0(int toState = 4): CLTransition(toState) {}
 
                     virtual bool check(CLMachine *, CLState *) const;
                 };
@@ -46,14 +46,14 @@ namespace FSM
                 CLTransition *_transitions[1];
 
                 public:
-                    LightOn(const char *name = "LightOn");
-                    virtual ~LightOn();
+                    SetLED(const char *name = "SetLED");
+                    virtual ~SetLED();
 
                     virtual CLTransition * const *transitions() const { return _transitions; }
                     virtual int numberOfTransitions() const { return 1; }
 
-#                   include "State_LightOn_Variables.h"
-#                   include "State_LightOn_Methods.h"
+#                   include "State_SetLED_Variables.h"
+#                   include "State_SetLED_Methods.h"
             };
         }
       }

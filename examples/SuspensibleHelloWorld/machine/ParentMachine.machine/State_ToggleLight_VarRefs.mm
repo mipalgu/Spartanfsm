@@ -1,5 +1,5 @@
 //
-// State_LightOff_VarRefs.mm
+// State_ToggleLight_VarRefs.mm
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
@@ -7,7 +7,7 @@
 #pragma clang diagnostic ignored "-Wunused-variable"
 #pragma clang diagnostic ignored "-Wshadow"
 
-LightOff *_s = static_cast<LightOff *>(_state);
+ToggleLight *_s = static_cast<ToggleLight *>(_state);
 
 
 #pragma clang diagnostic pop
