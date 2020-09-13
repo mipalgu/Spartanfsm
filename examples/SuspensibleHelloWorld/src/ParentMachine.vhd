@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-14 01:21 AEST
+--Date Generated: 2020-09-14 01:24 AEST
 --
 
 library IEEE;
@@ -52,7 +52,7 @@ architecture LLFSM of ParentMachine is
     constant RINGLETS_PER_NS: real := 1.0 / ringletLength;
     constant RINGLETS_PER_US: real := 1000.0 * RINGLETS_PER_NS;
     constant RINGLETS_PER_MS: real := 1000000.0 * RINGLETS_PER_NS;
-    constant RINGLETS_PER_S: real := 1000000000.0 * RINGLETS_PERS_NS;
+    constant RINGLETS_PER_S: real := 1000000000.0 * RINGLETS_PER_NS;
     --Snapshot of External Variables
     signal LED: std_logic;
     --Machine Variables
@@ -111,7 +111,6 @@ process (clk)
                     case currentState is
                         when STATE_SUSPENDED =>
                             LED <= '0';
-                            i <= (others => '0');
                         when STATE_SetLED =>
                             childCommand <= COMMAND_NULL;
                             ringlet_counter := 0;
@@ -142,7 +141,7 @@ process (clk)
                                 internalState <= Internal;
                             end if;
                         when STATE_SetLED =>
-                            if (ringlet_counter >= integer(ceil(1.0 * RINGLETS_PER_S)) and ringlet_counter >= integer(ceil(1000.0 * RINGLETS_PER_MS)) and ringlet_counter >= integer(ceil(1000000.0 * RINGLETS_PER_US)) and ringlet_counter >= integer(ceil(1000000000.0 * RINGLETS_PER_NS)) and true) then
+                            if (ringlet_counter >= integer(ceil(1.0 * RINGLETS_PER_S))) then
                                 targetState <= STATE_ToggleLight;
                                 internalState <= OnExit;
                             else
