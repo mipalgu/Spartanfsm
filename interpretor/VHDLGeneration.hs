@@ -311,7 +311,7 @@ counterVariables = "shared variable ringlet_counter: natural := 0;"
     +\> "constant RINGLETS_PER_NS: real := 1.0 / ringletLength;"
     +\> "constant RINGLETS_PER_US: real := 1000.0 * RINGLETS_PER_NS;"
     +\> "constant RINGLETS_PER_MS: real := 1000000.0 * RINGLETS_PER_NS;"
-    +\> "constant RINGLETS_PER_S: real := 1000000000.0 * RINGLETS_PERS_NS;"
+    +\> "constant RINGLETS_PER_S: real := 1000000000.0 * RINGLETS_PER_NS;"
 
 suspendedFromVariable :: String
 suspendedFromVariable = "suspendedFrom"
