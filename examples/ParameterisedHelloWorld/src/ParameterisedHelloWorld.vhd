@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-14 01:51 AEST
+--Date Generated: 2020-09-14 01:52 AEST
 --
 
 library IEEE;
@@ -60,7 +60,6 @@ architecture LLFSM of ParameterisedHelloWorld is
     signal LEDG: std_logic_vector(NGREEN - 1 downto 0);
     signal LEDR: std_logic_vector(NRED - 1 downto 0);
     --Machine Variables
-    constant RINGLETS_PER_S: unsigned(23 downto 0) := x"7F2816";
 begin
 process (clk)
     begin
