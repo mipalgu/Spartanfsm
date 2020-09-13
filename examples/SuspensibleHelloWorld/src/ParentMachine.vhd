@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-13 05:36 AEST
+--Date Generated: 2020-09-13 16:25 AEST
 --
 
 library IEEE;
@@ -33,8 +33,8 @@ architecture LLFSM of ParentMachine is
     constant STATE_Initial: std_logic_vector(2 downto 0) := "000";
     constant STATE_SUSPENDED: std_logic_vector(2 downto 0) := "001";
     constant STATE_InitialPseudoState: std_logic_vector(2 downto 0) := "010";
-    constant STATE_LightOn: std_logic_vector(2 downto 0) := "011";
-    constant STATE_LightOff: std_logic_vector(2 downto 0) := "100";
+    constant STATE_SetLED: std_logic_vector(2 downto 0) := "011";
+    constant STATE_ToggleLight: std_logic_vector(2 downto 0) := "100";
     constant STATE_SuspendChild: std_logic_vector(2 downto 0) := "101";
     constant STATE_RestartChild: std_logic_vector(2 downto 0) := "110";
     signal currentState: std_logic_vector(2 downto 0) := STATE_Initial;
@@ -52,6 +52,7 @@ architecture LLFSM of ParentMachine is
     signal i: unsigned(23 downto 0);
     signal childCommand: std_logic_vector(1 downto 0);
     signal childsLED: std_logic;
+    signal childSuspended: std_logic;
 begin
 process (clk)
     begin
@@ -102,10 +103,7 @@ process (clk)
                         when STATE_SUSPENDED =>
                             LED <= '0';
                             i <= (others => '0');
-                        when STATE_LightOn =>
-                            childCommand <= COMMAND_NULL;
-                            i <= (others => '0');
-                        when STATE_LightOff =>
+                        when STATE_SetLED =>
                             childCommand <= COMMAND_NULL;
                             i <= (others => '0');
                         when STATE_SuspendChild =>
@@ -120,7 +118,7 @@ process (clk)
                     case currentState is
                         when STATE_Initial =>
                             if (true) then
-                                targetState <= STATE_LightOn;
+                                targetState <= STATE_SetLED;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
@@ -134,30 +132,33 @@ process (clk)
                             else
                                 internalState <= Internal;
                             end if;
-                        when STATE_LightOn =>
+                        when STATE_SetLED =>
                             if (i >= RINGLETS_PER_S) then
-                                targetState <= STATE_SuspendChild;
+                                targetState <= STATE_ToggleLight;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
                             end if;
-                        when STATE_LightOff =>
-                            if (i >= RINGLETS_PER_S) then
+                        when STATE_ToggleLight =>
+                            if (childSuspended = '1') then
                                 targetState <= STATE_RestartChild;
+                                internalState <= OnExit;
+                            elsif (true) and (not (childSuspended = '1')) then
+                                targetState <= STATE_SuspendChild;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
                             end if;
                         when STATE_SuspendChild =>
                             if (true) then
-                                targetState <= STATE_LightOff;
+                                targetState <= STATE_SetLED;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
                             end if;
                         when STATE_RestartChild =>
                             if (true) then
-                                targetState <= STATE_LightOn;
+                                targetState <= STATE_SetLED;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
@@ -167,10 +168,7 @@ process (clk)
                     end case;
                 when Internal =>
                     case currentState is
-                        when STATE_LightOn =>
-                            i <= i + 1;
-                            led <= childsLed;
-                        when STATE_LightOff =>
+                        when STATE_SetLED =>
                             i <= i + 1;
                             led <= childsLed;
                         when others =>
