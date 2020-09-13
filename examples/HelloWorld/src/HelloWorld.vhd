@@ -2,19 +2,18 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-10 02:10 AEST
+--Date Generated: 2020-09-14 01:56 AEST
 --
 
 library IEEE;
 use IEEE.std_logic_1164.All;
+use IEEE.math_real.all;
 use IEEE.numeric_std.all;
 
 entity HelloWorld is
     port (
         clk: in std_logic;
-        restart: in std_logic;
-        resume: in std_logic;
-        suspend: in std_logic;
+        command: in std_logic_vector(1 downto 0);
         suspended: out std_logic;
         EXTERNAL_LED: out std_logic
     );
@@ -29,7 +28,7 @@ architecture LLFSM of HelloWorld is
     constant ReadSnapshot: std_logic_vector(2 downto 0) := "100";
     constant WriteSnapshot: std_logic_vector(2 downto 0) := "101";
     constant NoOnEntry: std_logic_vector(2 downto 0) := "110";
-    constant CheckForSuspension: std_logic_vector(2 downto 0) := "111";
+    
     signal internalState: std_logic_vector(2 downto 0) := ReadSnapshot;
     --State Representation Bits
     constant STATE_Initial: std_logic_vector(2 downto 0) := "000";
@@ -41,49 +40,76 @@ architecture LLFSM of HelloWorld is
     signal targetState: std_logic_vector(2 downto 0) := currentState;
     signal previousRinglet: std_logic_vector(2 downto 0) := STATE_Initial xor "111";
     signal suspendedFrom: std_logic_vector(2 downto 0) := STATE_Initial;
+    constant COMMAND_RESTART: std_logic_vector(1 downto 0) := "00";
+    constant COMMAND_SUSPEND: std_logic_vector(1 downto 0) := "01";
+    constant COMMAND_RESUME: std_logic_vector(1 downto 0) := "10";
+    constant COMMAND_NULL: std_logic_vector(1 downto 0) := "11";
+    shared variable ringlet_counter: natural := 0;
+    constant clockPeriod: real := 20.0;
+    constant ringletLength: real := 5.0 * clockPeriod;
+    constant RINGLETS_PER_NS: real := 1.0 / ringletLength;
+    constant RINGLETS_PER_US: real := 1000.0 * RINGLETS_PER_NS;
+    constant RINGLETS_PER_MS: real := 1000000.0 * RINGLETS_PER_NS;
+    constant RINGLETS_PER_S: real := 1000000000.0 * RINGLETS_PER_NS;
     --Snapshot of External Variables
     signal LED: std_logic;
     --Machine Variables
-    constant RINGLETS_PER_S: unsigned(23 downto 0) := x"7F2816";
-    signal i: unsigned(23 downto 0);
 begin
 process (clk)
     begin
         if (rising_edge(clk)) then
             case internalState is
-                when CheckForSuspension =>
-                    if (restart = '0') then
+                when ReadSnapshot =>
+                    if (command = COMMAND_RESTART) then
                         currentState <= STATE_Initial;
+                        if (previousRinglet /= STATE_Initial) then
+                            internalState <= OnEntry;
+                        else
+                            internalState <= NoOnEntry;
+                        end if;
                         suspended <= '0';
                         suspendedFrom <= STATE_Initial;
-                    elsif (resume = '1' and currentState = STATE_SUSPENDED and suspendedFrom /= STATE_SUSPENDED) then
+                        targetState <= STATE_Initial;
+                    elsif (command = COMMAND_RESUME and currentState = STATE_SUSPENDED and suspendedFrom /= STATE_SUSPENDED) then
                         suspended <= '0';
                         currentState <= suspendedFrom;
-                    elsif (suspend = '1' and currentState /= STATE_SUSPENDED) then
+                        if (previousringlet /= suspendedFrom) then
+                            internalState <= OnEntry;
+                        else
+                            internalState <= NoOnEntry;
+                        end if;
+                        targetState <= suspendedFrom;
+                    elsif (command = COMMAND_SUSPEND and currentState /= STATE_SUSPENDED) then
                         suspendedFrom <= currentState;
                         suspended <= '1';
                         currentState <= STATE_SUSPENDED;
-                    elsif (currentState = STATE_SUSPENDED) then
-                        suspended <= '1';
+                        if (previousRinglet /= STATE_SUSPENDED) then
+                            internalState <= OnEntry;
+                        else
+                            internalState <= NoOnEntry;
+                        end if;
+                        targetState <= STATE_SUSPENDED;
                     else
-                        suspended <= '0';
-                        suspendedFrom <= currentState;
-                    end if;
-                    internalState <= ReadSnapshot;
-                when ReadSnapshot =>
-                    if (previousRinglet = currentState) then
-                        internalState <= NoOnEntry;
-                    else
-                        internalState <= OnEntry;
+                        if (currentState = STATE_SUSPENDED) then
+                            suspended <= '1';
+                        else
+                            suspended <= '0';
+                            suspendedFrom <= currentState;
+                        end if;
+                        if (previousRinglet /= currentState) then
+                            internalState <= OnEntry;
+                        else
+                            internalState <= NoOnEntry;
+                        end if;
                     end if;
                 when OnEntry =>
                     case currentState is
                         when STATE_LightOn =>
                             LED <= '1';
-                            i <= (others => '0');
+                            ringlet_counter := 0;
                         when STATE_LightOff =>
                             LED <= '0';
-                            i <= (others => '0');
+                            ringlet_counter := 0;
                         when others =>
                             null;
                     end case;
@@ -107,14 +133,14 @@ process (clk)
                                 internalState <= Internal;
                             end if;
                         when STATE_LightOn =>
-                            if (i >= RINGLETS_PER_S) then
+                            if (ringlet_counter >= integer(ceil(1.0 * RINGLETS_PER_S))) then
                                 targetState <= STATE_LightOff;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
                             end if;
                         when STATE_LightOff =>
-                            if (i >= RINGLETS_PER_S) then
+                            if (ringlet_counter >= integer(ceil(1.0 * RINGLETS_PER_S))) then
                                 targetState <= STATE_LightOn;
                                 internalState <= OnExit;
                             else
@@ -126,9 +152,9 @@ process (clk)
                 when Internal =>
                     case currentState is
                         when STATE_LightOn =>
-                            i <= i + 1;
+                            ringlet_counter := ringlet_counter + 1;
                         when STATE_LightOff =>
-                            i <= i + 1;
+                            ringlet_counter := ringlet_counter + 1;
                         when others =>
                             null;
                     end case;
@@ -143,7 +169,7 @@ process (clk)
                     internalState <= CheckTransition;
                 when WriteSnapshot =>
                     EXTERNAL_LED <= LED;
-                    internalState <= CheckForSuspension;
+                    internalState <= ReadSnapshot;
                     previousRinglet <= currentState;
                     currentState <= targetState;
                 when others =>
