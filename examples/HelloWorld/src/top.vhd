@@ -16,9 +16,7 @@ architecture Behavioral of top is
 	component HelloWorld is
 		port (
 			  clk: in std_logic;
-			  restart: in std_logic;
-			  resume: in std_logic;
-			  suspend: in std_logic;
+			  command: in std_logic_vector(1 downto 0);
 			  suspended: out std_logic;
 			  EXTERNAL_LED: out std_logic
 		 );
@@ -31,9 +29,7 @@ begin
 
 	helloWorld_gen: HelloWorld port map (
 		clk => CLOCK_50,
-		restart => '1',
-		resume => '0',
-		suspend => '0',
+		command => "11",
 		suspended => suspended,
 		EXTERNAL_LED => ledValue
 	);
