@@ -2,11 +2,12 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-13 17:47 AEST
+--Date Generated: 2020-09-14 01:24 AEST
 --
 
 library IEEE;
 use IEEE.std_logic_1164.All;
+use IEEE.math_real.all;
 use IEEE.numeric_std.all;
 
 entity ParentMachine is
@@ -45,31 +46,36 @@ architecture LLFSM of ParentMachine is
     constant COMMAND_SUSPEND: std_logic_vector(1 downto 0) := "01";
     constant COMMAND_RESUME: std_logic_vector(1 downto 0) := "10";
     constant COMMAND_NULL: std_logic_vector(1 downto 0) := "11";
+    shared variable ringlet_counter: natural := 0;
+    constant clockPeriod: real := 20.0;
+    constant ringletLength: real := 5.0 * clockPeriod;
+    constant RINGLETS_PER_NS: real := 1.0 / ringletLength;
+    constant RINGLETS_PER_US: real := 1000.0 * RINGLETS_PER_NS;
+    constant RINGLETS_PER_MS: real := 1000000.0 * RINGLETS_PER_NS;
+    constant RINGLETS_PER_S: real := 1000000000.0 * RINGLETS_PER_NS;
     --Snapshot of External Variables
     signal LED: std_logic;
     --Machine Variables
-    constant RINGLETS_PER_S: unsigned(23 downto 0) := x"7F2816";
-    signal i: unsigned(23 downto 0);
     signal childCommand: std_logic_vector(1 downto 0);
     signal childsLED: std_logic;
     signal childSuspended: std_logic;
+	 
 	 component SuspensibleHelloWorld is
 		port (
-			  clk: in std_logic;
-			  command: in std_logic_vector(1 downto 0);
-			  suspended: out std_logic;
-			  EXTERNAL_LED: out std_logic
-		 );
+        clk: in std_logic;
+        command: in std_logic_vector(1 downto 0);
+        suspended: out std_logic;
+        EXTERNAL_LED: out std_logic
+		);
 	 end component;
-	 
 begin
-
 	child_gen: SuspensibleHelloWorld port map (
-        clk => clk,
-        command => childCommand,
-		  suspended => childSuspended,
-        EXTERNAL_LED => childsLED
+		clk => clk,
+	  command => childCommand,
+	  suspended => childSuspended,
+	  EXTERNAL_LED => childsLED
 	);
+
 process (clk)
     begin
         if (rising_edge(clk)) then
@@ -121,10 +127,9 @@ process (clk)
                     case currentState is
                         when STATE_SUSPENDED =>
                             LED <= '0';
-                            i <= (others => '0');
                         when STATE_SetLED =>
                             childCommand <= COMMAND_NULL;
-                            i <= (others => '0');
+                            ringlet_counter := 0;
                         when STATE_SuspendChild =>
                             childCommand <= COMMAND_SUSPEND;
                         when STATE_RestartChild =>
@@ -152,7 +157,7 @@ process (clk)
                                 internalState <= Internal;
                             end if;
                         when STATE_SetLED =>
-                            if (i >= RINGLETS_PER_S) then
+                            if (ringlet_counter >= integer(ceil(1.0 * RINGLETS_PER_S))) then
                                 targetState <= STATE_ToggleLight;
                                 internalState <= OnExit;
                             else
@@ -188,8 +193,8 @@ process (clk)
                 when Internal =>
                     case currentState is
                         when STATE_SetLED =>
-                            i <= i + 1;
                             led <= childsLed;
+                            ringlet_counter := ringlet_counter + 1;
                         when others =>
                             null;
                     end case;

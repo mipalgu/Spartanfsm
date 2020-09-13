@@ -56,7 +56,8 @@ module SpartanLLFSM_VHDLGeneration(
     createEntity,
     createArchitecture,
     toStateName,
-    getNumberOfBits
+    getNumberOfBits,
+    doesStateHaveAfter
 ) where
 
 import SpartanLLFSM_Strings
@@ -117,7 +118,7 @@ transitionToVhdl n m ts s
 createTransitionCode :: [String] -> [String] -> String
 createTransitionCode trans states
     | trans == [] = "internalState <= Internal;"
-    | otherwise   = createCode trans states 0 ((length trans) - 1) ""
+    | otherwise   = createCode (map replaceAftersInTransition trans) states 0 ((length trans) - 1) ""
         where
             createCode :: [String] -> [String] -> Int -> Int -> String -> String
             createCode ts ss n m carry
@@ -228,6 +229,7 @@ createArchitectureVariables size states vars firstState =
     ++ createPreviousRinglet (numberOfBits $ length states) firstState
     ++ createSuspendedFrom (numberOfBits $ length states) firstState
     ++ suspensionConstants
+    +\> counterVariables
 --    ++ createPreviousInternal
     +\> createArchitectureSnapshots (getExternalVars vars)
     ++ createVariables (getMachineVars vars)
@@ -239,6 +241,77 @@ createStateCode state code appendedCode = "when " ++ state ++ " =>" ++ (beautify
 -- Creates the code for a single var that reads the external variables into snapshot variables
 createReadLine :: String -> String
 createReadLine varName = varName ++ " <= " ++ toExternalName varName ++ ";"
+
+lower :: String -> String
+lower = map toLower
+
+isAfter :: String -> Bool
+isAfter str = "after" == (map toLower str)
+
+isAfterMs :: String -> Bool
+isAfterMs str = "after_ms" == (lower str)
+
+isAfterUs :: String -> Bool
+isAfterUs str = "after_us" == (lower str)
+
+isAfterNs :: String -> Bool
+isAfterNs str = "after_ns" == (lower str)
+
+isAnyAfter :: String -> Bool
+isAnyAfter str = isAfter str || isAfterMs str || isAfterUs str || isAfterNs str
+
+getAfterCandidates :: String -> [String]
+getAfterCandidates str = filter (\s -> isAfterCandidate (trim s)) (splitOn " " str)
+
+doesTransHaveAfter :: String -> Bool
+doesTransHaveAfter trans = length (filter (\s -> isAnyAfter (getAfterCommand (trim s))) (getAfterCandidates trans)) > 0
+
+doesStateHaveAfter :: [String] -> Bool
+doesStateHaveAfter trans = foldl (||) False (map doesTransHaveAfter trans)
+
+isAfterCandidate :: String -> Bool
+isAfterCandidate str = length (splitOn "(" str) >= 2 && isAnyAfter (getAfterCommand str)
+
+getAfterAndValue :: String -> [String]
+getAfterAndValue str = [getAfterCommand str, getValueFromAfter str]
+
+replaceAfter :: String -> String
+replaceAfter str | isAfterCandidate str = convertAfterToVHDLVariable ((getAfterAndValue str)!!0) ((getAfterAndValue str)!!1)
+                 | otherwise            = str
+
+replaceAftersInTransition :: String -> String
+replaceAftersInTransition str = foldl (++>) "" (map (\s -> replaceAfter (trim s)) (splitOn " " str))
+
+getAfterCommand :: String -> String
+getAfterCommand str = (splitOn "(" str)!!0
+
+getValueFromAfter :: String -> String
+getValueFromAfter str = (splitOn ")" ((splitOn "(" str)!!1))!!0
+
+toDecimal :: String -> String
+toDecimal str | length (filter (\x -> x == '.') str) == 0 = str ++ ".0"
+              | length (filter (\x -> x == '.') str) == 1 = str
+              | otherwise                                 = error ("Tried to convert to decimal that had more than 1 decimal point. candidate: " ++ str)
+
+convertAfter :: String -> String -> String
+convertAfter value variable = "ringlet_counter >= integer(ceil(" ++ toDecimal value ++ " * " ++ variable ++ "))"
+
+convertAfterToVHDLVariable :: String -> String -> String
+convertAfterToVHDLVariable afterStr valueStr
+    | isAfter afterStr   = convertAfter valueStr "RINGLETS_PER_S"
+    | isAfterMs afterStr = convertAfter valueStr "RINGLETS_PER_MS"
+    | isAfterUs afterStr = convertAfter valueStr "RINGLETS_PER_US"
+    | isAfterNs afterStr = convertAfter valueStr "RINGLETS_PER_NS"
+    | otherwise          = error ("Failed to convert after str. candidate: " ++ afterStr ++ "(" ++ valueStr ++ ")")
+
+counterVariables :: String
+counterVariables = "shared variable ringlet_counter: natural := 0;"
+    +\> "constant clockPeriod: real := 20.0;"
+    +\> "constant ringletLength: real := 5.0 * clockPeriod;"
+    +\> "constant RINGLETS_PER_NS: real := 1.0 / ringletLength;"
+    +\> "constant RINGLETS_PER_US: real := 1000.0 * RINGLETS_PER_NS;"
+    +\> "constant RINGLETS_PER_MS: real := 1000000.0 * RINGLETS_PER_NS;"
+    +\> "constant RINGLETS_PER_S: real := 1000000000.0 * RINGLETS_PER_NS;"
 
 suspendedFromVariable :: String
 suspendedFromVariable = "suspendedFrom"
@@ -374,17 +447,20 @@ createRisingEdge states codes vars = "if (rising_edge(clk)) then"
     ++ removeFirstNewLine (createAllRisingStateCode states codes vars)
     ++ "    end case;\nend if;"
 
-createCodeForState :: String -> String -> String
-createCodeForState state code | code == "" = ""
-                              | otherwise  = "when " ++ state ++ " =>" +\> beautifyTrimmed 1 code
+createCodeForState :: String -> String -> Bool -> String -> String
+createCodeForState state code hasAfter internalState
+    | hasAfter && internalState == "OnEntry"  = "when" ++> state ++> "=>" +\> beautifyTrimmed 1 (code +\> "ringlet_counter := 0;")
+    | hasAfter && internalState == "Internal" = "when" ++> state ++> "=>" +\> beautifyTrimmed 1 (code +\> "ringlet_counter := ringlet_counter + 1;")
+    | code == ""                              = ""
+    | otherwise                               = "when " ++ state ++ " =>" +\> beautifyTrimmed 1 code
 
 onlyValidNewLine :: String -> String -> String
 onlyValidNewLine str1 str2 | str1 == "" && str2 == "" = ""
                            | otherwise                = trimNewLines (str1 +\> str2)
 
-createAllInternalStateCode :: String -> [String] -> [String] -> String -> String
-createAllInternalStateCode internalState states codes trailer = "when " ++ internalState ++ " =>" +\> beautifyTrimmed 1 ("case currentState is"
-    +\> beautifyTrimmed 1 (trimNewLines (foldl onlyValidNewLine "" (map (\(s,c) -> createCodeForState s c) $ zip states codes))
+createAllInternalStateCode :: String -> [String] -> [String] -> String -> [Bool] -> String
+createAllInternalStateCode internalState states codes trailer afters = "when " ++ internalState ++ " =>" +\> beautifyTrimmed 1 ("case currentState is"
+    +\> beautifyTrimmed 1 (trimNewLines (foldl onlyValidNewLine "" (map (\(a, (s,c)) -> createCodeForState s c a internalState) $ zip afters (zip states codes)))
     +\> othersNullBlock) +\> "end case;" +\> trailer)
 
 getActions :: [[String]] -> Int -> [String]
@@ -414,14 +490,14 @@ emptyStringLists size = emptyStringListsCarry size []
 --    ++ removeFirstNewLine (beautify 1 (removeFirstNewLine (beautify 1 othersNullBlock)))
 --    ++ "    end case;\nend if;"
 
-createAllInRisingEdge :: String-> [String] -> [[String]] -> [[String]] -> [[String]] -> String -> String
-createAllInRisingEdge initialState states codes trans targets vars = "if (rising_edge(clk)) then"
+createAllInRisingEdge :: String-> [String] -> [[String]] -> [[String]] -> [[String]] -> String -> [Bool] -> String
+createAllInRisingEdge initialState states codes trans targets vars afters = "if (rising_edge(clk)) then"
     ++ beautify 1 "case internalState is"
     ++ beautifyTrimmed 2 (createReadSnapshot vars initialState)
-    +\> beautifyTrimmed 2 (createAllInternalStateCode "OnEntry" states (getActions codes 0) "internalState <= CheckTransition;")
-    +\> beautifyTrimmed 2 (createAllInternalStateCode "CheckTransition" states (map (\(trans, trgs) -> createTransitionCode trans trgs) (zip trans targets)) "")
-    +\> beautifyTrimmed 2 (createAllInternalStateCode "Internal" states (getActions codes 1) "internalState <= WriteSnapshot;")
-    +\> beautifyTrimmed 2 (createAllInternalStateCode "OnExit" states (getActions codes 2) "internalState <= WriteSnapshot;")
+    +\> beautifyTrimmed 2 (createAllInternalStateCode "OnEntry" states (getActions codes 0) "internalState <= CheckTransition;" afters)
+    +\> beautifyTrimmed 2 (createAllInternalStateCode "CheckTransition" states (map (\(trans, trgs) -> createTransitionCode trans trgs) (zip trans targets)) "" afters)
+    +\> beautifyTrimmed 2 (createAllInternalStateCode "Internal" states (getActions codes 1) "internalState <= WriteSnapshot;" afters)
+    +\> beautifyTrimmed 2 (createAllInternalStateCode "OnExit" states (getActions codes 2) "internalState <= WriteSnapshot;" afters)
     +\> beautifyTrimmed 2 ("when NoOnEntry =>" +\-> "internalState <= CheckTransition;")
     +\> beautifyTrimmed 2 (createWriteSnapshot vars)
     +\> beautifyTrimmed 2 othersNullBlock 
@@ -429,20 +505,20 @@ createAllInRisingEdge initialState states codes trans targets vars = "if (rising
     +\> "end if;"
 
 --create process block
-createProcessBlock :: String -> [String] -> [[String]] -> [[String]] -> [[String]] -> String -> String
-createProcessBlock initialState states codes transitions targets vars = "process (clk)\n    begin"
+createProcessBlock :: String -> [String] -> [[String]] -> [[String]] -> [[String]] -> String -> [Bool] -> String
+createProcessBlock initialState states codes transitions targets vars afters = "process (clk)\n    begin"
 --  ++ beautify 2 (createSuspendedLogic)
-    ++ beautify 2 (createAllInRisingEdge initialState states codes transitions targets vars) -- add removeFirstNewLine when adding suspend logic
+    ++ beautify 2 (createAllInRisingEdge initialState states codes transitions targets vars afters) -- add removeFirstNewLine when adding suspend logic
 --    ++ removeFirstNewLine (beautify 2 (createFallingEdge states codes transitions targets vars))
     ++ "    end process;"
 
 --Create entire architecture block
-createArchitecture :: [String] -> [[String]] -> [[String]] -> [[String]] -> Int -> String -> String -> String -> String
-createArchitecture states risingEdgeCode transitions targets size name vars firstState = 
+createArchitecture :: [String] -> [Bool] -> [[String]] -> [[String]] -> [[String]] -> Int -> String -> String -> String -> String
+createArchitecture states afters risingEdgeCode transitions targets size name vars firstState = 
     "architecture LLFSM of " ++ name ++ " is"
     ++ beautify 1 (createArchitectureVariables size (map toStateName states) vars (toStateName firstState))
     ++ "begin"
-    +\> createProcessBlock firstState (map toStateName states) risingEdgeCode transitions targets vars
+    +\> createProcessBlock firstState (map toStateName states) risingEdgeCode transitions targets vars afters
     ++ "\nend LLFSM;"
 
 --Checks if code is a comment
@@ -532,7 +608,7 @@ createGenericDeclaration vs | length vs == 0 = ""
 
 --Create entity block
 createEntity :: String -> String -> String -> String
-createEntity includes name vars = "library IEEE;\nuse IEEE.std_logic_1164.All;\n" ++ includes ++ "\n\nentity " ++ name ++ " is"
+createEntity includes name vars = "library IEEE;\nuse IEEE.std_logic_1164.All;\nuse IEEE.math_real.all;\n" ++ includes ++ "\n\nentity " ++ name ++ " is"
     ++ beautify 1 (createGenericDeclaration $ getParameters $ removeAllTrailingComments $ filterOutComments vars)
     ++ removeFirstNewLine (beautify 1 (createPortDeclaration $ getExternals $ removeAllTrailingComments $ filterOutComments vars))
     ++ "end " ++ name ++ ";"
