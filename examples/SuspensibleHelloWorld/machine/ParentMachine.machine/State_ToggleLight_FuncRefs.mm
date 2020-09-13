@@ -1,5 +1,5 @@
 //
-// State_LightOn_FuncRefs.mm
+// State_ToggleLight_FuncRefs.mm
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //

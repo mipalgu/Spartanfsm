@@ -1,5 +1,5 @@
 //
-// State_LightOff_FuncRefs.mm
+// State_SetLED_FuncRefs.mm
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
