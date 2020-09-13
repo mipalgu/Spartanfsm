@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-14 01:15 AEST
+--Date Generated: 2020-09-14 01:18 AEST
 --
 
 library IEEE;
@@ -56,8 +56,6 @@ architecture LLFSM of ParentMachine is
     --Snapshot of External Variables
     signal LED: std_logic;
     --Machine Variables
-    constant RINGLETS_PER_S: unsigned(23 downto 0) := x"7F2816";
-    signal i: unsigned(23 downto 0);
     signal childCommand: std_logic_vector(1 downto 0);
     signal childsLED: std_logic;
     signal childSuspended: std_logic;
@@ -116,7 +114,6 @@ process (clk)
                             i <= (others => '0');
                         when STATE_SetLED =>
                             childCommand <= COMMAND_NULL;
-                            i <= (others => '0');
                             ringlet_counter := 0;
                         when STATE_SuspendChild =>
                             childCommand <= COMMAND_SUSPEND;
@@ -181,7 +178,6 @@ process (clk)
                 when Internal =>
                     case currentState is
                         when STATE_SetLED =>
-                            i <= i + 1;
                             led <= childsLed;
                             ringlet_counter := ringlet_counter + 1;
                         when others =>
