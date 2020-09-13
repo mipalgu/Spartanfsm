@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-13 16:25 AEST
+--Date Generated: 2020-09-13 17:46 AEST
 --
 
 library IEEE;
@@ -60,6 +60,7 @@ process (clk)
                         end if;
                         suspended <= '0';
                         suspendedFrom <= STATE_Initial;
+                        targetState <= STATE_Initial;
                     elsif (command = COMMAND_RESUME and currentState = STATE_SUSPENDED and suspendedFrom /= STATE_SUSPENDED) then
                         suspended <= '0';
                         currentState <= suspendedFrom;
@@ -68,6 +69,7 @@ process (clk)
                         else
                             internalState <= NoOnEntry;
                         end if;
+                        targetState <= suspendedFrom;
                     elsif (command = COMMAND_SUSPEND and currentState /= STATE_SUSPENDED) then
                         suspendedFrom <= currentState;
                         suspended <= '1';
@@ -77,6 +79,7 @@ process (clk)
                         else
                             internalState <= NoOnEntry;
                         end if;
+                        targetState <= STATE_SUSPENDED;
                     else
                         if (currentState = STATE_SUSPENDED) then
                             suspended <= '1';
