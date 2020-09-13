@@ -19,9 +19,7 @@ architecture Behavioral of top is
 		 );
 		port (
 			  clk: in std_logic;
-			  restart: in std_logic;
-			  resume: in std_logic;
-			  suspend: in std_logic;
+			  command: in std_logic_vector(1 downto 0);
 			  suspended: out std_logic;
 			  EXTERNAL_LEDG: out std_logic_vector(NGREEN - 1 downto 0);
 			  EXTERNAL_LEDR: out std_logic_vector(NRED - 1 downto 0)
@@ -35,9 +33,7 @@ begin
 	)
 	port map(
 		clk => CLOCK_50,
-		restart => '1',
-		resume => '0',
-		suspend => '0',
+		command => "11",
 		suspended => suspended,
 		EXTERNAL_LEDG => LEDG,
 		EXTERNAL_LEDR => LEDR
