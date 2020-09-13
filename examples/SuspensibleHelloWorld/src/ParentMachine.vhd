@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-14 01:18 AEST
+--Date Generated: 2020-09-14 01:21 AEST
 --
 
 library IEEE;
@@ -142,7 +142,7 @@ process (clk)
                                 internalState <= Internal;
                             end if;
                         when STATE_SetLED =>
-                            if (ringlet_counter >= integer(ceil(1.0 * RINGLETS_PER_S))) then
+                            if (ringlet_counter >= integer(ceil(1.0 * RINGLETS_PER_S)) and ringlet_counter >= integer(ceil(1000.0 * RINGLETS_PER_MS)) and ringlet_counter >= integer(ceil(1000000.0 * RINGLETS_PER_US)) and ringlet_counter >= integer(ceil(1000000000.0 * RINGLETS_PER_NS)) and true) then
                                 targetState <= STATE_ToggleLight;
                                 internalState <= OnExit;
                             else
