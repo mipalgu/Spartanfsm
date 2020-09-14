@@ -1,10 +1,10 @@
 //
-// State_ConvertToSigned.h
+// State_WaitForMaxTime.h
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
-#ifndef clfsm_SensorFusion_State_ConvertToSigned_h
-#define clfsm_SensorFusion_State_ConvertToSigned_h
+#ifndef clfsm_UltrasonicDiscreteSingle_State_WaitForMaxTime_h
+#define clfsm_UltrasonicDiscreteSingle_State_WaitForMaxTime_h
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wc++98-compat"
@@ -17,11 +17,11 @@ namespace FSM
 {
   namespace CLM
   {
-    namespace FSMSensorFusion
+    namespace FSMUltrasonicDiscreteSingle
     {
       namespace State
       {
-        class ConvertToSigned: public CLState
+        class WaitForMaxTime: public CLState
         {
           class OnEntry: public CLAction
           {
@@ -50,30 +50,22 @@ namespace FSM
                           class Transition_0: public CLTransition
                 {
                 public:
-                    Transition_0(int toState = 9): CLTransition(toState) {}
+                    Transition_0(int toState = 3): CLTransition(toState) {}
 
                     virtual bool check(CLMachine *, CLState *) const;
                 };
 
-                class Transition_1: public CLTransition
-                {
-                public:
-                    Transition_1(int toState = 4): CLTransition(toState) {}
-
-                    virtual bool check(CLMachine *, CLState *) const;
-                };
-
-                CLTransition *_transitions[2];
+                CLTransition *_transitions[1];
 
                 public:
-                    ConvertToSigned(const char *name = "ConvertToSigned");
-                    virtual ~ConvertToSigned();
+                    WaitForMaxTime(const char *name = "WaitForMaxTime");
+                    virtual ~WaitForMaxTime();
 
                     virtual CLTransition * const *transitions() const { return _transitions; }
-                    virtual int numberOfTransitions() const { return 2; }
+                    virtual int numberOfTransitions() const { return 1; }
 
-#                   include "State_ConvertToSigned_Variables.h"
-#                   include "State_ConvertToSigned_Methods.h"
+#                   include "State_WaitForMaxTime_Variables.h"
+#                   include "State_WaitForMaxTime_Methods.h"
             };
         }
       }

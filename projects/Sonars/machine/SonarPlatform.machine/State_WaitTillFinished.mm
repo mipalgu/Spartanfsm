@@ -3,6 +3,9 @@
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wc++98-compat"
+
 #include "SonarPlatform_Includes.h"
 #include "SonarPlatform.h"
 #include "State_WaitTillFinished.h"
@@ -14,7 +17,7 @@ using namespace CLM;
 using namespace FSMSonarPlatform;
 using namespace State;
 
-WaitTillFinished::WaitTillFinished(const char *name): CLState(name, *new WaitTillFinished::OnEntry, *new WaitTillFinished::OnExit, *new WaitTillFinished::Internal)
+WaitTillFinished::WaitTillFinished(const char *name): CLState(name, *new WaitTillFinished::OnEntry, *new WaitTillFinished::OnExit, *new WaitTillFinished::Internal, NULLPTR, new WaitTillFinished::OnSuspend, new WaitTillFinished::OnResume)
 {
 	_transitions[0] = new Transition_0();
 }
@@ -24,7 +27,8 @@ WaitTillFinished::~WaitTillFinished()
 	delete &onEntryAction();
 	delete &onExitAction();
 	delete &internalAction();
-
+	delete onSuspendAction();
+	delete onResumeAction();
 	delete _transitions[0];
 }
 
@@ -36,7 +40,7 @@ void WaitTillFinished::OnEntry::perform(CLMachine *_machine, CLState *_state) co
 #	include "State_WaitTillFinished_FuncRefs.mm"
 #	include "State_WaitTillFinished_OnEntry.mm"
 }
-
+ 
 void WaitTillFinished::OnExit::perform(CLMachine *_machine, CLState *_state) const
 {
 #	include "SonarPlatform_VarRefs.mm"
@@ -55,6 +59,23 @@ void WaitTillFinished::Internal::perform(CLMachine *_machine, CLState *_state) c
 #	include "State_WaitTillFinished_Internal.mm"
 }
 
+void WaitTillFinished::OnSuspend::perform(CLMachine *_machine, CLState *_state) const
+{
+#	include "SonarPlatform_VarRefs.mm"
+#	include "State_WaitTillFinished_VarRefs.mm"
+#	include "SonarPlatform_FuncRefs.mm"
+#	include "State_WaitTillFinished_FuncRefs.mm"
+#	include "State_WaitTillFinished_OnSuspend.mm"
+}
+
+void WaitTillFinished::OnResume::perform(CLMachine *_machine, CLState *_state) const
+{
+#	include "SonarPlatform_VarRefs.mm"
+#	include "State_WaitTillFinished_VarRefs.mm"
+#	include "SonarPlatform_FuncRefs.mm"
+#	include "State_WaitTillFinished_FuncRefs.mm"
+#	include "State_WaitTillFinished_OnResume.mm"
+}
 bool WaitTillFinished::Transition_0::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "SonarPlatform_VarRefs.mm"

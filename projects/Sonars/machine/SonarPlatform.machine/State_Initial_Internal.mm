@@ -1,2 +1,1 @@
-sensorRestart <= '1';
-sensorSuspend <= '1';
+sensorCommand <= COMMAND_SUSPEND;

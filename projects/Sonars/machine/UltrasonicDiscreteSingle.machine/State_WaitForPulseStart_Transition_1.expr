@@ -1,1 +1,1 @@
-i >= RINGLETS_PER_MS
+after_ms(1) and after_us(1000)

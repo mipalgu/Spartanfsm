@@ -6,36 +6,48 @@
 #ifndef clfsm_SonarPlatform_State_SUSPENDED_h
 #define clfsm_SonarPlatform_State_SUSPENDED_h
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wc++98-compat"
+
 #include "CLState.h"
 #include "CLAction.h"
 #include "CLTransition.h"
 
 namespace FSM
 {
-    namespace CLM
+  namespace CLM
+  {
+    namespace FSMSonarPlatform
     {
-      namespace FSMSonarPlatform
+      namespace State
       {
-        namespace State
+        class SUSPENDED: public CLState
         {
-            class SUSPENDED: public CLState
-            {
-                class OnEntry: public CLAction
-                {
-                    virtual void perform(CLMachine *, CLState *) const;
-                };
-
-                class OnExit: public CLAction
-                {
-                    virtual void perform(CLMachine *, CLState *) const;
-                };
-
-                class Internal: public CLAction
-                {
-                    virtual void perform(CLMachine *, CLState *) const;
-                };
-
-#pragma clang diagnostic push
+          class OnEntry: public CLAction
+          {
+            virtual void perform(CLMachine *, CLState *) const;
+          };
+          
+          class OnExit: public CLAction
+          {
+            virtual void perform(CLMachine *, CLState *) const;
+          };
+          
+          class Internal: public CLAction
+          {
+            virtual void perform(CLMachine *, CLState *) const;
+          };
+          
+          class OnSuspend: public CLAction
+          {
+            virtual void perform(CLMachine *, CLState *) const;
+          };
+          
+          class OnResume: public CLAction
+          {
+            virtual void perform(CLMachine *, CLState *) const;
+          };
+          #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wzero-length-array"
                 CLTransition *_transitions[0];
 #pragma clang diagnostic pop

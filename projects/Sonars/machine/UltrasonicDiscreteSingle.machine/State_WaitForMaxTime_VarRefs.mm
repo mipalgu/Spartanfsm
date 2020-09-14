@@ -1,5 +1,5 @@
 //
-// State_WaitForOneSecond_VarRefs.mm
+// State_WaitForMaxTime_VarRefs.mm
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
@@ -7,7 +7,7 @@
 #pragma clang diagnostic ignored "-Wunused-variable"
 #pragma clang diagnostic ignored "-Wshadow"
 
-WaitForOneSecond *_s = static_cast<WaitForOneSecond *>(_state);
+WaitForMaxTime *_s = static_cast<WaitForMaxTime *>(_state);
 
 
 #pragma clang diagnostic pop

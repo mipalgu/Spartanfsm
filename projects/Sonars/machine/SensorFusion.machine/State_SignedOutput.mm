@@ -3,6 +3,9 @@
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wc++98-compat"
+
 #include "SensorFusion_Includes.h"
 #include "SensorFusion.h"
 #include "State_SignedOutput.h"
@@ -14,7 +17,7 @@ using namespace CLM;
 using namespace FSMSensorFusion;
 using namespace State;
 
-SignedOutput::SignedOutput(const char *name): CLState(name, *new SignedOutput::OnEntry, *new SignedOutput::OnExit, *new SignedOutput::Internal)
+SignedOutput::SignedOutput(const char *name): CLState(name, *new SignedOutput::OnEntry, *new SignedOutput::OnExit, *new SignedOutput::Internal, NULLPTR, new SignedOutput::OnSuspend, new SignedOutput::OnResume)
 {
 	_transitions[0] = new Transition_0();
 }
@@ -24,7 +27,8 @@ SignedOutput::~SignedOutput()
 	delete &onEntryAction();
 	delete &onExitAction();
 	delete &internalAction();
-
+	delete onSuspendAction();
+	delete onResumeAction();
 	delete _transitions[0];
 }
 
@@ -36,7 +40,7 @@ void SignedOutput::OnEntry::perform(CLMachine *_machine, CLState *_state) const
 #	include "State_SignedOutput_FuncRefs.mm"
 #	include "State_SignedOutput_OnEntry.mm"
 }
-
+ 
 void SignedOutput::OnExit::perform(CLMachine *_machine, CLState *_state) const
 {
 #	include "SensorFusion_VarRefs.mm"
@@ -55,6 +59,23 @@ void SignedOutput::Internal::perform(CLMachine *_machine, CLState *_state) const
 #	include "State_SignedOutput_Internal.mm"
 }
 
+void SignedOutput::OnSuspend::perform(CLMachine *_machine, CLState *_state) const
+{
+#	include "SensorFusion_VarRefs.mm"
+#	include "State_SignedOutput_VarRefs.mm"
+#	include "SensorFusion_FuncRefs.mm"
+#	include "State_SignedOutput_FuncRefs.mm"
+#	include "State_SignedOutput_OnSuspend.mm"
+}
+
+void SignedOutput::OnResume::perform(CLMachine *_machine, CLState *_state) const
+{
+#	include "SensorFusion_VarRefs.mm"
+#	include "State_SignedOutput_VarRefs.mm"
+#	include "SensorFusion_FuncRefs.mm"
+#	include "State_SignedOutput_FuncRefs.mm"
+#	include "State_SignedOutput_OnResume.mm"
+}
 bool SignedOutput::Transition_0::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "SensorFusion_VarRefs.mm"
