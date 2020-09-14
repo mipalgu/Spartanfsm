@@ -253,7 +253,7 @@ lower :: String -> String
 lower = map toLower
 
 isAfter :: String -> Bool
-isAfter str = "after" == (map toLower str)
+isAfter str = "after" == (lower str)
 
 isAfterMs :: String -> Bool
 isAfterMs str = "after_ms" == (lower str)
@@ -325,33 +325,42 @@ isMatchedRegex :: Regex -> String -> Bool
 isMatchedRegex reg mat = matchRegex reg mat /= Nothing
 
 removeFirstFromString :: String -> Int -> String
-removeFirstFromString str n | n > 0     = removeFirstFromString (tail str) (n - 1)
-                            | otherwise = str
+removeFirstFromString str n | length str < n = error "Can't remove elements from front of string since string is too small"
+                            | n > 0          = removeFirstFromString (tail str) (n - 1)
+                            | otherwise      = str
 
 removeLastFromString :: String -> Int -> String
 removeLastFromString str n | n > 0     = removeLastFromString (init str) (n - 1)
                            | otherwise = str
 
 sliceString :: Int -> Int -> String -> String
-sliceString from to str = removeLastFromString (removeFirstFromString str (from + 1)) ((length str) - to + 1)
+sliceString from to str = removeLastFromString (removeFirstFromString str from) ((length str) - to - 1)
 
 isSmallAfter :: String -> Bool
 isSmallAfter str = str == "after_ns" || str == "after_us" || str == "after_ms"
 
 isNormalAfter :: String -> Bool
-isNormalAfter str = (sliceString 3 7 str) == "after"
+isNormalAfter str | length str /= 8 = False
+                  | otherwise       = (removeFirstFromString str 3) == "after"
 
 matchString :: String -> Bool 
 matchString str | length str /= 8 = False
                 | otherwise       = isSmallAfter str || isNormalAfter str
 
+findValueAndCarry :: String -> String -> String -> String
+findValueAndCarry str carry allButCarry
+  = replaceString (removeFirstFromString str (2 + length (findValueInBrackets str "" 0))) "" (allButCarry ++ (convertAfterToVHDLVariable carry (findValueInBrackets str "" 0)))
+
+
 replaceString :: String -> String -> String -> String
 replaceString str carry allButCarry
-  | length carry > 8  = replaceString str (tail carry) (allButCarry ++ [head carry])
-  | matchString carry = 
-      replaceString (removeFirstFromString str (2 + length (findValueInBrackets str "" 0))) "" (allButCarry ++ (convertAfterToVHDLVariable carry (findValueInBrackets str "" 0)))
-  | str == ""         = allButCarry ++ carry
-  | otherwise         = replaceString (tail str) (carry ++ [head str]) allButCarry
+  | length carry > 8    = replaceString str (tail carry) (allButCarry ++ [head carry])
+  | length carry == 5 
+    && carry == "after" = findValueAndCarry str carry allButCarry
+  | isSmallAfter carry  = findValueAndCarry str carry allButCarry
+  | isNormalAfter carry = findValueAndCarry str (removeFirstFromString carry 3) allButCarry     
+  | str == ""           = allButCarry ++ carry
+  | otherwise           = replaceString (tail str) (carry ++ [head str]) allButCarry
 
 isAfterRegex :: Regex -> Bool
 isAfterRegex after = isMatchedRegex after "after_ns(1)" || isMatchedRegex after "after_us(1)" || isMatchedRegex after "after_ms(1)" || isMatchedRegex after "after(1)" 
