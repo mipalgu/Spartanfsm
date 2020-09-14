@@ -3,6 +3,9 @@
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wc++98-compat"
+
 #include "ParentMachine_Includes.h"
 #include "ParentMachine.h"
 #include "State_ToggleLight.h"
@@ -14,7 +17,7 @@ using namespace CLM;
 using namespace FSMParentMachine;
 using namespace State;
 
-ToggleLight::ToggleLight(const char *name): CLState(name, *new ToggleLight::OnEntry, *new ToggleLight::OnExit, *new ToggleLight::Internal)
+ToggleLight::ToggleLight(const char *name): CLState(name, *new ToggleLight::OnEntry, *new ToggleLight::OnExit, *new ToggleLight::Internal, NULLPTR, new ToggleLight::OnSuspend, new ToggleLight::OnResume)
 {
 	_transitions[0] = new Transition_0();
 	_transitions[1] = new Transition_1();
@@ -25,7 +28,8 @@ ToggleLight::~ToggleLight()
 	delete &onEntryAction();
 	delete &onExitAction();
 	delete &internalAction();
-
+	delete onSuspendAction();
+	delete onResumeAction();
 	delete _transitions[0];
 	delete _transitions[1];
 }
@@ -38,7 +42,7 @@ void ToggleLight::OnEntry::perform(CLMachine *_machine, CLState *_state) const
 #	include "State_ToggleLight_FuncRefs.mm"
 #	include "State_ToggleLight_OnEntry.mm"
 }
-
+ 
 void ToggleLight::OnExit::perform(CLMachine *_machine, CLState *_state) const
 {
 #	include "ParentMachine_VarRefs.mm"
@@ -57,6 +61,23 @@ void ToggleLight::Internal::perform(CLMachine *_machine, CLState *_state) const
 #	include "State_ToggleLight_Internal.mm"
 }
 
+void ToggleLight::OnSuspend::perform(CLMachine *_machine, CLState *_state) const
+{
+#	include "ParentMachine_VarRefs.mm"
+#	include "State_ToggleLight_VarRefs.mm"
+#	include "ParentMachine_FuncRefs.mm"
+#	include "State_ToggleLight_FuncRefs.mm"
+#	include "State_ToggleLight_OnSuspend.mm"
+}
+
+void ToggleLight::OnResume::perform(CLMachine *_machine, CLState *_state) const
+{
+#	include "ParentMachine_VarRefs.mm"
+#	include "State_ToggleLight_VarRefs.mm"
+#	include "ParentMachine_FuncRefs.mm"
+#	include "State_ToggleLight_FuncRefs.mm"
+#	include "State_ToggleLight_OnResume.mm"
+}
 bool ToggleLight::Transition_0::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "ParentMachine_VarRefs.mm"

@@ -3,6 +3,9 @@
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wc++98-compat"
+
 #include "ParentMachine_Includes.h"
 #include "ParentMachine.h"
 #include "State_SUSPENDED.h"
@@ -14,7 +17,7 @@ using namespace CLM;
 using namespace FSMParentMachine;
 using namespace State;
 
-SUSPENDED::SUSPENDED(const char *name): CLState(name, *new SUSPENDED::OnEntry, *new SUSPENDED::OnExit, *new SUSPENDED::Internal)
+SUSPENDED::SUSPENDED(const char *name): CLState(name, *new SUSPENDED::OnEntry, *new SUSPENDED::OnExit, *new SUSPENDED::Internal, NULLPTR, new SUSPENDED::OnSuspend, new SUSPENDED::OnResume)
 {
 }
 
@@ -23,7 +26,8 @@ SUSPENDED::~SUSPENDED()
 	delete &onEntryAction();
 	delete &onExitAction();
 	delete &internalAction();
-
+	delete onSuspendAction();
+	delete onResumeAction();
 }
 
 void SUSPENDED::OnEntry::perform(CLMachine *_machine, CLState *_state) const
@@ -34,7 +38,7 @@ void SUSPENDED::OnEntry::perform(CLMachine *_machine, CLState *_state) const
 #	include "State_SUSPENDED_FuncRefs.mm"
 #	include "State_SUSPENDED_OnEntry.mm"
 }
-
+ 
 void SUSPENDED::OnExit::perform(CLMachine *_machine, CLState *_state) const
 {
 #	include "ParentMachine_VarRefs.mm"
@@ -53,3 +57,20 @@ void SUSPENDED::Internal::perform(CLMachine *_machine, CLState *_state) const
 #	include "State_SUSPENDED_Internal.mm"
 }
 
+void SUSPENDED::OnSuspend::perform(CLMachine *_machine, CLState *_state) const
+{
+#	include "ParentMachine_VarRefs.mm"
+#	include "State_SUSPENDED_VarRefs.mm"
+#	include "ParentMachine_FuncRefs.mm"
+#	include "State_SUSPENDED_FuncRefs.mm"
+#	include "State_SUSPENDED_OnSuspend.mm"
+}
+
+void SUSPENDED::OnResume::perform(CLMachine *_machine, CLState *_state) const
+{
+#	include "ParentMachine_VarRefs.mm"
+#	include "State_SUSPENDED_VarRefs.mm"
+#	include "ParentMachine_FuncRefs.mm"
+#	include "State_SUSPENDED_FuncRefs.mm"
+#	include "State_SUSPENDED_OnResume.mm"
+}

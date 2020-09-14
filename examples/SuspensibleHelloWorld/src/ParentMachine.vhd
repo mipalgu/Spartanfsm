@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-14 01:24 AEST
+--Date Generated: 2020-09-15 00:32 AEST
 --
 
 library IEEE;
@@ -21,15 +21,17 @@ end ParentMachine;
 
 architecture LLFSM of ParentMachine is
     --Internal State Representation Bits
-    constant OnEntry: std_logic_vector(2 downto 0) := "000";
-    constant CheckTransition: std_logic_vector(2 downto 0) := "001";
-    constant OnExit: std_logic_vector(2 downto 0) := "010";
-    constant Internal: std_logic_vector(2 downto 0) := "011";
-    constant ReadSnapshot: std_logic_vector(2 downto 0) := "100";
-    constant WriteSnapshot: std_logic_vector(2 downto 0) := "101";
-    constant NoOnEntry: std_logic_vector(2 downto 0) := "110";
-    
-    signal internalState: std_logic_vector(2 downto 0) := ReadSnapshot;
+    constant OnEntry: std_logic_vector(3 downto 0) := "0000";
+    constant CheckTransition: std_logic_vector(3 downto 0) := "0001";
+    constant OnExit: std_logic_vector(3 downto 0) := "0010";
+    constant Internal: std_logic_vector(3 downto 0) := "0011";
+    constant ReadSnapshot: std_logic_vector(3 downto 0) := "0100";
+    constant WriteSnapshot: std_logic_vector(3 downto 0) := "0101";
+    constant NoOnEntry: std_logic_vector(3 downto 0) := "0110";
+    constant OnSuspend: std_logic_vector(3 downto 0) := "0111";
+    constant OnResume: std_logic_vector(3 downto 0) := "1000";
+    constant NoSuspendOrResume: std_logic_vector(3 downto 0) := "1001";
+    signal internalState: std_logic_vector(3 downto 0) := ReadSnapshot;
     --State Representation Bits
     constant STATE_Initial: std_logic_vector(2 downto 0) := "000";
     constant STATE_SUSPENDED: std_logic_vector(2 downto 0) := "001";
@@ -48,7 +50,7 @@ architecture LLFSM of ParentMachine is
     constant COMMAND_NULL: std_logic_vector(1 downto 0) := "11";
     shared variable ringlet_counter: natural := 0;
     constant clockPeriod: real := 20.0;
-    constant ringletLength: real := 5.0 * clockPeriod;
+    constant ringletLength: real := 6.0 * clockPeriod;
     constant RINGLETS_PER_NS: real := 1.0 / ringletLength;
     constant RINGLETS_PER_US: real := 1000.0 * RINGLETS_PER_NS;
     constant RINGLETS_PER_MS: real := 1000000.0 * RINGLETS_PER_NS;
@@ -59,23 +61,7 @@ architecture LLFSM of ParentMachine is
     signal childCommand: std_logic_vector(1 downto 0);
     signal childsLED: std_logic;
     signal childSuspended: std_logic;
-	 
-	 component SuspensibleHelloWorld is
-		port (
-        clk: in std_logic;
-        command: in std_logic_vector(1 downto 0);
-        suspended: out std_logic;
-        EXTERNAL_LED: out std_logic
-		);
-	 end component;
 begin
-	child_gen: SuspensibleHelloWorld port map (
-		clk => clk,
-	  command => childCommand,
-	  suspended => childSuspended,
-	  EXTERNAL_LED => childsLED
-	);
-
 process (clk)
     begin
         if (rising_edge(clk)) then
@@ -83,32 +69,20 @@ process (clk)
                 when ReadSnapshot =>
                     if (command = COMMAND_RESTART) then
                         currentState <= STATE_Initial;
-                        if (previousRinglet /= STATE_Initial) then
-                            internalState <= OnEntry;
-                        else
-                            internalState <= NoOnEntry;
-                        end if;
+                        internalState <= NoSuspendOrResume;
                         suspended <= '0';
                         suspendedFrom <= STATE_Initial;
                         targetState <= STATE_Initial;
                     elsif (command = COMMAND_RESUME and currentState = STATE_SUSPENDED and suspendedFrom /= STATE_SUSPENDED) then
                         suspended <= '0';
                         currentState <= suspendedFrom;
-                        if (previousringlet /= suspendedFrom) then
-                            internalState <= OnEntry;
-                        else
-                            internalState <= NoOnEntry;
-                        end if;
+                        internalState <= OnResume;
                         targetState <= suspendedFrom;
                     elsif (command = COMMAND_SUSPEND and currentState /= STATE_SUSPENDED) then
                         suspendedFrom <= currentState;
                         suspended <= '1';
                         currentState <= STATE_SUSPENDED;
-                        if (previousRinglet /= STATE_SUSPENDED) then
-                            internalState <= OnEntry;
-                        else
-                            internalState <= NoOnEntry;
-                        end if;
+                        internalState <= OnSuspend;
                         targetState <= STATE_SUSPENDED;
                     else
                         if (currentState = STATE_SUSPENDED) then
@@ -117,11 +91,25 @@ process (clk)
                             suspended <= '0';
                             suspendedFrom <= currentState;
                         end if;
-                        if (previousRinglet /= currentState) then
-                            internalState <= OnEntry;
-                        else
-                            internalState <= NoOnEntry;
-                        end if;
+                        internalState <= NoSuspendOrResume;
+                    end if;
+                when OnSuspend =>
+                    case suspendedFrom is
+                        when others =>
+                            null;
+                    end case;
+                    internalState <= OnEntry;
+                when OnResume =>
+                    case currentState is
+                        when others =>
+                            null;
+                    end case;
+                    internalState <= OnEntry;
+                when NoSuspendOrResume =>
+                    if (previousRinglet /= currentState) then
+                        internalState <= OnEntry;
+                    else
+                        internalState <= NoOnEntry;
                     end if;
                 when OnEntry =>
                     case currentState is
