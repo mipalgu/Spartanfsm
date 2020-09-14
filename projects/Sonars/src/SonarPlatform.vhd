@@ -68,12 +68,68 @@ architecture LLFSM of SonarPlatform is
     --Machine Variables
     signal smallestDistance: std_logic_vector(15 downto 0);
     constant allSuspended: std_logic_vector(numberOfSensors - 1 downto 0) := (others => '1');
-    signal sensorSuspend: std_logic;
+    signal sensorsSuspended: std_logic_vector(numberOfSensors - 1 downto 0);
     signal sensorFusionSuspended: std_logic;
-    signal allOutputs: std_logic_vector(numberOfSensors * sensorOutputSize - 1 downto 0);
+    signal allOutputs: std_logic_vector(numberOfSensors * 16 - 1 downto 0);
     signal sensorCommand: std_logic_vector(1 downto 0) := COMMAND_NULL;
     signal sensorFusionCommand: std_logic_vector(1 downto 0) := COMMAND_NULL;
+	 
+	 component SensorFusion is
+		 generic (
+			  numberOfSensors: positive;
+			  sensorOutputSize: positive;
+			  signedOutput: boolean;
+			  maxValue: Integer;
+			  minValue: Integer
+		 );
+		 port (
+			  clk: in std_logic;
+			  command: in std_logic_vector(1 downto 0);
+			  suspended: out std_logic;
+			  EXTERNAL_smallestOutput: out std_logic_vector(sensorOutputSize - 1 downto 0);
+			  EXTERNAL_sensorOutputs: in std_logic_vector(numberOfSensors * sensorOutputSize - 1 downto 0)
+		 );
+	 end component;
+	 
+	 component UltrasonicDiscreteSingle is
+		 port (
+			  clk: in std_logic;
+			  command: in std_logic_vector(1 downto 0);
+			  suspended: out std_logic;
+			  EXTERNAL_triggerPin: out std_logic;
+			  EXTERNAL_echo: inout std_logic;
+			  EXTERNAL_distance: out std_logic_vector(15 downto 0)
+		 );
+	 end component;
+	 
 begin
+	
+	sensor_fusion: Sensorfusion generic map (
+		numberOfSensors => 1,
+		sensorOutputSize => 16,
+		signedOutput => false,
+		maxValue => 65535,
+		minValue => 0
+	)
+	port map (
+		clk => clk,
+		command => sensorFusionCommand,
+		suspended => sensorFusionSuspended,
+		EXTERNAL_smallestOutput => smallestDistance,
+		EXTERNAL_sensorOutputs => allOutputs
+	);
+	
+	sensors_gen:
+	for I in 0 to (numberOfSensors - 1) generate
+		sensor: UltrasonicDiscreteSingle port map (
+			clk => clk,
+			command => sensorCommand,
+			suspended => sensorsSuspended(I),
+			EXTERNAL_triggerPin => triggers(I),
+			EXTERNAL_echo => echos(I),
+			EXTERNAL_distance => allOutputs(16 * (I + 1) - 1 downto 16 * I)
+		);
+	end generate sensors_gen;
 process (clk)
     begin
         if (rising_edge(clk)) then

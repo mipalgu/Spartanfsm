@@ -20,7 +20,7 @@ end top;
 
 architecture Behavioural of top is
 	signal distance: std_logic_vector(15 downto 0);
-	signal platformRestart: std_logic;
+	signal platformCommand : std_logic_vector(1 downto 0) := "11";
 	signal platformSuspended: std_logic;
 	
 	component SonarPlatform is
@@ -29,9 +29,7 @@ architecture Behavioural of top is
 		);
 		port (
 			clk: in std_logic;
-			restart: in std_logic;
-			resume: in std_logic;
-			suspend: in std_logic;
+			command: in std_logic_vector(1 downto 0);
 			suspended: out std_logic;
 			EXTERNAL_distance: out std_logic_vector(15 downto 0);
 			EXTERNAL_triggers: out std_logic_vector(numberOfSensors - 1 downto 0);
@@ -46,9 +44,7 @@ begin
 	)
 	port map (
 		clk => CLOCK_50,
-		restart => platformRestart,
-		resume => '0',
-		suspend => '0',
+		command => platformCommand,
 		suspended => platformSuspended,
 		EXTERNAL_distance => distance,
 		EXTERNAL_triggers => GPIO(0 downto 0),
