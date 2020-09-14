@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-14 16:36 AEST
+--Date Generated: 2020-09-14 16:51 AEST
 --
 
 library IEEE;
@@ -30,9 +30,9 @@ architecture LLFSM of OnSuspendAndOnResumeHelloWorld is
     constant WriteSnapshot: std_logic_vector(3 downto 0) := "0101";
     constant NoOnEntry: std_logic_vector(3 downto 0) := "0110";
     constant OnSuspend: std_logic_vector(3 downto 0) := "0111";
-    constant OnResume: std_logic_vector(3 downto 0) := "1000"
+    constant OnResume: std_logic_vector(3 downto 0) := "1000";
     constant NoSuspendOrResume: std_logic_vector(3 downto 0) := "1001";
-    signal internalState: std_logic_vector(2 downto 0) := ReadSnapshot;
+    signal internalState: std_logic_vector(3 downto 0) := ReadSnapshot;
     --State Representation Bits
     constant STATE_Initial: std_logic_vector(2 downto 0) := "000";
     constant STATE_InitialPseudoState: std_logic_vector(2 downto 0) := "001";
