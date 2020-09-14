@@ -126,9 +126,15 @@ getOnExit dir state = getInternalStates dir state "OnExit"
 getInternal :: String -> String -> IO String
 getInternal dir state = getInternalStates dir state "Internal"
 
+getOnSuspend :: String -> String -> IO String
+getOnSuspend dir state = getInternalStates dir state "OnSuspend"
+
+getOnResume :: String -> String -> IO String
+getOnResume dir state = getInternalStates dir state "OnResume"
+
 --Gets all of the internal state code
 getInternals :: String -> String -> IO [String]
-getInternals dir state =  sequence ([getOnEntry dir state, getInternal dir state, getOnExit dir state])
+getInternals dir state =  sequence ([getOnEntry dir state, getInternal dir state, getOnExit dir state, getOnSuspend dir state, getOnResume dir state])
 
 --Gets all of the internal state code for all of the states
 getAllInternals :: String -> [String] -> IO [[String]]
