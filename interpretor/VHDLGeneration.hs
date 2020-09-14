@@ -67,6 +67,8 @@ import SpartanLLFSM_Format
 import Data.Char
 import Data.List
 import Data.Maybe
+import Text.Read
+import Text.Regex
 
 -- VHDL CODE
 
@@ -262,6 +264,18 @@ isAfterUs str = "after_us" == (lower str)
 isAfterNs :: String -> Bool
 isAfterNs str = "after_ns" == (lower str)
 
+afterReg :: Regex
+afterReg = mkRegex "after\\(.*\\)"
+
+after_ms :: Regex
+after_ms = mkRegex "after_ms\\(.*\\)"
+
+after_us :: Regex
+after_us = mkRegex "after_us\\(.*\\)"
+
+after_ns :: Regex
+after_ns = mkRegex "after_ns\\(.*\\)"
+
 isAnyAfter :: String -> Bool
 isAnyAfter str = isAfter str || isAfterMs str || isAfterUs str || isAfterNs str
 
@@ -280,23 +294,122 @@ isAfterCandidate str = length (splitOn "(" str) >= 2 && isAnyAfter (getAfterComm
 getAfterAndValue :: String -> [String]
 getAfterAndValue str = [getAfterCommand str, getValueFromAfter str]
 
-replaceAfter :: String -> String
-replaceAfter str | isAfterCandidate str = convertAfterToVHDLVariable ((getAfterAndValue str)!!0) ((getAfterAndValue str)!!1)
-                 | otherwise            = str
+--replaceAfter :: String -> String
+--replaceAfter str | isAfterCandidate str = convertAfterToVHDLVariable ((getAfterAndValue str)!!0) ((getAfterAndValue str)!!1)
+--                 | otherwise            = str
+
+
+after_nsReplace :: String -> String
+after_nsReplace val = convertAfter val "RINGLETS_PER_NS"
+
+after_usReplace :: String -> String
+after_usReplace val = convertAfter val "RINGLETS_PER_US"
+
+after_msReplace :: String -> String
+after_msReplace val = convertAfter val "RINGLETS_PER_MS"
+
+afterReplace :: String -> String
+afterReplace val = convertAfter val "RINGLETS_PER_S"
+
+replaceAfter :: Regex -> String -> String
+replaceAfter reg | isMatchedRegex reg "after_ns(1)" = after_nsReplace 
+                 | isMatchedRegex reg "after_us(1)" = after_usReplace 
+                 | isMatchedRegex reg "after_ms(1)" = after_msReplace 
+                 | isMatchedRegex reg "after(1)"    = afterReplace 
+                 | otherwise                        = error "Can't replace invalid after."
+
+getValueStr :: String -> String -> String
+getValueStr str after = init (tail (getValueBit after str))
+
+isMatchedRegex :: Regex -> String -> Bool
+isMatchedRegex reg mat = matchRegex reg mat /= Nothing
+
+removeFirstFromString :: String -> Int -> String
+removeFirstFromString str n | n > 0     = removeFirstFromString (tail str) (n - 1)
+                            | otherwise = str
+
+removeLastFromString :: String -> Int -> String
+removeLastFromString str n | n > 0     = removeLastFromString (init str) (n - 1)
+                           | otherwise = str
+
+sliceString :: Int -> Int -> String -> String
+sliceString from to str = removeLastFromString (removeFirstFromString str (from + 1)) ((length str) - to + 1)
+
+isSmallAfter :: String -> Bool
+isSmallAfter str = str == "after_ns" || str == "after_ms" || str == "after_ms"
+
+isNormalAfter :: String -> Bool
+isNormalAfter str = (sliceString 3 7 str) == "after"
+
+matchString :: String -> Bool 
+matchString str = isSmallAfter str || isNormalAfter str
+
+replaceString :: String -> String -> String -> String
+replaceString str carry allButCarry
+  | length carry > 8  = replaceString str (tail carry) (allButCarry ++ [head carry])
+  | matchString carry = 
+      replaceString (removeFirstFromString str (2 + length (findValueInBrackets str "" 0))) "" (allButCarry ++ (convertAfterToVHDLVariable carry (findValueInBrackets str "" 0)))
+  | str == ""         = allButCarry ++ carry
+  | otherwise         = replaceString (tail str) (carry ++ [head str]) allButCarry
+
+isAfterRegex :: Regex -> Bool
+isAfterRegex after = isMatchedRegex after "after_ns(1)" || isMatchedRegex after "after_us(1)" || isMatchedRegex after "after_ms(1)" || isMatchedRegex after "after(1)" 
+
+afterRegToStr :: Regex -> String
+afterRegToStr after | isMatchedRegex after "after_ns(1)" = "after_ns"
+                    | isMatchedRegex after "after_us(1)" = "after_us"
+                    | isMatchedRegex after "after_ms(1)" = "after_ms"
+                    | isMatchedRegex after "after(1)"    = "after"
+                    | otherwise                          = error "Not an after regex." 
+
+afterReplaceStr :: String -> Regex -> String
+afterReplaceStr str reg | isAfterRegex reg = replaceAfter reg (getValueStr str (afterRegToStr reg)) 
+                        | otherwise        = error ""
+
+findValueInBrackets :: String -> String -> Int -> String
+findValueInBrackets remaining carry openBrackets 
+  | remaining == ""                             = error "Unbalanced Parenthesis"
+  | head remaining == '('                       = findValueInBrackets (tail remaining) (carry ++ "(") (openBrackets + 1)
+  | head remaining == ')' && openBrackets <= 1  = tail carry 
+  | head remaining == ')'                       = findValueInBrackets (tail remaining) (carry ++ ")") (openBrackets - 1)
+  | otherwise                                   = findValueInBrackets (tail remaining) (carry ++ ([head remaining])) openBrackets
 
 replaceAftersInTransition :: String -> String
-replaceAftersInTransition str = foldl (++>) "" (map (\s -> replaceAfter (trim s)) (splitOn " " str))
+replaceAftersInTransition str = replaceString str "" ""
+--replaceAftersInTransition str = last (scanl (\s af -> replaceString s af "" "") str ["after_ns", "after_us", "after_ms", "after"])
+--replaceAftersInTransition str = last (scanl (\s reg -> subRegex reg s (afterReplaceStr s reg)) str [after_ns, after_us, after_ms, afterReg])
+--replaceAftersInTransition str = foldl (++>) "" (map (\s -> replaceAfter (trim s)) (splitOn " " str))
 
 getAfterCommand :: String -> String
 getAfterCommand str = (splitOn "(" str)!!0
 
+containsString :: String -> String -> Bool
+containsString elem str = length (splitOn elem str) > 1
+
+getValueBit :: String -> String -> String
+getValueBit after str = findValueInBrackets ((splitOn after str)!!1) "" 0
+
 getValueFromAfter :: String -> String
-getValueFromAfter str = (splitOn ")" ((splitOn "(" str)!!1))!!0
+getValueFromAfter str
+  | containsString "after_ns" str = getValueStr "after_ns" str
+  | containsString "after_us" str = getValueStr "after_us" str
+  | containsString "after_ms" str = getValueStr "after_ms" str
+  | containsString "after" str    = getValueStr "after" str
+  | otherwise                     = error ("Trying to get after value for incorrect string," ++> str)
+--(splitOn ")" ((splitOn "(" str)!!1))!!0
+
+readInt :: String -> Maybe Int
+readInt str = readMaybe str :: Maybe Int
+
+readDouble :: String -> Maybe Double
+readDouble str = readMaybe str :: Maybe Double
 
 toDecimal :: String -> String
-toDecimal str | length (filter (\x -> x == '.') str) == 0 = str ++ ".0"
-              | length (filter (\x -> x == '.') str) == 1 = str
-              | otherwise                                 = error ("Tried to convert to decimal that had more than 1 decimal point. candidate: " ++ str)
+toDecimal str 
+  | readInt str /= Nothing       = str ++ ".0"
+--  | length (filter (\x -> x == '.') str) == 0   = str ++ ".0"
+--  | length (filter (\x -> x == '.') str) == 1   = str
+  | otherwise                    = str
 
 convertAfter :: String -> String -> String
 convertAfter value variable = "ringlet_counter >= integer(ceil(" ++ toDecimal value ++ " * " ++ variable ++ "))"
