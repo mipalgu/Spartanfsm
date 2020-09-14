@@ -336,13 +336,14 @@ sliceString :: Int -> Int -> String -> String
 sliceString from to str = removeLastFromString (removeFirstFromString str (from + 1)) ((length str) - to + 1)
 
 isSmallAfter :: String -> Bool
-isSmallAfter str = str == "after_ns" || str == "after_ms" || str == "after_ms"
+isSmallAfter str = str == "after_ns" || str == "after_us" || str == "after_ms"
 
 isNormalAfter :: String -> Bool
 isNormalAfter str = (sliceString 3 7 str) == "after"
 
 matchString :: String -> Bool 
-matchString str = isSmallAfter str || isNormalAfter str
+matchString str | length str /= 8 = False
+                | otherwise       = isSmallAfter str || isNormalAfter str
 
 replaceString :: String -> String -> String -> String
 replaceString str carry allButCarry
@@ -369,8 +370,9 @@ afterReplaceStr str reg | isAfterRegex reg = replaceAfter reg (getValueStr str (
 findValueInBrackets :: String -> String -> Int -> String
 findValueInBrackets remaining carry openBrackets 
   | remaining == ""                             = error "Unbalanced Parenthesis"
+  | openBrackets == 0 && head remaining == '('  = findValueInBrackets (tail remaining) carry 1
   | head remaining == '('                       = findValueInBrackets (tail remaining) (carry ++ "(") (openBrackets + 1)
-  | head remaining == ')' && openBrackets <= 1  = tail carry 
+  | head remaining == ')' && openBrackets <= 1  = carry 
   | head remaining == ')'                       = findValueInBrackets (tail remaining) (carry ++ ")") (openBrackets - 1)
   | otherwise                                   = findValueInBrackets (tail remaining) (carry ++ ([head remaining])) openBrackets
 
@@ -407,9 +409,8 @@ readDouble str = readMaybe str :: Maybe Double
 toDecimal :: String -> String
 toDecimal str 
   | readInt str /= Nothing       = str ++ ".0"
---  | length (filter (\x -> x == '.') str) == 0   = str ++ ".0"
---  | length (filter (\x -> x == '.') str) == 1   = str
-  | otherwise                    = str
+  | readDouble str /= Nothing    = str
+  | otherwise                    = "(" ++ str ++ ")"
 
 convertAfter :: String -> String -> String
 convertAfter value variable = "ringlet_counter >= integer(ceil(" ++ toDecimal value ++ " * " ++ variable ++ "))"
