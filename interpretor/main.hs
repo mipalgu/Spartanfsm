@@ -20,9 +20,6 @@ main = do
     internals <- getAllInternals dir states
     transitions <- getAllTransCodeForAllStates dir states
     afters <- return $ map doesStateHaveAfter transitions
-    putStrLn (show transitions)
-    putStrLn (show states)
-    putStrLn (show afters)
     numberOfTargets <- return $ getNumberOfTargets states transitions
     targets <- getAllTargets dir states numberOfTargets
     targetStates <- return $ allTargetsToState states targets

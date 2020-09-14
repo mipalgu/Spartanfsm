@@ -6,36 +6,48 @@
 #ifndef clfsm_SensorFusion_State_changeCurrentSensor_h
 #define clfsm_SensorFusion_State_changeCurrentSensor_h
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wc++98-compat"
+
 #include "CLState.h"
 #include "CLAction.h"
 #include "CLTransition.h"
 
 namespace FSM
 {
-    namespace CLM
+  namespace CLM
+  {
+    namespace FSMSensorFusion
     {
-      namespace FSMSensorFusion
+      namespace State
       {
-        namespace State
+        class changeCurrentSensor: public CLState
         {
-            class changeCurrentSensor: public CLState
-            {
-                class OnEntry: public CLAction
-                {
-                    virtual void perform(CLMachine *, CLState *) const;
-                };
-
-                class OnExit: public CLAction
-                {
-                    virtual void perform(CLMachine *, CLState *) const;
-                };
-
-                class Internal: public CLAction
-                {
-                    virtual void perform(CLMachine *, CLState *) const;
-                };
-
-                class Transition_0: public CLTransition
+          class OnEntry: public CLAction
+          {
+            virtual void perform(CLMachine *, CLState *) const;
+          };
+          
+          class OnExit: public CLAction
+          {
+            virtual void perform(CLMachine *, CLState *) const;
+          };
+          
+          class Internal: public CLAction
+          {
+            virtual void perform(CLMachine *, CLState *) const;
+          };
+          
+          class OnSuspend: public CLAction
+          {
+            virtual void perform(CLMachine *, CLState *) const;
+          };
+          
+          class OnResume: public CLAction
+          {
+            virtual void perform(CLMachine *, CLState *) const;
+          };
+                          class Transition_0: public CLTransition
                 {
                 public:
                     Transition_0(int toState = 6): CLTransition(toState) {}

@@ -14,13 +14,11 @@ SonarPlatform *_m = static_cast<SonarPlatform *>(_machine);
 #extern	&triggers: out std_logic_vector(numberOfSensors - 1 downto 0) = _m->triggers: out std_logic_vector(numberOfSensors - 1 downto 0);	///<
 #extern	&echos: inout std_logic_vector(numberOfSensors - 1 downto 0) = _m->echos: inout std_logic_vector(numberOfSensors - 1 downto 0);	///<
 #machine	&signal smallestDistance: std_logic_vector(15 downto 0) = _m->signal smallestDistance: std_logic_vector(15 downto 0);	///<
-#machine	&signal sensorRestart: std_logic = _m->signal sensorRestart: std_logic;	///<
-#machine	&signal sensorsSuspended: std_logic_vector(numberOfSensors - 1 downto 0) = _m->signal sensorsSuspended: std_logic_vector(numberOfSensors - 1 downto 0);	///<
 #machine	&constant allSuspended: std_logic_vector(numberOfSensors - 1 downto 0) := (others => '1') = _m->constant allSuspended: std_logic_vector(numberOfSensors - 1 downto 0) := (others => '1');	///<
-#machine	&signal sensorFusionRestart: std_logic = _m->signal sensorFusionRestart: std_logic;	///<
-#machine	&signal sensorFusionSuspend: std_logic = _m->signal sensorFusionSuspend: std_logic;	///<
 #machine	&signal sensorSuspend: std_logic = _m->signal sensorSuspend: std_logic;	///<
 #machine	&signal sensorFusionSuspended: std_logic = _m->signal sensorFusionSuspended: std_logic;	///<
 #machine	&signal allOutputs: std_logic_vector(numberOfSensors * sensorOutputSize - 1 downto 0) = _m->signal allOutputs: std_logic_vector(numberOfSensors * sensorOutputSize - 1 downto 0);	///<
+#machine	&signal sensorCommand: std_logic_vector(1 downto 0) := COMMAND_NULL = _m->signal sensorCommand: std_logic_vector(1 downto 0) := COMMAND_NULL;	///<
+#machine	&signal sensorFusionCommand: std_logic_vector(1 downto 0) := COMMAND_NULL = _m->signal sensorFusionCommand: std_logic_vector(1 downto 0) := COMMAND_NULL;	///<
 
 #pragma clang diagnostic pop

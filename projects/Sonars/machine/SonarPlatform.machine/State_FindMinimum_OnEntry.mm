@@ -1,1 +1,1 @@
-sensorFusionRestart <= '1';
+sensorFusionCommand <= COMMAND_NULL;

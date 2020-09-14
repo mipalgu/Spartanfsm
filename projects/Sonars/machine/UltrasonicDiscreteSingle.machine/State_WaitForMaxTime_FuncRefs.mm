@@ -1,5 +1,5 @@
 //
-// State_WaitForOneSecond_FuncRefs.mm
+// State_WaitForMaxTime_FuncRefs.mm
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
