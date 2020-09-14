@@ -149,9 +149,9 @@ internalStateVhdl =
     ++ "constant WriteSnapshot: std_logic_vector(3 downto 0) := \"0101\";\n"
     ++ "constant NoOnEntry: std_logic_vector(3 downto 0) := \"0110\";\n"
     ++ "constant OnSuspend: std_logic_vector(3 downto 0) := \"0111\";"
-    +\> "constant OnResume: std_logic_vector(3 downto 0) := \"1000\""
+    +\> "constant OnResume: std_logic_vector(3 downto 0) := \"1000\";"
     +\> "constant NoSuspendOrResume: std_logic_vector(3 downto 0) := \"1001\";"
-    +\> "signal internalState: std_logic_vector(2 downto 0) := ReadSnapshot;\n"
+    +\> "signal internalState: std_logic_vector(3 downto 0) := ReadSnapshot;\n"
 
 -- Get number of bits to represent the states in dir
 getNumberOfBits :: String -> IO Int
