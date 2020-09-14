@@ -2,11 +2,12 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-11 23:22 AEST
+--Date Generated: 2020-09-15 00:52 AEST
 --
 
 library IEEE;
 use IEEE.std_logic_1164.All;
+use IEEE.math_real.all;
 
 
 entity SonarPlatform is
@@ -15,9 +16,7 @@ entity SonarPlatform is
     );
     port (
         clk: in std_logic;
-        restart: in std_logic;
-        resume: in std_logic;
-        suspend: in std_logic;
+        command: in std_logic_vector(1 downto 0);
         suspended: out std_logic;
         EXTERNAL_distance: out std_logic_vector(15 downto 0);
         EXTERNAL_triggers: out std_logic_vector(numberOfSensors - 1 downto 0);
@@ -27,15 +26,17 @@ end SonarPlatform;
 
 architecture LLFSM of SonarPlatform is
     --Internal State Representation Bits
-    constant OnEntry: std_logic_vector(2 downto 0) := "000";
-    constant CheckTransition: std_logic_vector(2 downto 0) := "001";
-    constant OnExit: std_logic_vector(2 downto 0) := "010";
-    constant Internal: std_logic_vector(2 downto 0) := "011";
-    constant ReadSnapshot: std_logic_vector(2 downto 0) := "100";
-    constant WriteSnapshot: std_logic_vector(2 downto 0) := "101";
-    constant NoOnEntry: std_logic_vector(2 downto 0) := "110";
-    constant CheckForSuspension: std_logic_vector(2 downto 0) := "111";
-    signal internalState: std_logic_vector(2 downto 0) := ReadSnapshot;
+    constant OnEntry: std_logic_vector(3 downto 0) := "0000";
+    constant CheckTransition: std_logic_vector(3 downto 0) := "0001";
+    constant OnExit: std_logic_vector(3 downto 0) := "0010";
+    constant Internal: std_logic_vector(3 downto 0) := "0011";
+    constant ReadSnapshot: std_logic_vector(3 downto 0) := "0100";
+    constant WriteSnapshot: std_logic_vector(3 downto 0) := "0101";
+    constant NoOnEntry: std_logic_vector(3 downto 0) := "0110";
+    constant OnSuspend: std_logic_vector(3 downto 0) := "0111";
+    constant OnResume: std_logic_vector(3 downto 0) := "1000";
+    constant NoSuspendOrResume: std_logic_vector(3 downto 0) := "1001";
+    signal internalState: std_logic_vector(3 downto 0) := ReadSnapshot;
     --State Representation Bits
     constant STATE_Initial: std_logic_vector(2 downto 0) := "000";
     constant STATE_SUSPENDED: std_logic_vector(2 downto 0) := "001";
@@ -49,131 +50,94 @@ architecture LLFSM of SonarPlatform is
     signal targetState: std_logic_vector(2 downto 0) := currentState;
     signal previousRinglet: std_logic_vector(2 downto 0) := STATE_Initial xor "111";
     signal suspendedFrom: std_logic_vector(2 downto 0) := STATE_Initial;
+    constant COMMAND_RESTART: std_logic_vector(1 downto 0) := "00";
+    constant COMMAND_SUSPEND: std_logic_vector(1 downto 0) := "01";
+    constant COMMAND_RESUME: std_logic_vector(1 downto 0) := "10";
+    constant COMMAND_NULL: std_logic_vector(1 downto 0) := "11";
+    shared variable ringlet_counter: natural := 0;
+    constant clockPeriod: real := 20.0;
+    constant ringletLength: real := 6.0 * clockPeriod;
+    constant RINGLETS_PER_NS: real := 1.0 / ringletLength;
+    constant RINGLETS_PER_US: real := 1000.0 * RINGLETS_PER_NS;
+    constant RINGLETS_PER_MS: real := 1000000.0 * RINGLETS_PER_NS;
+    constant RINGLETS_PER_S: real := 1000000000.0 * RINGLETS_PER_NS;
     --Snapshot of External Variables
     signal distance: std_logic_vector(15 downto 0);
     signal triggers: std_logic_vector(numberOfSensors - 1 downto 0);
     signal echos: std_logic_vector(numberOfSensors - 1 downto 0);
     --Machine Variables
     signal smallestDistance: std_logic_vector(15 downto 0);
-    signal sensorRestart: std_logic;
-    signal sensorsSuspended: std_logic_vector(numberOfSensors - 1 downto 0);
     constant allSuspended: std_logic_vector(numberOfSensors - 1 downto 0) := (others => '1');
-    signal sensorFusionRestart: std_logic;
-    signal sensorFusionSuspend: std_logic;
     signal sensorSuspend: std_logic;
     signal sensorFusionSuspended: std_logic;
-    signal allOutputs: std_logic_vector(numberOfSensors * 16 - 1 downto 0);
-	 
-	 component SensorFusion is
-		 generic (
-			  numberOfSensors: positive;
-			  sensorOutputSize: positive;
-			  signedOutput: boolean;
-			  maxValue: Integer;
-			  minValue: Integer
-		 );
-		 port (
-			  clk: in std_logic;
-			  restart: in std_logic;
-			  resume: in std_logic;
-			  suspend: in std_logic;
-			  suspended: out std_logic;
-			  EXTERNAL_smallestOutput: out std_logic_vector(sensorOutputSize - 1 downto 0);
-			  EXTERNAL_sensorOutputs: in std_logic_vector(numberOfSensors * sensorOutputSize - 1 downto 0)
-		 );
-	 end component;
-	 
-	 component UltrasonicDiscreteSingle is
-		 port (
-			  clk: in std_logic;
-			  restart: in std_logic;
-			  resume: in std_logic;
-			  suspend: in std_logic;
-			  suspended: out std_logic;
-			  EXTERNAL_triggerPin: out std_logic;
-			  EXTERNAL_echo: inout std_logic;
-			  EXTERNAL_distance: out std_logic_vector(15 downto 0)
-		 );
-	 end component;
-	 
+    signal allOutputs: std_logic_vector(numberOfSensors * sensorOutputSize - 1 downto 0);
+    signal sensorCommand: std_logic_vector(1 downto 0) := COMMAND_NULL;
+    signal sensorFusionCommand: std_logic_vector(1 downto 0) := COMMAND_NULL;
 begin
-	
-	sensor_fusion: Sensorfusion generic map (
-		numberOfSensors => 1,
-		sensorOutputSize => 16,
-		signedOutput => false,
-		maxValue => 65535,
-		minValue => 0
-	)
-	port map (
-		clk => clk,
-		restart => sensorFusionRestart,
-		resume => '0',
-		suspend => sensorFusionsuspend,
-		suspended => sensorFusionSuspended,
-		EXTERNAL_smallestOutput => smallestDistance,
-		EXTERNAL_sensorOutputs => allOutputs
-	);
-	
-	sensors_gen:
-	for I in 0 to (numberOfSensors - 1) generate
-		sensor: UltrasonicDiscreteSingle port map (
-			clk => clk,
-			restart => '1',
-			resume => '0',
-			suspend => '0',
-			EXTERNAL_triggerPin => triggers(I),
-			EXTERNAL_echo => echos(I),
-			EXTERNAL_distance => allOutputs(16 * (I + 1) - 1 downto 16 * I)
-		);
-	end generate sensors_gen;
-	
 process (clk)
     begin
         if (rising_edge(clk)) then
             case internalState is
-                when CheckForSuspension =>
-                    if (restart = '0') then
+                when ReadSnapshot =>
+                    echos <= EXTERNAL_echos;
+                    if (command = COMMAND_RESTART) then
                         currentState <= STATE_Initial;
+                        internalState <= NoSuspendOrResume;
                         suspended <= '0';
                         suspendedFrom <= STATE_Initial;
-                    elsif (resume = '1' and currentState = STATE_SUSPENDED and suspendedFrom /= STATE_SUSPENDED) then
+                        targetState <= STATE_Initial;
+                    elsif (command = COMMAND_RESUME and currentState = STATE_SUSPENDED and suspendedFrom /= STATE_SUSPENDED) then
                         suspended <= '0';
                         currentState <= suspendedFrom;
-                    elsif (suspend = '1' and currentState /= STATE_SUSPENDED) then
+                        internalState <= OnResume;
+                        targetState <= suspendedFrom;
+                    elsif (command = COMMAND_SUSPEND and currentState /= STATE_SUSPENDED) then
                         suspendedFrom <= currentState;
                         suspended <= '1';
                         currentState <= STATE_SUSPENDED;
-                    elsif (currentState = STATE_SUSPENDED) then
-                        suspended <= '1';
+                        internalState <= OnSuspend;
+                        targetState <= STATE_SUSPENDED;
                     else
-                        suspended <= '0';
-                        suspendedFrom <= currentState;
+                        if (currentState = STATE_SUSPENDED) then
+                            suspended <= '1';
+                        else
+                            suspended <= '0';
+                            suspendedFrom <= currentState;
+                        end if;
+                        internalState <= NoSuspendOrResume;
                     end if;
-                    internalState <= ReadSnapshot;
-                when ReadSnapshot =>
-                    echos <= EXTERNAL_echos;
-                    if (previousRinglet = currentState) then
-                        internalState <= NoOnEntry;
-                    else
+                when OnSuspend =>
+                    case suspendedFrom is
+                        when others =>
+                            null;
+                    end case;
+                    internalState <= OnEntry;
+                when OnResume =>
+                    case currentState is
+                        when others =>
+                            null;
+                    end case;
+                    internalState <= OnEntry;
+                when NoSuspendOrResume =>
+                    if (previousRinglet /= currentState) then
                         internalState <= OnEntry;
+                    else
+                        internalState <= NoOnEntry;
                     end if;
                 when OnEntry =>
                     case currentState is
                         when STATE_Initial =>
-                            sensorRestart <= '1';
-                            sensorSuspend <= '1';
+                            sensorCommand <= COMMAND_SUSPEND;
                         when STATE_StartSensors =>
-                            sensorRestart <= '0';
+                            sensorCommand <= COMMAND_RESTART;
                         when STATE_WaitTillFinished =>
-                            sensorRestart <= '1';
+                            sensorCommand <= COMMAND_NULL;
                         when STATE_StartFusion =>
-                            sensorFusionRestart <= '0';
-                            sensorFusionSuspend <= '0';
+                            sensorFusionCommand <= COMMAND_RESTART;
                         when STATE_SetMinimum =>
                             distance <= smallestDistance;
                         when STATE_FindMinimum =>
-                            sensorFusionRestart <= '1';
+                            sensorFusionCommand <= COMMAND_NULL;
                         when others =>
                             null;
                     end case;
@@ -237,8 +201,7 @@ process (clk)
                 when Internal =>
                     case currentState is
                         when STATE_Initial =>
-                            sensorRestart <= '1';
-                            sensorSuspend <= '1';
+                            sensorCommand <= COMMAND_SUSPEND;
                         when others =>
                             null;
                     end case;
@@ -246,8 +209,7 @@ process (clk)
                 when OnExit =>
                     case currentState is
                         when STATE_Initial =>
-                            sensorFusionRestart <= '1';
-                            sensorFusionSuspend <= '1';
+                            sensorFusionCommand <= COMMAND_SUSPEND;
                         when others =>
                             null;
                     end case;
@@ -258,7 +220,7 @@ process (clk)
                     EXTERNAL_distance <= distance;
                     EXTERNAL_triggers <= triggers;
                     EXTERNAL_echos <= echos;
-                    internalState <= CheckForSuspension;
+                    internalState <= ReadSnapshot;
                     previousRinglet <= currentState;
                     currentState <= targetState;
                 when others =>
