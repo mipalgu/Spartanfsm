@@ -14,3 +14,7 @@ install:
 
 uninstall:
 	$Erm -f /usr/local/bin/${bin_name}
+
+manpage:
+	$Ecp man/spartanfsm /usr/local/man/man1/spartanfsm.1
+	$Egzip -f /usr/local/man/man1/spartanfsm.1

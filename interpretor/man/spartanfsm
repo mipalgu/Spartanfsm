@@ -1,0 +1,17 @@
+.\" Manpage for spartanfsm.
+.\" Contact morgan.mccoll@griffithuni.edu.au to correct errors or typos.
+.TH man 8 "16 Sep 2020" "1.0" "spartanfsm man page"
+.SH NAME
+spartanfsm \- Convert an LLFSM in the machine structure into a VHDL source file. 
+.SH SYNOPSIS
+spartanfsm dir
+.SH DESCRIPTION
+spartanfsm is a tool used to convert existing LLFSMs in the clfsm machine structure into VHDL source files. The machine must contain VHDL code within its structure. No other languages are supported for this conversion.
+.SH OPTIONS
+The spartanfsm does not take any options. However, you must supply the machine directory from which you are converting.
+.SH SEE ALSO
+clfsm(1)
+.SH BUGS
+No known bugs.
+.SH AUTHOR
+Morgan McColl (morgan.mccoll@griffithuni.edu.au)
