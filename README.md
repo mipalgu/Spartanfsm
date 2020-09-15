@@ -24,6 +24,7 @@ sudo apt-get install -y cabal-install ghc
 ```
 cabal update
 cabal install split
+cabal install extra
 ```
 3. Install the interpretor
 ```
