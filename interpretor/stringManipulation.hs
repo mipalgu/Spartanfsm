@@ -61,12 +61,15 @@ module SpartanLLFSM_Strings(
     (+\>),
     (+\->),
     (++>),
+    (+?>),
+    (+\?>),
     tab,
     beautify,
     removeFirstNewLine,
     getLocalTimeString,
     beautifyTrimmed,
-    trimNewLines
+    trimNewLines,
+    isEmpty
 ) where
 
 import Data.Time
@@ -112,6 +115,17 @@ infixl 2 +\->
 str1 +\-> str2 | str1 == "" = str2
                | str2 == "" = str1
                | otherwise  = str1 +\> "" +-> str2
+
+infixl 2 +?>
+(+?>) :: String -> String -> String
+str1 +?> str2 | str1 == "" || str2 == "" = ""
+              | otherwise                = str1 ++ str2
+
+infixl 2 +\?>
+(+\?>) :: String -> String -> String
+str1 +\?> str2 | str1 == "" = str2
+               | str2 == "" = str1
+               | otherwise  = str1 +\> str2
 
 --Determins if a character is whitespace
 isCharWhitespace :: Char -> Bool
@@ -178,4 +192,8 @@ removeAllTrailingNewLines str | str == []        = str
 
 trimNewLines :: String -> String
 trimNewLines str = removeAllLeadingNewLines (removeAllTrailingNewLines str)
+
+isEmpty :: String -> IO Bool
+isEmpty str = return (str == "")
+
 --END STRING FORMATTING

@@ -39,8 +39,4 @@ main = do
 getProjectName :: String -> String
 getProjectName dir = head (splitOn ".machine" (last (filter (\x -> x /= "") (splitOn "/" dir))))
 
---The default comment located at the top of a generated machine .vhd file.
-createMachineComment :: String -> String -> String -> String -> String
-createMachineComment name time author email =
-    "--" ++ name ++ ".vhd" +\> "--\n--This is a generated file - DO NOT ALTER." +\> "--Please use an LLFSM editor to change this file."
-    +\> "--Date Generated:" ++> time +\> "--" +\> "--Author: " ++ author +\> "--Email: " ++ email +\> "--"
+

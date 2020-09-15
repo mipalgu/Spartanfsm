@@ -57,7 +57,8 @@ module SpartanLLFSM_VHDLGeneration(
     createArchitecture,
     toStateName,
     getNumberOfBits,
-    doesStateHaveAfter
+    doesStateHaveAfter,
+    createMachineComment
 ) where
 
 import SpartanLLFSM_Strings
@@ -71,6 +72,25 @@ import Text.Read
 import Text.Regex
 
 -- VHDL CODE
+
+--The default comment located at the top of a generated machine .vhd file.
+createMachineComment :: String -> String -> String -> String -> String
+createMachineComment name time author email = fullCommentBlock name time +\?> authorAndEmailComment author email 
+
+authorAndEmailComment :: String -> String -> String
+authorAndEmailComment author email = authorComment author +\?> emailComment email +?> "\n--" 
+
+authorComment :: String -> String
+authorComment author =  "--Author: " +?> author
+
+emailComment :: String -> String
+emailComment email = "--Email: " +?> email
+
+fullCommentBlock :: String -> String -> String
+fullCommentBlock name time = "--" ++ name ++ ".vhd" +\> commentBlock +\> "--Date Generated:" ++> time +\> "--"
+
+commentBlock :: String
+commentBlock = "--\n--This is a generated file - DO NOT ALTER." +\> "--Please use an LLFSM editor to change this file."
 
 -- Constant when others => null vhdl code
 othersNullBlock :: String

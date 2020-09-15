@@ -81,9 +81,6 @@ getUser = readProcess "whoami" [] ""
 getHostname :: IO String
 getHostname = readProcess "uname" ["-n"] ""
 
-isEmpty :: String -> IO Bool
-isEmpty str = return (str == "")
-
 getAuthor :: IO String
 getAuthor = (ifM (getGitAuthor >>= isEmpty) getUser getGitAuthor) >>= ioTrim
 
