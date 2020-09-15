@@ -53,10 +53,11 @@
 -- Fifth Floor, Boston, MA  02110-1301, USA.
 
 
-module SpartanLLFSM_IO(getFileContents, callLs) where
+module SpartanLLFSM_IO(getFileContents, callLs, getAuthor, getEmail) where
 
 import SpartanLLFSM_Strings
 import System.Process
+import Control.Monad.Extra
 
 --FILE IO AND SYSTEM CALLS
 
@@ -67,6 +68,37 @@ getFileContents path = readFile path >>= ioTrim
 --Calls ls system command and returns result.
 callLs :: String -> IO String
 callLs dir = readProcess ("ls") [dir] ""
+
+getGitAuthor :: IO String
+getGitAuthor = readProcess "git" ["config", "user.name"] ""
+
+getGitEmail :: IO String
+getGitEmail = readProcess "git" ["config", "user.email"] ""
+
+getUser :: IO String
+getUser = readProcess "whoami" [] ""
+
+getHostname :: IO String
+getHostname = readProcess "uname" ["-n"] ""
+
+isEmpty :: String -> IO Bool
+isEmpty str = return (str == "")
+
+getAuthor :: IO String
+getAuthor = (ifM (getGitAuthor >>= isEmpty) getUser getGitAuthor) >>= ioTrim
+
+appendString :: String -> String -> IO String
+appendString str2 str1 = return $ str1 ++ str2
+
+appendBackString :: String -> String -> IO String
+appendBackString str2 str1 = appendString str1 str2
+
+appendBackIOString :: IO String -> String -> IO String
+appendBackIOString str2 str1 =  str2 >>= (appendBackString str1)
+
+getEmail :: IO String
+getEmail = (ifM (getGitEmail >>= isEmpty) (getUser >>= (appendString "@") >>= (appendBackIOString getHostname)) getGitEmail) >>= ioTrim
+         
 
 
 --END FILE IO AND SYSTEM CALLS
