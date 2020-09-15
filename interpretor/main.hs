@@ -8,6 +8,7 @@ import SpartanLLFSM_IO
 import SpartanLLFSM_Strings
 import SpartanLLFSM_Format
 import SpartanLLFSM_VHDLGeneration
+import SpartanLLFSM_License
 
 main :: IO ()
 main = do
@@ -32,7 +33,10 @@ main = do
     timeString <- getLocalTimeString
     author <- getAuthor
     email <- getEmail
-    writeFile (projectName ++ ".vhd") (createMachineComment projectName timeString author email ++ "\n\n" ++ entity ++ "\n\n" ++ architecture)
+    licenseType <- return $ "mit"
+    year <- getYear
+    license <- return $ getLicense licenseType author email year
+    writeFile (projectName ++ ".vhd") (createMachineComment projectName timeString author email license ++ "\n\n" ++ entity ++ "\n\n" ++ architecture)
 
 
 --Gets project name by inspecting the folder structure

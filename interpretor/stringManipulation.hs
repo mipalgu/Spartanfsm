@@ -67,6 +67,7 @@ module SpartanLLFSM_Strings(
     beautify,
     removeFirstNewLine,
     getLocalTimeString,
+    getYear,
     beautifyTrimmed,
     trimNewLines,
     isEmpty
@@ -86,6 +87,12 @@ getLocalTimeString = do
 to24hrTime :: Int -> String
 to24hrTime time | time < 10 = "0" ++ (show time)
                 | otherwise = show time
+
+getYear :: IO String
+getYear = do
+    ZonedTime (LocalTime date (TimeOfDay hour min sec)) (TimeZone mins isSummer name) <- getZonedTime
+    (year, month, day) <- return $ toGregorian date 
+    return (show year)
 
 --Checks a list contains an element.
 contains :: Eq a => a -> [a] -> Bool

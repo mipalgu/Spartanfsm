@@ -74,8 +74,8 @@ import Text.Regex
 -- VHDL CODE
 
 --The default comment located at the top of a generated machine .vhd file.
-createMachineComment :: String -> String -> String -> String -> String
-createMachineComment name time author email = fullCommentBlock name time +\?> authorAndEmailComment author email 
+createMachineComment :: String -> String -> String -> String -> String -> String
+createMachineComment name time author email license = fullCommentBlock name time +\?> authorAndEmailComment author email +\> license +\> "--"
 
 authorAndEmailComment :: String -> String -> String
 authorAndEmailComment author email = authorComment author +\?> emailComment email +?> "\n--" 

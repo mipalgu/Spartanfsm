@@ -1,4 +1,4 @@
-SRCS?=main.hs io.hs stringManipulation.hs LLFSMFormat.hs helpers.hs VHDLGeneration.hs
+SRCS?=main.hs io.hs stringManipulation.hs LLFSMFormat.hs helpers.hs VHDLGeneration.hs license.hs
 E?=@
 bin_name?=spartanfsm
 
