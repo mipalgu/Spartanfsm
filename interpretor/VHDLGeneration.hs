@@ -619,6 +619,9 @@ createAllInternalStateCodeWithDefault internalState states codes trailer afters 
   | internalState == "OnSuspend" = createAllInternalStateCodeWithStateVar internalState states (map (\c -> setToDefault c defaults) codes) trailer afters "suspendedFrom" suspendedState
   | otherwise                    = createAllInternalStateCode internalState states (map (\c -> setToDefault c defaults) codes) trailer afters suspendedState
 
+createAllInternalStateCodeWithCombinedActions :: String -> [String] -> [String] -> String -> [Bool] -> String -> String -> [String] -> String
+createAllInternalStateCodeWithCombinedActions internalState states codes trailer afters defaults suspendedState codes2
+  | 
 
 getActions :: [[String]] -> Int -> [String]
 getActions codes index = map (\x -> x!!index) codes
@@ -661,8 +664,8 @@ createAllInRisingEdge :: String-> String -> [String] -> [[String]] -> [[String]]
 createAllInRisingEdge initialState suspendedState states codes trans targets vars afters = "if (rising_edge(clk)) then"
     ++ beautify 1 "case internalState is"
     ++ beautifyTrimmed 2 (createReadSnapshot vars initialState suspendedState)
-    +\> beautifyTrimmed 2 (createAllInternalStateCodeWithDefault "OnSuspend" states (getActions codes 3) "internalState <= OnEntry;" afters ((getActions codes 3)!!(getSuspendedIndex states suspendedState)) suspendedState) 
-    +\> beautifyTrimmed 2 (createAllInternalStateCodeWithDefault "OnResume" states (getActions codes 4) "internalState <= OnEntry;" afters ((getActions codes 4)!!(getSuspendedIndex states suspendedState)) suspendedState)
+    +\> beautifyTrimmed 2 (createAllInternalStateCode "OnSuspend" states (getActions codes 3) "internalState <= CheckTransition;" afters ((getActions codes 3)!!(getSuspendedIndex states suspendedState)) suspendedState) 
+    +\> beautifyTrimmed 2 (createAllInternalStateCode "OnResume" states (getActions codes 4) "internalState <= CheckTransition;" afters ((getActions codes 4)!!(getSuspendedIndex states suspendedState)) suspendedState)
     +\> beautifyTrimmed 2 ("when NoSuspendOrResume =>" +\> (beautifyTrimmed 1 shouldExecuteOnEntryCode))
     +\> beautifyTrimmed 2 (createAllInternalStateCode "OnEntry" states (getActions codes 0) "internalState <= CheckTransition;" afters suspendedState)
     +\> beautifyTrimmed 2 (createAllInternalStateCode "CheckTransition" states (map (\(trans, trgs) -> createTransitionCode trans trgs) (zip trans targets)) "" afters suspendedState)
