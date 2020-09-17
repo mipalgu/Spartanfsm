@@ -68,7 +68,6 @@ import SpartanLLFSM_Format
 import Data.Char
 import Data.List
 import Data.Maybe
-import Text.Read
 import Text.Regex
 
 -- VHDL CODE
@@ -429,12 +428,6 @@ getValueFromAfter str
   | otherwise                     = error ("Trying to get after value for incorrect string," ++> str)
 --(splitOn ")" ((splitOn "(" str)!!1))!!0
 
-readInt :: String -> Maybe Int
-readInt str = readMaybe str :: Maybe Int
-
-readDouble :: String -> Maybe Double
-readDouble str = readMaybe str :: Maybe Double
-
 toDecimal :: String -> String
 toDecimal str 
   | readInt str /= Nothing       = str ++ ".0"
@@ -464,32 +457,40 @@ counterVariables = "shared variable ringlet_counter: natural := 0;"
 suspendedFromVariable :: String
 suspendedFromVariable = "suspendedFrom"
 
-suspensionLogic :: String -> String
-suspensionLogic initialState = "if (command = " ++ restart ++ ") then"
+suspensionLogic :: String -> String -> String
+suspensionLogic initialState suspendedState = "if (command = " ++ restart ++ ") then"
     +\-> "currentState <= " ++ toStateName initialState ++ ";"
     +\-> "internalState <= NoSuspendOrResume;"
     +\-> "suspended <= '0';"
     +\-> suspendedFromVariable ++ " <= " ++ toStateName initialState ++ ";"
     +\-> "targetState <= " ++ toStateName initialState ++ ";"
-    +\>  "elsif (command = " ++ resume ++ " and currentState = " ++ toStateName "SUSPENDED" ++ " and " ++ suspendedFromVariable ++ " /= " ++ toStateName "SUSPENDED" ++ ") then"
+    +\>  "elsif (command = " ++ resume ++ " and currentState = " ++ toStateName suspendedState ++ " and " ++ suspendedFromVariable ++ " /= " ++ toStateName suspendedState ++ ") then"
     +\-> "suspended <= '0';"
     +\-> "currentState <= " ++ suspendedFromVariable ++ ";"
     +\-> "internalState <= OnResume;"
     +\-> "targetState <= " ++ suspendedFromVariable ++ ";"
-    +\>  "elsif (command = " ++ suspend ++ " and currentState /= " ++ toStateName "SUSPENDED" ++ ") then"
+    +\>  "elsif (command = " ++ suspend ++ " and currentState /= " ++ toStateName suspendedState ++ ") then"
     +\-> suspendedFromVariable ++ " <= currentState;"
     +\-> "suspended <= '1';"
-    +\-> "currentState <= " ++ toStateName "SUSPENDED" ++ ";"
+    +\-> "currentState <= " ++ toStateName suspendedState ++ ";"
     +\-> "internalState <= OnSuspend;"
-    +\-> "targetState <= " ++ toStateName "SUSPENDED" ++ ";"
+    +\-> "targetState <= " ++ toStateName suspendedState ++ ";"
     +\>  "else"
-    +\-> "if (currentState = " ++ toStateName "SUSPENDED" ++ ") then"
+    +\-> "if (currentState = " ++ toStateName suspendedState ++ ") then"
     +\-> tab ++ "suspended <= '1';"
+    +\-> "if (previousRinglet /=" ++> toStateName suspendedState ++ ") then"
+    +\-> tab ++ "internalState <= OnSuspend;"
+    +\-> "else"
+    +\-> tab ++ "internalState <= NoOnEntry;"
+    +\-> "end if;"
     +\-> "else"
     +\-> tab ++ "suspended <= '0';"
     +\-> tab ++ suspendedFromVariable ++ " <= currentState;"
+    +\-> "if (previousRinglet /= currentState) then"
+    +\-> tab ++ "internalState <= OnEntry;"
+    +\-> "else"
+    +\-> tab ++ "internalState <= NoOnEntry;"
     +\-> "end if;"
-    +\-> "internalState <= NoSuspendOrResume;"
     +\>  "end if;"
 
 -- Creates the code for all var that reads the external variables into snapshot variables
@@ -503,8 +504,8 @@ createReadCode vars
 --  = "if (previousRinglet = currentState) then\n    internalState <= NoOnEntry;\nelse\n    internalState <= OnEntry;\nend if;"
 
 -- Creates the ReadSnapshot section of the VHDL source file
-createReadSnapshot :: String -> String -> String
-createReadSnapshot vars initialState = createStateCode "ReadSnapshot" (createReadCode vars) (suspensionLogic initialState)
+createReadSnapshot :: String -> String -> String -> String
+createReadSnapshot vars initialState suspendedState = createStateCode "ReadSnapshot" (createReadCode vars) (suspensionLogic initialState suspendedState)
 
 --Creates the code for writing a single snapshot variable to an external variable
 createWriteLine :: String -> String
@@ -523,8 +524,8 @@ createWriteTransition  = "internalState <= ReadSnapshot;\npreviousRinglet <= cur
 createWriteSnapshot :: String -> String
 createWriteSnapshot vars = createStateCode "WriteSnapshot" (createWriteCode vars) createWriteTransition
 
-createCheckSuspension :: String -> String
-createCheckSuspension initialState = createStateCode "CheckForSuspension" (suspensionLogic initialState) ""
+--createCheckSuspension :: String -> String
+--createCheckSuspension initialState = createStateCode "CheckForSuspension" (suspensionLogic initialState) ""
 
 -- Create onEntry code
 createOnEntry :: String -> String
@@ -579,37 +580,37 @@ createRisingEdge states codes vars = "if (rising_edge(clk)) then"
     ++ removeFirstNewLine (createAllRisingStateCode states codes vars)
     ++ "    end case;\nend if;"
 
-createCodeForState :: String -> String -> Bool -> String -> String
-createCodeForState state code hasAfter internalState
-    | hasAfter && internalState == "OnEntry"  = "when" ++> state ++> "=>" +\> beautifyTrimmed 1 (code +\> "ringlet_counter := 0;")
-    | hasAfter && internalState == "Internal" = "when" ++> state ++> "=>" +\> beautifyTrimmed 1 (code +\> "ringlet_counter := ringlet_counter + 1;")
-    | code == ""                              = ""
+createCodeForState :: String -> String -> Bool -> String -> String -> String
+createCodeForState state code hasAfter internalState suspendedState
+    | hasAfter && internalState == "OnEntry"   = "when" ++> state ++> "=>" +\> beautifyTrimmed 1 (code +\> "ringlet_counter := 0;")
+    | hasAfter && internalState == "Internal"  = "when" ++> state ++> "=>" +\> beautifyTrimmed 1 (code +\> "ringlet_counter := ringlet_counter + 1;")
+    | code == ""                               = ""
     | internalState == "OnSuspend"
-        && state == toStateName "SUSPENDED"   = ""
+        && state == toStateName suspendedState = ""
     | internalState == "OnResume"
-        && state == toStateName "SUSPENDED"   = ""
-    | otherwise                               = "when " ++ state ++ " =>" +\> beautifyTrimmed 1 code
+        && state == toStateName suspendedState = ""
+    | otherwise                                = "when " ++ state ++ " =>" +\> beautifyTrimmed 1 code
 
 onlyValidNewLine :: String -> String -> String
 onlyValidNewLine str1 str2 | str1 == "" && str2 == "" = ""
                            | otherwise                = trimNewLines (str1 +\> str2)
 
-createAllInternalStateCodeWithStateVar :: String -> [String] -> [String] -> String -> [Bool] -> String -> String
-createAllInternalStateCodeWithStateVar internalState states codes trailer afters stateVar = "when " ++ internalState ++ " =>" +\> beautifyTrimmed 1 ("case " ++ stateVar ++>  "is"
-    +\> beautifyTrimmed 1 (trimNewLines (foldl onlyValidNewLine "" (map (\(a, (s,c)) -> createCodeForState s c a internalState) $ zip afters (zip states codes)))
+createAllInternalStateCodeWithStateVar :: String -> [String] -> [String] -> String -> [Bool] -> String -> String -> String
+createAllInternalStateCodeWithStateVar internalState states codes trailer afters stateVar suspendedState = "when " ++ internalState ++ " =>" +\> beautifyTrimmed 1 ("case " ++ stateVar ++>  "is"
+    +\> beautifyTrimmed 1 (trimNewLines (foldl onlyValidNewLine "" (map (\(a, (s,c)) -> createCodeForState s c a internalState suspendedState) $ zip afters (zip states codes)))
     +\> othersNullBlock) +\> "end case;" +\> trailer)
 
-createAllInternalStateCode :: String -> [String] -> [String] -> String -> [Bool] -> String
-createAllInternalStateCode internalState states codes trailer afters = createAllInternalStateCodeWithStateVar internalState states codes trailer afters "currentState"
+createAllInternalStateCode :: String -> [String] -> [String] -> String -> [Bool] -> String -> String
+createAllInternalStateCode internalState states codes trailer afters suspendedState = createAllInternalStateCodeWithStateVar internalState states codes trailer afters "currentState" suspendedState
 
 setToDefault :: String -> String -> String
 setToDefault str def | str == "" = def
                      | otherwise = str
 
-createAllInternalStateCodeWithDefault :: String -> [String] -> [String] -> String ->[Bool] -> String -> String
-createAllInternalStateCodeWithDefault internalState states codes trailer afters defaults 
-  | internalState == "OnSuspend" = createAllInternalStateCodeWithStateVar internalState states (map (\c -> setToDefault c defaults) codes) trailer afters "suspendedFrom"
-  | otherwise                    = createAllInternalStateCode internalState states (map (\c -> setToDefault c defaults) codes) trailer afters
+createAllInternalStateCodeWithDefault :: String -> [String] -> [String] -> String ->[Bool] -> String -> String -> String
+createAllInternalStateCodeWithDefault internalState states codes trailer afters defaults suspendedState
+  | internalState == "OnSuspend" = createAllInternalStateCodeWithStateVar internalState states (map (\c -> setToDefault c defaults) codes) trailer afters "suspendedFrom" suspendedState
+  | otherwise                    = createAllInternalStateCode internalState states (map (\c -> setToDefault c defaults) codes) trailer afters suspendedState
 
 
 getActions :: [[String]] -> Int -> [String]
@@ -646,20 +647,20 @@ shouldExecuteOnEntryCode = "if (previousRinglet /= currentState) then"
     +\-> "internalState <= NoOnEntry;"
     +\> "end if;"
 
-getSuspendedIndex :: [String] -> Int
-getSuspendedIndex states = fromJust (elemIndex (toStateName "SUSPENDED") states)
+getSuspendedIndex :: [String] -> String -> Int
+getSuspendedIndex states suspendedState = fromJust (elemIndex (toStateName suspendedState) states)
 
-createAllInRisingEdge :: String-> [String] -> [[String]] -> [[String]] -> [[String]] -> String -> [Bool] -> String
-createAllInRisingEdge initialState states codes trans targets vars afters = "if (rising_edge(clk)) then"
+createAllInRisingEdge :: String-> String -> [String] -> [[String]] -> [[String]] -> [[String]] -> String -> [Bool] -> String
+createAllInRisingEdge initialState suspendedState states codes trans targets vars afters = "if (rising_edge(clk)) then"
     ++ beautify 1 "case internalState is"
-    ++ beautifyTrimmed 2 (createReadSnapshot vars initialState)
-    +\> beautifyTrimmed 2 (createAllInternalStateCodeWithDefault "OnSuspend" states (getActions codes 3) "internalState <= OnEntry;" afters ((getActions codes 3)!!(getSuspendedIndex states)))
-    +\> beautifyTrimmed 2 (createAllInternalStateCodeWithDefault "OnResume" states (getActions codes 4) "internalState <= OnEntry;" afters ((getActions codes 4)!!(getSuspendedIndex states)))
+    ++ beautifyTrimmed 2 (createReadSnapshot vars initialState suspendedState)
+    +\> beautifyTrimmed 2 (createAllInternalStateCodeWithDefault "OnSuspend" states (getActions codes 3) "internalState <= OnEntry;" afters ((getActions codes 3)!!(getSuspendedIndex states suspendedState)) suspendedState) 
+    +\> beautifyTrimmed 2 (createAllInternalStateCodeWithDefault "OnResume" states (getActions codes 4) "internalState <= OnEntry;" afters ((getActions codes 4)!!(getSuspendedIndex states suspendedState)) suspendedState)
     +\> beautifyTrimmed 2 ("when NoSuspendOrResume =>" +\> (beautifyTrimmed 1 shouldExecuteOnEntryCode))
-    +\> beautifyTrimmed 2 (createAllInternalStateCode "OnEntry" states (getActions codes 0) "internalState <= CheckTransition;" afters)
-    +\> beautifyTrimmed 2 (createAllInternalStateCode "CheckTransition" states (map (\(trans, trgs) -> createTransitionCode trans trgs) (zip trans targets)) "" afters)
-    +\> beautifyTrimmed 2 (createAllInternalStateCode "Internal" states (getActions codes 1) "internalState <= WriteSnapshot;" afters)
-    +\> beautifyTrimmed 2 (createAllInternalStateCode "OnExit" states (getActions codes 2) "internalState <= WriteSnapshot;" afters)
+    +\> beautifyTrimmed 2 (createAllInternalStateCode "OnEntry" states (getActions codes 0) "internalState <= CheckTransition;" afters suspendedState)
+    +\> beautifyTrimmed 2 (createAllInternalStateCode "CheckTransition" states (map (\(trans, trgs) -> createTransitionCode trans trgs) (zip trans targets)) "" afters suspendedState)
+    +\> beautifyTrimmed 2 (createAllInternalStateCode "Internal" states (getActions codes 1) "internalState <= WriteSnapshot;" afters suspendedState)
+    +\> beautifyTrimmed 2 (createAllInternalStateCode "OnExit" states (getActions codes 2) "internalState <= WriteSnapshot;" afters suspendedState)
     +\> beautifyTrimmed 2 ("when NoOnEntry =>" +\-> "internalState <= CheckTransition;")
     +\> beautifyTrimmed 2 (createWriteSnapshot vars)
     +\> beautifyTrimmed 2 othersNullBlock 
@@ -667,20 +668,20 @@ createAllInRisingEdge initialState states codes trans targets vars afters = "if 
     +\> "end if;"
 
 --create process block
-createProcessBlock :: String -> [String] -> [[String]] -> [[String]] -> [[String]] -> String -> [Bool] -> String
-createProcessBlock initialState states codes transitions targets vars afters = "process (clk)\n    begin"
+createProcessBlock :: String -> String -> [String] -> [[String]] -> [[String]] -> [[String]] -> String -> [Bool] -> String
+createProcessBlock initialState suspendedState states codes transitions targets vars afters = "process (clk)\n    begin"
 --  ++ beautify 2 (createSuspendedLogic)
-    ++ beautify 2 (createAllInRisingEdge initialState states codes transitions targets vars afters) -- add removeFirstNewLine when adding suspend logic
+    ++ beautify 2 (createAllInRisingEdge initialState suspendedState states codes transitions targets vars afters) -- add removeFirstNewLine when adding suspend logic
 --    ++ removeFirstNewLine (beautify 2 (createFallingEdge states codes transitions targets vars))
     ++ "    end process;"
 
 --Create entire architecture block
-createArchitecture :: [String] -> [Bool] -> [[String]] -> [[String]] -> [[String]] -> Int -> String -> String -> String -> String
-createArchitecture states afters risingEdgeCode transitions targets size name vars firstState = 
+createArchitecture :: [String] -> [Bool] -> [[String]] -> [[String]] -> [[String]] -> Int -> String -> String -> String -> String -> String
+createArchitecture states afters risingEdgeCode transitions targets size name vars firstState suspendedState = 
     "architecture LLFSM of " ++ name ++ " is"
     ++ beautify 1 (createArchitectureVariables size (map toStateName states) vars (toStateName firstState))
     ++ "begin"
-    +\> createProcessBlock firstState (map toStateName states) risingEdgeCode transitions targets vars afters
+    +\> createProcessBlock firstState suspendedState (map toStateName states) risingEdgeCode transitions targets vars afters
     ++ "\nend LLFSM;"
 
 --Checks if code is a comment

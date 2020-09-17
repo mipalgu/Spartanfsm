@@ -70,10 +70,13 @@ module SpartanLLFSM_Strings(
     getYear,
     beautifyTrimmed,
     trimNewLines,
-    isEmpty
+    isEmpty,
+    readInt,
+    readDouble
 ) where
 
 import Data.Time
+import Text.Read
 
 --STRING FORMATING
 
@@ -202,5 +205,12 @@ trimNewLines str = removeAllLeadingNewLines (removeAllTrailingNewLines str)
 
 isEmpty :: String -> IO Bool
 isEmpty str = return (str == "")
+
+readInt :: String -> Maybe Int
+readInt str = readMaybe str :: Maybe Int
+
+readDouble :: String -> Maybe Double
+readDouble str = readMaybe str :: Maybe Double
+
 
 --END STRING FORMATTING

@@ -65,7 +65,8 @@ module SpartanLLFSM_Format(
     suspended,
     allTargetsToState,
     initialPseudostate,
-    getInitialState
+    getInitialState,
+    getSuspendedState
 ) where
 
 import SpartanLLFSM_Strings
@@ -73,6 +74,8 @@ import SpartanLLFSM_IO
 import Data.List
 import Data.List.Split
 import Data.Char
+import Data.Maybe
+import Text.Regex
 
 --Initial Pseudostate name.
 initialPseudostate :: String
@@ -213,13 +216,52 @@ getTargetTransition n contents = return $ (read (getTargetStateFromTransitionLin
 readTargetTransition :: Int -> String -> IO Int
 readTargetTransition n file = getFileContents file >>= getTargetTransition n
 
-getInitialState :: String -> [String] -> IO String
-getInitialState dir states = do
-    hasIncorrectTransitions <- (getTransitionsForState initialPseudostate dir) >>= (\x -> return ( (length x) /= 1 && (map toLower (head x)) /= "true"))
-    if hasIncorrectTransitions then 
-        error ("Initial Pseudostate has too many transitions or non-true transition")
-    else 
-        (getTargetsForState dir initialPseudostate 1) >>= (\x -> return $ head $ targetToState states x)
+--getInitialState :: String -> [String] -> IO String
+--getInitialState dir states = do
+--    hasIncorrectTransitions <- (getTransitionsForState initialPseudostate dir) >>= (\x -> return ( (length x) /= 1 && (map toLower (head x)) /= "true"))
+--    if hasIncorrectTransitions then 
+--        error ("Initial Pseudostate has too many transitions or non-true transition")
+--    else 
+--        (getTargetsForState dir initialPseudostate 1) >>= (\x -> return $ head $ targetToState states x)
+
+setInitialRegex :: Regex
+setInitialRegex = mkRegex "setInitialState\\(_states\\[\\d+\\]\\);"
+
+setSuspendRegex :: Regex
+setSuspendRegex = mkRegex "setSuspendState\\(_states\\[\\d+\\]\\);"
+
+getMatchFromContents :: String -> Regex -> [String]
+getMatchFromContents contents rgx = fromJust (head (filter isJust (map (matchRegex rgx) (lines contents))))
+
+splitOnSpecialCmd :: String -> String -> [String]
+splitOnSpecialCmd context cmd = splitOn (cmd ++ "(_states[") context 
+
+findLinesWithSpecialState :: String -> String -> [String]
+findLinesWithSpecialState contents cmd = filter  (\l -> (splitOnSpecialCmd l cmd) /= []) (lines contents)
+
+getSpecialLine :: String -> String -> String
+getSpecialLine contents cmd | length (findLinesWithSpecialState contents cmd) >= 1 = head (findLinesWithSpecialState contents cmd)
+                            | otherwise                                            = error ("Couldn't find initial/suspended state")
+
+getIndexFromSpecialCommand :: String -> String -> String
+getIndexFromSpecialCommand cmd contents = head ((splitOn "]);" ((splitOnSpecialCmd cmd (getSpecialLine contents cmd))!!1)))
+
+getInitialOrSuspendedIndex :: String -> Bool -> String
+getInitialOrSuspendedIndex contents isInitial | isInitial = getIndexFromSpecialCommand "setInitialState" contents
+                                              | otherwise = getIndexFromSpecialCommand "setSuspendState" contents
+
+getSpecialState :: Regex -> String -> String -> [String] -> IO String
+getSpecialState rgx dir name states = do
+    contents <- getFileContents (dir ++ "/" ++ name ++ ".mm")
+    matches <- return $ getMatchFromContents contents rgx 
+    putStrLn (show matches)
+    return $ head matches
+
+getInitialState :: String -> String -> [String] -> IO String
+getInitialState = getSpecialState setInitialRegex
+        
+getSuspendedState :: String -> String -> [String] -> IO String
+getSuspendedState = getSpecialState setSuspendRegex
 
 --Gets the targets for n transition of state in directory
 getTargetsForState :: String -> String -> Int -> IO [Int]
