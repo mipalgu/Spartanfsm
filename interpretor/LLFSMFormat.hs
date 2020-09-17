@@ -225,37 +225,21 @@ readTargetTransition n file = getFileContents file >>= getTargetTransition n
 --        (getTargetsForState dir initialPseudostate 1) >>= (\x -> return $ head $ targetToState states x)
 
 setInitialRegex :: Regex
-setInitialRegex = mkRegex "setInitialState\\(_states\\[\\d+\\]\\);"
+setInitialRegex = mkRegex "setInitialState\\(_states\\[[0-9]"
 
 setSuspendRegex :: Regex
-setSuspendRegex = mkRegex "setSuspendState\\(_states\\[\\d+\\]\\);"
+setSuspendRegex = mkRegex "setSuspendState\\(_states\\[[0-9]" 
 
 getMatchFromContents :: String -> Regex -> [String]
-getMatchFromContents contents rgx = fromJust (head (filter isJust (map (matchRegex rgx) (lines contents))))
-
-splitOnSpecialCmd :: String -> String -> [String]
-splitOnSpecialCmd context cmd = splitOn (cmd ++ "(_states[") context 
-
-findLinesWithSpecialState :: String -> String -> [String]
-findLinesWithSpecialState contents cmd = filter  (\l -> (splitOnSpecialCmd l cmd) /= []) (lines contents)
-
-getSpecialLine :: String -> String -> String
-getSpecialLine contents cmd | length (findLinesWithSpecialState contents cmd) >= 1 = head (findLinesWithSpecialState contents cmd)
-                            | otherwise                                            = error ("Couldn't find initial/suspended state")
-
-getIndexFromSpecialCommand :: String -> String -> String
-getIndexFromSpecialCommand cmd contents = head ((splitOn "]);" ((splitOnSpecialCmd cmd (getSpecialLine contents cmd))!!1)))
-
-getInitialOrSuspendedIndex :: String -> Bool -> String
-getInitialOrSuspendedIndex contents isInitial | isInitial = getIndexFromSpecialCommand "setInitialState" contents
-                                              | otherwise = getIndexFromSpecialCommand "setSuspendState" contents
+getMatchFromContents contents rgx = map (\(_, s, _, _) -> s) (map fromJust (filter isJust (map (matchRegexAll rgx) (lines contents))))
 
 getSpecialState :: Regex -> String -> String -> [String] -> IO String
 getSpecialState rgx dir name states = do
     contents <- getFileContents (dir ++ "/" ++ name ++ ".mm")
     matches <- return $ getMatchFromContents contents rgx 
     putStrLn (show matches)
-    return $ head matches
+    index <- return $ fromJust $ readInt $ (last (head matches)) : ""
+    return $ states!!index
 
 getInitialState :: String -> String -> [String] -> IO String
 getInitialState = getSpecialState setInitialRegex
