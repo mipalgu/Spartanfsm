@@ -218,10 +218,10 @@ createCommandDeclaration :: String -> String -> String
 createCommandDeclaration cmd val = "constant" ++> cmd ++ ": std_logic_vector(1 downto 0) := \"" ++ val ++ "\";"
 
 suspensionConstants :: String
-suspensionConstants = createCommandDeclaration (toCommand restart) "00"
-    +\> createCommandDeclaration (toCommand suspend) "01"
-    +\> createCommandDeclaration (toCommand resume) "10"
-    +\> createCommandDeclaration (toCommand SpartanLLFSM_Variables.null) "11"
+suspensionConstants = createCommandDeclaration (toCommand SpartanLLFSM_Variables.null) "00"
+    +\> createCommandDeclaration (toCommand restart) "01"
+    +\> createCommandDeclaration (toCommand suspend) "10"
+    +\> createCommandDeclaration (toCommand resume) "11"
 
 -- Create variables in architecture block
 createArchitectureVariables :: Int -> [String] -> String -> String -> String
