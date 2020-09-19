@@ -16,12 +16,12 @@ namespace FSM
     {
         class OnSuspendAndOnResumeHelloWorld: public CLMachine
         {
-            CLState *_states[5];
+            CLState *_states[4];
         public:
             OnSuspendAndOnResumeHelloWorld(int mid  = 0, const char *name = "OnSuspendAndOnResumeHelloWorld");
             virtual ~OnSuspendAndOnResumeHelloWorld();
             virtual CLState * const * states() const { return _states; }
-            virtual int numberOfStates() const { return 5; }
+            virtual int numberOfStates() const { return 4; }
 #           include "OnSuspendAndOnResumeHelloWorld_Variables.h"
 #           include "OnSuspendAndOnResumeHelloWorld_Methods.h"
         };
