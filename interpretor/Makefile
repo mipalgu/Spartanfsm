@@ -1,4 +1,4 @@
-SRCS?=main.hs io.hs stringManipulation.hs format.hs helpers.hs variables.hs generation.hs license.hs
+SRCS?=main.hs io.hs strings.hs format.hs helpers.hs variables.hs generation.hs license.hs
 E?=@
 bin_name?=spartanfsm
 
