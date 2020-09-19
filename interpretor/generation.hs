@@ -513,15 +513,14 @@ onlyValidNewLine str1 str2 | str1 == "" && str2 == "" = ""
 
 createAllInternalStateCodeWithStateVar :: String -> [String] -> [String] -> String -> [Bool] -> String -> String -> String 
 createAllInternalStateCodeWithStateVar internalState states codes trailer afters stateVar suspendedState =
-    "when " ++ internalState ++ " =>" +\> beautifyTrimmed 1 ("case " ++ stateVar ++>  "is"
+    "when " ++ internalState ++> "=>" +\> beautifyTrimmed 1 ("case " ++ stateVar ++>  "is"
     +\> beautifyTrimmed 1 (trimNewLines (foldl onlyValidNewLine "" (map (\(a, (s,c)) -> createCodeForState s c a internalState suspendedState) $ zip afters (zip states codes)))
     +\> othersNullBlock) +\> "end case;" +\> trailer)
 
 createAllInternalStateCode :: String -> [String] -> [String] -> String -> [Bool] -> String -> String 
 createAllInternalStateCode internalState states codes trailer afters suspendedState =
     let var = if internalState == onSuspend then suspendedFrom else currentState
-    in
-    createAllInternalStateCodeWithStateVar internalState states codes trailer afters var suspendedState
+    in createAllInternalStateCodeWithStateVar internalState states codes trailer afters var suspendedState
 
 setToDefault :: String -> String -> String
 setToDefault str def | str == "" = def
@@ -539,26 +538,14 @@ emptyStringLists size = emptyStringListsCarry size []
 getSuspendedIndex :: [String] -> String -> Int
 getSuspendedIndex states suspendedState = fromJust (elemIndex (toStateName suspendedState) states)
 
-mergeAction :: [String] -> [String] -> [String]
-mergeAction action1 action2 = map (\(a1, a2) -> a1 +\?> a2) (zip action1 action2)
-
-appendAction :: [String] -> String -> [String]
-appendAction action1 code = map (\s -> s +\?> code) action1
-
-createMergedActions :: [[String]] -> Int -> [[String]]
-createMergedActions stateActions suspendedIndex = 
-    [
-        getActions stateActions 0,
-        getActions stateActions 1,
-        getActions stateActions 2,
-        appendAction (getActions stateActions 3) ((getActions stateActions 0)!!suspendedIndex),
-        mergeAction (appendAction (getActions stateActions 4) ((getActions stateActions 4)!!suspendedIndex)) (getActions stateActions 0)
-    ]
+createMergedActions :: [[String]] -> [String] -> [[String]]
+createMergedActions stateActions suspendedActions = map (\as -> [as!!0, as!!1, as!!2, (as!!3 +\?> suspendedActions!!0), (suspendedActions!!4 +\?> as!!4 +\?> as!!0)]) stateActions
 
 createAllInRisingEdge :: String-> String -> [String] -> [[String]] -> [[String]] -> [[String]] -> String -> [Bool] -> String
 createAllInRisingEdge initialState suspendedState states codes trans targets vars afters =
     let index = getSuspendedIndex states suspendedState
-        actions = createMergedActions codes index
+        suspendedActions = codes!!index
+        actions = createMergedActions codes suspendedActions
         internalToCheckTrans = internalState ++> "<=" ++> checkTransition ++ ";"
         internalToWriteSnapshot = internalState ++> "<=" ++> writeSnapshot ++ ";"
     in
