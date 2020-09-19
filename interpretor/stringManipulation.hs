@@ -63,6 +63,7 @@ module SpartanLLFSM_Strings(
     (++>),
     (+?>),
     (+\?>),
+    (+->),
     tab,
     beautify,
     removeFirstNewLine,

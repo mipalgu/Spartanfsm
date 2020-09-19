@@ -15,13 +15,9 @@ main = do
     args <- getArgs
     dir <- return $ if last (head args) == '/' then init (head args) else head args
     states <- getAllStates dir
-    hasInitialPseudostate states
-    hasSuspended states
     projectName <- return $ getProjectName dir
     initialState <- getInitialState dir projectName states 
     suspendedState <- getSuspendedState dir projectName states
-    putStrLn initialState
-    putStrLn suspendedState
     internals <- getAllInternals dir states
     transitions <- getAllTransCodeForAllStates dir states
     afters <- return $ map doesStateHaveAfter transitions

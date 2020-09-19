@@ -54,15 +54,12 @@
 
 module SpartanLLFSM_Format(
     getAllStates,
-    hasInitialPseudostate,
-    hasSuspended,
     getAllInternals,
     getAllTransCodeForAllStates,
     getAllTargets,
     getNumberOfTargets,
     getVariables,
     getIncludes,
-    suspended,
     allTargetsToState,
     initialPseudostate,
     getInitialState,
@@ -71,6 +68,7 @@ module SpartanLLFSM_Format(
 
 import SpartanLLFSM_Strings
 import SpartanLLFSM_IO
+import SpartanLLFSM_Variables
 import Data.List
 import Data.List.Split
 import Data.Char
@@ -81,19 +79,15 @@ import Text.Regex
 initialPseudostate :: String
 initialPseudostate = "InitialPseudoState"
 
---Suspended state name.
-suspended :: String
-suspended = "SUSPENDED"
-
 --Checks the states for the initial pseudostate. If the pseudostate is not present, the program errors out.
-hasInitialPseudostate :: [String] -> IO Bool
-hasInitialPseudostate states | contains initialPseudostate states = return True
-                             | otherwise                          = error ("No " ++ initialPseudostate ++ " State")
+--hasInitialPseudostate :: [String] -> IO Bool
+--hasInitialPseudostate states | contains initialPseudostate states = return True
+--                             | otherwise                          = error ("No " ++ initialPseudostate ++ " State")
 
 --Checks the states for the suspended state. If this state is not present, then the program will error out.
-hasSuspended :: [String] -> IO Bool
-hasSuspended states | contains suspended states = return True
-                    | otherwise                 = error ("No " ++ suspended ++ " State")
+--hasSuspended :: [String] -> IO Bool
+--hasSuspended states | contains suspended states = return True
+--                    | otherwise                 = error ("No " ++ suspended ++ " State")
 
 --STATE CODE
 
@@ -119,21 +113,21 @@ getInternalStates dir state intState = getFileContents (dir ++ "/State_" ++ stat
 
 --Get onEntry code for a given state
 getOnEntry :: String -> String -> IO String
-getOnEntry dir state = getInternalStates dir state "OnEntry"
+getOnEntry dir state = getInternalStates dir state onEntry
 
 --Get onExit code for a given state
 getOnExit :: String -> String -> IO String
-getOnExit dir state = getInternalStates dir state "OnExit"
+getOnExit dir state = getInternalStates dir state onExit
 
 --Get Internal code for a given state
 getInternal :: String -> String -> IO String
-getInternal dir state = getInternalStates dir state "Internal"
+getInternal dir state = getInternalStates dir state internal
 
 getOnSuspend :: String -> String -> IO String
-getOnSuspend dir state = getInternalStates dir state "OnSuspend"
+getOnSuspend dir state = getInternalStates dir state onSuspend
 
 getOnResume :: String -> String -> IO String
-getOnResume dir state = getInternalStates dir state "OnResume"
+getOnResume dir state = getInternalStates dir state onResume
 
 --Gets all of the internal state code
 getInternals :: String -> String -> IO [String]
