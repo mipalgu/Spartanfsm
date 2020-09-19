@@ -262,18 +262,6 @@ isAfterUs str = "after_us" == (lower str)
 isAfterNs :: String -> Bool
 isAfterNs str = "after_ns" == (lower str)
 
-afterReg :: Regex
-afterReg = mkRegex "after\\(.*\\)"
-
-after_ms :: Regex
-after_ms = mkRegex "after_ms\\(.*\\)"
-
-after_us :: Regex
-after_us = mkRegex "after_us\\(.*\\)"
-
-after_ns :: Regex
-after_ns = mkRegex "after_ns\\(.*\\)"
-
 isAnyAfter :: String -> Bool
 isAnyAfter str = isAfter str || isAfterMs str || isAfterUs str || isAfterNs str
 
@@ -292,11 +280,6 @@ isAfterCandidate str = length (splitOn "(" str) >= 2 && isAnyAfter (getAfterComm
 getAfterAndValue :: String -> [String]
 getAfterAndValue str = [getAfterCommand str, getValueFromAfter str]
 
---replaceAfter :: String -> String
---replaceAfter str | isAfterCandidate str = convertAfterToVHDLVariable ((getAfterAndValue str)!!0) ((getAfterAndValue str)!!1)
---                 | otherwise            = str
-
-
 after_nsReplace :: String -> String
 after_nsReplace val = convertAfter val ringletsPerNs 
 
@@ -309,18 +292,8 @@ after_msReplace val = convertAfter val ringletsPerMs
 afterReplace :: String -> String
 afterReplace val = convertAfter val ringletsPerS
 
-replaceAfter :: Regex -> String -> String
-replaceAfter reg | isMatchedRegex reg "after_ns(1)" = after_nsReplace 
-                 | isMatchedRegex reg "after_us(1)" = after_usReplace 
-                 | isMatchedRegex reg "after_ms(1)" = after_msReplace 
-                 | isMatchedRegex reg "after(1)"    = afterReplace 
-                 | otherwise                        = error "Can't replace invalid after."
-
 getValueStr :: String -> String -> String
 getValueStr str after = init (tail (getValueBit after str))
-
-isMatchedRegex :: Regex -> String -> Bool
-isMatchedRegex reg mat = matchRegex reg mat /= Nothing
 
 removeFirstFromString :: String -> Int -> String
 removeFirstFromString str n | length str < n = error "Can't remove elements from front of string since string is too small"
@@ -359,20 +332,6 @@ replaceString str carry allButCarry
   | isNormalAfter carry = findValueAndCarry str (removeFirstFromString carry 3) allButCarry     
   | str == ""           = allButCarry ++ carry
   | otherwise           = replaceString (tail str) (carry ++ [head str]) allButCarry
-
-isAfterRegex :: Regex -> Bool
-isAfterRegex after = isMatchedRegex after "after_ns(1)" || isMatchedRegex after "after_us(1)" || isMatchedRegex after "after_ms(1)" || isMatchedRegex after "after(1)" 
-
-afterRegToStr :: Regex -> String
-afterRegToStr after | isMatchedRegex after "after_ns(1)" = "after_ns"
-                    | isMatchedRegex after "after_us(1)" = "after_us"
-                    | isMatchedRegex after "after_ms(1)" = "after_ms"
-                    | isMatchedRegex after "after(1)"    = "after"
-                    | otherwise                          = error "Not an after regex." 
-
-afterReplaceStr :: String -> Regex -> String
-afterReplaceStr str reg | isAfterRegex reg = replaceAfter reg (getValueStr str (afterRegToStr reg)) 
-                        | otherwise        = error ""
 
 findValueInBrackets :: String -> String -> Int -> String
 findValueInBrackets remaining carry openBrackets 
@@ -500,9 +459,6 @@ createWriteTransition  = internalState ++> "<=" ++> readSnapshot ++ ";"
 -- Creates the WriteSnapshot section
 createWriteSnapshot :: String -> String
 createWriteSnapshot vars = createStateCode writeSnapshot (createWriteCode vars) createWriteTransition
-
---createCheckSuspension :: String -> String
---createCheckSuspension initialState = createStateCode "CheckForSuspension" (suspensionLogic initialState) ""
 
 -- Create onEntry code
 createOnEntry :: String -> String
