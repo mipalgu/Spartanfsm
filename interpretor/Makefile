@@ -9,7 +9,7 @@ build:
 clean:
 	$Erm -f bin/* ${bin_name}
 
-install: manpage
+install: 
 	$Emv ${bin_name} /usr/local/bin
 
 uninstall:
