@@ -311,7 +311,7 @@ isSmallAfter str = str == "after_ns" || str == "after_us" || str == "after_ms"
 
 isNormalAfter :: String -> Bool
 isNormalAfter str | length str /= 8 = False
-                  | otherwise       = (removeFirstFromString str 3) == "after"
+                  | otherwise       = removeLastFromString str 2 == "after("
 
 matchString :: String -> Bool 
 matchString str | length str /= 8 = False
@@ -324,13 +324,13 @@ findValueAndCarry str carry allButCarry
 
 replaceString :: String -> String -> String -> String
 replaceString str carry allButCarry
-  | length carry > 8    = replaceString str (tail carry) (allButCarry ++ [head carry])
-  | length carry == 5 
-    && carry == "after" = findValueAndCarry str carry allButCarry
-  | isSmallAfter carry  = findValueAndCarry str carry allButCarry
-  | isNormalAfter carry = findValueAndCarry str (removeFirstFromString carry 3) allButCarry     
-  | str == ""           = allButCarry ++ carry
-  | otherwise           = replaceString (tail str) (carry ++ [head str]) allButCarry
+  | length carry > 8      = replaceString str (tail carry) (allButCarry ++ [head carry])
+  | length carry == 8 &&
+      isSmallAfter carry  = findValueAndCarry str carry allButCarry
+  | length carry == 8 &&
+      isNormalAfter carry = findValueAndCarry ((sliceString 5 7 carry) ++ str) (removeLastFromString carry 3) allButCarry     
+  | str == ""             = allButCarry ++ carry
+  | otherwise             = replaceString (tail str) (carry ++ [head str]) allButCarry
 
 findValueInBrackets :: String -> String -> Int -> String
 findValueInBrackets remaining carry openBrackets 
