@@ -231,7 +231,6 @@ getSpecialState :: Regex -> String -> String -> [String] -> IO String
 getSpecialState rgx dir name states = do
     contents <- getFileContents (dir ++ "/" ++ name ++ ".mm")
     matches <- return $ getMatchFromContents contents rgx 
-    putStrLn (show matches)
     index <- return $ fromJust $ readInt $ (last (head matches)) : ""
     return $ states!!index
 
