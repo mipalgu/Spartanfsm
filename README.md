@@ -25,6 +25,7 @@ sudo apt-get install -y cabal-install ghc
 cabal update
 cabal install split
 cabal install extra
+cabal install regex-compat
 ```
 3. Install the interpretor
 ```
