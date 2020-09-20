@@ -33,7 +33,7 @@ begin
 	)
 	port map(
 		clk => CLOCK_50,
-		command => "11",
+		command => "00",
 		suspended => suspended,
 		EXTERNAL_LEDG => LEDG,
 		EXTERNAL_LEDR => LEDR
