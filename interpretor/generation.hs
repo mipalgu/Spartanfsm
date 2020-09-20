@@ -184,8 +184,8 @@ createTargetState bits = "signal" ++> targetState ++ ": std_logic_vector(" ++ (s
 --Code to create previousRinglet signal.
 createPreviousRinglet :: Int -> String -> String
 createPreviousRinglet bits initialState
-  = "signal" ++> previousRinglet ++ ": std_logic_vector(" ++ (show (bits - 1)) ++ " downto 0) := "
-    ++ initialState ++ " xor \"" ++ (ones bits) ++ "\";\n"
+  = "signal" ++> previousRinglet ++ ": std_logic_vector(" ++ (show (bits - 1)) ++ " downto 0) := \""
+    ++ repeatChar 'Z' bits ++ "\";\n"
 
 --Creates the suspendedFrom architecture signal.
 createSuspendedFrom :: Int -> String -> String

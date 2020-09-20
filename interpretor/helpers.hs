@@ -54,7 +54,7 @@
 
 --CONVENIENCE CODE
 
-module SpartanLLFSM_Helpers(decToBin, ones) where
+module SpartanLLFSM_Helpers(decToBin, ones, repeatChar) where
 
 --Converts decimal to a binary number
 decToBin :: Int -> Int -> String
@@ -77,6 +77,9 @@ ones n = onesCarry n ""
         onesCarry :: Int -> String -> String
         onesCarry m str | m <= 0    = str
                         | otherwise = onesCarry (m-1) ("1" ++ str)
+
+repeatChar :: Char -> Int -> String
+repeatChar c i = map (\s -> c) (ones i) 
 
 --END CONVENIENCE CODE
 
