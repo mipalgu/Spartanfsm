@@ -1,2 +1,1 @@
-bcdRestart <= '0';
-bcdSuspend <= '0';
+bcdCommand <= command_RESTART;

@@ -1,1 +1,1 @@
-digitsRestart <= '1';
+digitsCommand <= command_NULL;

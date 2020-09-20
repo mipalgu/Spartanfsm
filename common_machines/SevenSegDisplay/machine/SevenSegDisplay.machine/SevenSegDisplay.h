@@ -16,12 +16,12 @@ namespace FSM
     {
         class SevenSegDisplay: public CLMachine
         {
-            CLState *_states[6];
+            CLState *_states[5];
         public:
             SevenSegDisplay(int mid  = 0, const char *name = "SevenSegDisplay");
             virtual ~SevenSegDisplay();
             virtual CLState * const * states() const { return _states; }
-            virtual int numberOfStates() const { return 6; }
+            virtual int numberOfStates() const { return 5; }
 #           include "SevenSegDisplay_Variables.h"
 #           include "SevenSegDisplay_Methods.h"
         };

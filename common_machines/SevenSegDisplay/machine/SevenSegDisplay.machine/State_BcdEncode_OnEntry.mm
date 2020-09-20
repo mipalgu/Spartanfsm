@@ -1,1 +1,1 @@
-bcdRestart <= '1';
+bcdCommand <= command_NULL;

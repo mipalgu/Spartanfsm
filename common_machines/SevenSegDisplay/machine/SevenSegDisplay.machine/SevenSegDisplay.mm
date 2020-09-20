@@ -8,7 +8,6 @@
 
 #include "State_Initial.h"
 #include "State_SUSPENDED.h"
-#include "State_InitialPseudoState.h"
 #include "State_BcdEncode.h"
 #include "State_StartSevSeg.h"
 #include "State_WaitForFinish.h"
@@ -28,10 +27,9 @@ SevenSegDisplay::SevenSegDisplay(int mid, const char *name): CLMachine(mid, name
 {
 	_states[0] = new FSMSevenSegDisplay::State::Initial;
 	_states[1] = new FSMSevenSegDisplay::State::SUSPENDED;
-	_states[2] = new FSMSevenSegDisplay::State::InitialPseudoState;
-	_states[3] = new FSMSevenSegDisplay::State::BcdEncode;
-	_states[4] = new FSMSevenSegDisplay::State::StartSevSeg;
-	_states[5] = new FSMSevenSegDisplay::State::WaitForFinish;
+	_states[2] = new FSMSevenSegDisplay::State::BcdEncode;
+	_states[3] = new FSMSevenSegDisplay::State::StartSevSeg;
+	_states[4] = new FSMSevenSegDisplay::State::WaitForFinish;
 
 	setSuspendState(_states[1]);            // set suspend state
 	setInitialState(_states[0]);            // set initial state
@@ -44,5 +42,4 @@ SevenSegDisplay::~SevenSegDisplay()
 	delete _states[2];
 	delete _states[3];
 	delete _states[4];
-	delete _states[5];
 }

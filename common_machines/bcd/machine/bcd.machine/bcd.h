@@ -16,12 +16,12 @@ namespace FSM
     {
         class bcd: public CLMachine
         {
-            CLState *_states[6];
+            CLState *_states[5];
         public:
             bcd(int mid  = 0, const char *name = "bcd");
             virtual ~bcd();
             virtual CLState * const * states() const { return _states; }
-            virtual int numberOfStates() const { return 6; }
+            virtual int numberOfStates() const { return 5; }
 #           include "bcd_Variables.h"
 #           include "bcd_Methods.h"
         };

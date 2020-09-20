@@ -3,6 +3,9 @@
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wc++98-compat"
+
 #include "SevenSegDigit_Includes.h"
 #include "SevenSegDigit.h"
 #include "State_Seven.h"
@@ -14,7 +17,7 @@ using namespace CLM;
 using namespace FSMSevenSegDigit;
 using namespace State;
 
-Seven::Seven(const char *name): CLState(name, *new Seven::OnEntry, *new Seven::OnExit, *new Seven::Internal)
+Seven::Seven(const char *name): CLState(name, *new Seven::OnEntry, *new Seven::OnExit, *new Seven::Internal, NULLPTR, new Seven::OnSuspend, new Seven::OnResume)
 {
 	_transitions[0] = new Transition_0();
 }
@@ -24,7 +27,8 @@ Seven::~Seven()
 	delete &onEntryAction();
 	delete &onExitAction();
 	delete &internalAction();
-
+	delete onSuspendAction();
+	delete onResumeAction();
 	delete _transitions[0];
 }
 
@@ -36,7 +40,7 @@ void Seven::OnEntry::perform(CLMachine *_machine, CLState *_state) const
 #	include "State_Seven_FuncRefs.mm"
 #	include "State_Seven_OnEntry.mm"
 }
-
+ 
 void Seven::OnExit::perform(CLMachine *_machine, CLState *_state) const
 {
 #	include "SevenSegDigit_VarRefs.mm"
@@ -55,6 +59,23 @@ void Seven::Internal::perform(CLMachine *_machine, CLState *_state) const
 #	include "State_Seven_Internal.mm"
 }
 
+void Seven::OnSuspend::perform(CLMachine *_machine, CLState *_state) const
+{
+#	include "SevenSegDigit_VarRefs.mm"
+#	include "State_Seven_VarRefs.mm"
+#	include "SevenSegDigit_FuncRefs.mm"
+#	include "State_Seven_FuncRefs.mm"
+#	include "State_Seven_OnSuspend.mm"
+}
+
+void Seven::OnResume::perform(CLMachine *_machine, CLState *_state) const
+{
+#	include "SevenSegDigit_VarRefs.mm"
+#	include "State_Seven_VarRefs.mm"
+#	include "SevenSegDigit_FuncRefs.mm"
+#	include "State_Seven_FuncRefs.mm"
+#	include "State_Seven_OnResume.mm"
+}
 bool Seven::Transition_0::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "SevenSegDigit_VarRefs.mm"

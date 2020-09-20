@@ -1,2 +1,1 @@
-digitsRestart <= '0';
-digitsSuspend <= '0';
+digitsCommand <= command_RESTART;

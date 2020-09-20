@@ -1,4 +1,2 @@
-digitsRestart <= '1';
-digitsSuspend <= '1';
-bcdRestart <= '1';
-bcdSuspend <= '1';
+digitsCommand <= command_SUSPEND;
+bcdCommand <= command_SUSPEND;

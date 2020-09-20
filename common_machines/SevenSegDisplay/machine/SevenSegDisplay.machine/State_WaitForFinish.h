@@ -6,36 +6,48 @@
 #ifndef clfsm_SevenSegDisplay_State_WaitForFinish_h
 #define clfsm_SevenSegDisplay_State_WaitForFinish_h
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wc++98-compat"
+
 #include "CLState.h"
 #include "CLAction.h"
 #include "CLTransition.h"
 
 namespace FSM
 {
-    namespace CLM
+  namespace CLM
+  {
+    namespace FSMSevenSegDisplay
     {
-      namespace FSMSevenSegDisplay
+      namespace State
       {
-        namespace State
+        class WaitForFinish: public CLState
         {
-            class WaitForFinish: public CLState
-            {
-                class OnEntry: public CLAction
-                {
-                    virtual void perform(CLMachine *, CLState *) const;
-                };
-
-                class OnExit: public CLAction
-                {
-                    virtual void perform(CLMachine *, CLState *) const;
-                };
-
-                class Internal: public CLAction
-                {
-                    virtual void perform(CLMachine *, CLState *) const;
-                };
-
-                class Transition_0: public CLTransition
+          class OnEntry: public CLAction
+          {
+            virtual void perform(CLMachine *, CLState *) const;
+          };
+          
+          class OnExit: public CLAction
+          {
+            virtual void perform(CLMachine *, CLState *) const;
+          };
+          
+          class Internal: public CLAction
+          {
+            virtual void perform(CLMachine *, CLState *) const;
+          };
+          
+          class OnSuspend: public CLAction
+          {
+            virtual void perform(CLMachine *, CLState *) const;
+          };
+          
+          class OnResume: public CLAction
+          {
+            virtual void perform(CLMachine *, CLState *) const;
+          };
+                          class Transition_0: public CLTransition
                 {
                 public:
                     Transition_0(int toState = 1): CLTransition(toState) {}
