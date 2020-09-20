@@ -8,7 +8,6 @@
 
 #include "State_Initial.h"
 #include "State_SUSPENDED.h"
-#include "State_InitialPseudoState.h"
 #include "State_LightOn.h"
 
 using namespace FSM;
@@ -26,8 +25,7 @@ SuspensibleHelloWorld::SuspensibleHelloWorld(int mid, const char *name): CLMachi
 {
 	_states[0] = new FSMSuspensibleHelloWorld::State::Initial;
 	_states[1] = new FSMSuspensibleHelloWorld::State::SUSPENDED;
-	_states[2] = new FSMSuspensibleHelloWorld::State::InitialPseudoState;
-	_states[3] = new FSMSuspensibleHelloWorld::State::LightOn;
+	_states[2] = new FSMSuspensibleHelloWorld::State::LightOn;
 
 	setSuspendState(_states[1]);            // set suspend state
 	setInitialState(_states[0]);            // set initial state
@@ -38,5 +36,4 @@ SuspensibleHelloWorld::~SuspensibleHelloWorld()
 	delete _states[0];
 	delete _states[1];
 	delete _states[2];
-	delete _states[3];
 }

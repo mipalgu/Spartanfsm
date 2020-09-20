@@ -16,12 +16,12 @@ namespace FSM
     {
         class HelloWorld: public CLMachine
         {
-            CLState *_states[5];
+            CLState *_states[4];
         public:
             HelloWorld(int mid  = 0, const char *name = "HelloWorld");
             virtual ~HelloWorld();
             virtual CLState * const * states() const { return _states; }
-            virtual int numberOfStates() const { return 5; }
+            virtual int numberOfStates() const { return 4; }
 #           include "HelloWorld_Variables.h"
 #           include "HelloWorld_Methods.h"
         };

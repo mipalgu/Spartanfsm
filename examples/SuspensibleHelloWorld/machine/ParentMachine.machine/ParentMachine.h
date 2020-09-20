@@ -16,12 +16,12 @@ namespace FSM
     {
         class ParentMachine: public CLMachine
         {
-            CLState *_states[7];
+            CLState *_states[6];
         public:
             ParentMachine(int mid  = 0, const char *name = "ParentMachine");
             virtual ~ParentMachine();
             virtual CLState * const * states() const { return _states; }
-            virtual int numberOfStates() const { return 7; }
+            virtual int numberOfStates() const { return 6; }
 #           include "ParentMachine_Variables.h"
 #           include "ParentMachine_Methods.h"
         };
