@@ -1,5 +1,5 @@
 //
-// State_Initial_FuncRefs.mm
+// State_Suspend_FuncRefs.mm
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //

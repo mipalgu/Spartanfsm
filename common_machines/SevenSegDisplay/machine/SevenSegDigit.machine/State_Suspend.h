@@ -1,10 +1,10 @@
 //
-// State_SUSPENDED.h
+// State_Suspend.h
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
-#ifndef clfsm_SevenSegDigit_State_SUSPENDED_h
-#define clfsm_SevenSegDigit_State_SUSPENDED_h
+#ifndef clfsm_SevenSegDigit_State_Suspend_h
+#define clfsm_SevenSegDigit_State_Suspend_h
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wc++98-compat"
@@ -21,7 +21,7 @@ namespace FSM
     {
       namespace State
       {
-        class SUSPENDED: public CLState
+        class Suspend: public CLState
         {
           class OnEntry: public CLAction
           {
@@ -54,14 +54,14 @@ namespace FSM
 
 
                 public:
-                    SUSPENDED(const char *name = "SUSPENDED");
-                    virtual ~SUSPENDED();
+                    Suspend(const char *name = "Suspend");
+                    virtual ~Suspend();
 
                     virtual CLTransition * const *transitions() const { return _transitions; }
                     virtual int numberOfTransitions() const { return 0; }
 
-#                   include "State_SUSPENDED_Variables.h"
-#                   include "State_SUSPENDED_Methods.h"
+#                   include "State_Suspend_Variables.h"
+#                   include "State_Suspend_Methods.h"
             };
         }
       }
