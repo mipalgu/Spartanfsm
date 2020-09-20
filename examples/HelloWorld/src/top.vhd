@@ -29,7 +29,7 @@ begin
 
 	helloWorld_gen: HelloWorld port map (
 		clk => CLOCK_50,
-		command => "11",
+		command => "00",
 		suspended => suspended,
 		EXTERNAL_LED => ledValue
 	);
