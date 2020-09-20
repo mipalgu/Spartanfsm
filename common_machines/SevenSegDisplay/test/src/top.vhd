@@ -18,24 +18,26 @@ end top;
 architecture Behavioral of top is
 	signal displayOutput: std_logic_vector(55 downto 0);
 	signal number: std_logic_vector(23 downto 0) := x"BC614E"; -- The number is 12345678
-	signal displayRestart: std_logic;
 	signal displaySuspended: std_logic;
+    constant COMMAND_NULL: std_logic_vector(1 downto 0) := "00";
+    constant COMMAND_RESTART: std_logic_vector(1 downto 0) := "01";
+    constant COMMAND_SUSPEND: std_logic_vector(1 downto 0) := "10";
+    constant COMMAND_RESUME: std_logic_vector(1 downto 0) := "11";
+    signal displayCommand: std_logic_vector(1 downto 0) := COMMAND_NULL;
 	
 	
 	component SevenSegDisplay is
 		generic (
-			N: positive;
-			digits: positive
-		);
-		port (
-			clk: in std_logic;
-			restart: in std_logic;
-			resume: in std_logic;
-			suspend: in std_logic;
-			suspended: out std_logic;
-			EXTERNAL_number: in std_logic_vector(N - 1 downto 0);
-			EXTERNAL_sevSegDigits: out std_logic_vector(7 * digits - 1 downto 0)
-		);
+            N: positive;
+            digits: positive
+        );
+        port (
+            clk: in std_logic;
+            command: in std_logic_vector(1 downto 0);
+            suspended: out std_logic;
+            EXTERNAL_number: in std_logic_vector(N - 1 downto 0);
+            EXTERNAL_sevSegDigits: out std_logic_vector(7 * digits - 1 downto 0)
+        );
 	end component;
 
 begin
@@ -46,9 +48,7 @@ begin
 	)
 	port map (
 		clk => CLOCK_50,
-		restart => displayRestart,
-		resume => '0',
-		suspend => '0',
+		command => displayCommand,
 		suspended => displaySuspended,
 		EXTERNAL_number => number,
 		EXTERNAL_sevSegDigits => displayOutput
@@ -67,9 +67,9 @@ process (CLOCK_50)
 begin
 	if (rising_edge(CLOCK_50)) then
 		if (displaySuspended = '1') then
-			displayRestart <= '0';
+			displayCommand <= COMMAND_RESTART;
 		else
-			displayRestart <= '1';
+			displayCommand <= COMMAND_NULL;
 		end if;
 	end if;
 end process;
