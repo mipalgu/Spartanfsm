@@ -178,8 +178,8 @@ createCurrentState firstState bits =
     "signal" ++> currentState ++ ": std_logic_vector(" ++ (show (bits - 1)) ++ " downto 0) := " ++ firstState ++ ";\n"
 
 -- Code to create targetState signal.
-createTargetState :: Int -> String
-createTargetState bits = "signal" ++> targetState ++ ": std_logic_vector(" ++ (show (bits - 1)) ++ " downto 0) :=" ++> currentState ++ ";\n"
+createTargetState :: Int -> String -> String
+createTargetState bits initialState = "signal" ++> targetState ++ ": std_logic_vector(" ++ (show (bits - 1)) ++ " downto 0) :=" ++> initialState ++ ";\n"
 
 --Code to create previousRinglet signal.
 createPreviousRinglet :: Int -> String -> String
@@ -229,7 +229,7 @@ createArchitectureVariables size states vars firstState =
     internalStateVhdl
     ++ createAllStates (numberOfBits $ length states) (getBins states) states
     ++ (createCurrentState (firstState) (numberOfBits (length states)))
-    ++ createTargetState (numberOfBits $ length states)
+    ++ createTargetState (numberOfBits $ length states) firstState
     ++ createPreviousRinglet (numberOfBits $ length states) firstState
     ++ createSuspendedFrom (numberOfBits $ length states) firstState
     ++ suspensionConstants
