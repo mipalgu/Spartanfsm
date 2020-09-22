@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-23 05:24 AEST
+--Date Generated: 2020-09-23 05:58 AEST
 --
 --Author: Morgan McColl
 --Email: morgan.mccoll@alumni.griffithuni.edu.au
@@ -140,6 +140,7 @@ process (clk)
                             triggerPin <= '0';
                         when STATE_Skip_Garbage =>
                             triggerPin <= '0';
+                            ringlet_counter := 0;
                         when STATE_ClearTrigger =>
                             triggerPin <= '0';
                         when STATE_LostPulse =>
@@ -159,6 +160,7 @@ process (clk)
                             triggerPin <= '0';
                         when STATE_Skip_Garbage =>
                             triggerPin <= '0';
+                            ringlet_counter := 0;
                         when STATE_WaitForPulseStart =>
                             ringlet_counter := 0;
                         when STATE_ClearTrigger =>
@@ -197,6 +199,9 @@ process (clk)
                         when STATE_Skip_Garbage =>
                             if (echo = '0') then
                                 targetState <= STATE_WaitForPulseStart;
+                                internalState <= OnExit;
+                            elsif (ringlet_counter >= integer(ceil((real(MAX_TIME)) * RINGLETS_PER_US))) and (not (echo = '0')) then
+                                targetState <= STATE_LostPulse;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
@@ -257,6 +262,8 @@ process (clk)
                     end case;
                 when Internal =>
                     case currentState is
+                        when STATE_Skip_Garbage =>
+                            ringlet_counter := ringlet_counter + 1;
                         when STATE_WaitForPulseStart =>
                             numloops <= numloops + 1;
                             ringlet_counter := ringlet_counter + 1;
