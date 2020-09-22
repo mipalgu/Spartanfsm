@@ -21,6 +21,7 @@ end top;
 
 architecture Behavioural of top is
 	signal distance: std_logic_vector(15 downto 0) := x"3039";
+    signal displayDistance: std_logic_vector(15 downto 0);
     signal allDigits: std_logic_vector(34 downto 0);
     constant COMMAND_NULL: std_logic_vector(1 downto 0) := "00";
     constant COMMAND_RESTART: std_logic_vector(1 downto 0) := "01";
@@ -78,7 +79,7 @@ begin
         clk => CLOCK_50,
         command => displayCommand,
         suspended => displaySuspended,
-        EXTERNAL_number => distance,
+        EXTERNAL_number => displayDistance,
         EXTERNAL_sevSegDigits => allDigits
     );
     
@@ -87,6 +88,8 @@ begin
     HEX3 <= allDigits(20 downto 14);
     HEX4 <= allDigits(27 downto 21);
     HEX5 <= allDigits(34 downto 28);
+    
+    displayDistance <= distance after 500 ms;
    
 process (CLOCK_50)
 begin
