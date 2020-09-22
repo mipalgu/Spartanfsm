@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-23 04:44 AEST
+--Date Generated: 2020-09-23 04:47 AEST
 --
 --Author: Morgan McColl
 --Email: morgan.mccoll@alumni.griffithuni.edu.au
@@ -72,7 +72,7 @@ architecture LLFSM of UltrasonicDiscreteSingle is
     signal distance: std_logic_vector(15 downto 0);
     --Machine Variables
     constant SCHEDULE_LENGTH: natural := 100;
-    constant SPEED_OF_SOUND: natural: 343;
+    constant SPEED_OF_SOUND: natural := 343;
     constant SONAR_OFFSET: natural := 40;
     constant MAX_DISTANCE: natural := 4000000;
     constant MAX_TIME: natural := MAX_DISTANCE * 2 / SPEED_OF_SOUND * 1000;
