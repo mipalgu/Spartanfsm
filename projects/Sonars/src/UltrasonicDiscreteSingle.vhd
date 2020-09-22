@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-23 07:13 AEST
+--Date Generated: 2020-09-23 07:18 AEST
 --
 --Author: Morgan McColl
 --Email: morgan.mccoll@alumni.griffithuni.edu.au
@@ -146,7 +146,7 @@ process (clk)
                         when STATE_LostPulse =>
                             distance <= (others => '1');
                         when STATE_CalculateDistance =>
-                            distance <= std_logic_vector(to_unsigned(((numloops* SCHEDULE_LENGTH / 1000) * SPEED_OF_SOUND) / 10000, 16));
+                            distance <= std_logic_vector(to_unsigned(((numloops* SCHEDULE_LENGTH / 1000) * SPEED_OF_SOUND) / 10000 - SONAR_OFFSET, 16));
                         when STATE_WaitForMaxTime =>
                             hasResult <= '1';
                             ringlet_counter := 0;
@@ -168,7 +168,7 @@ process (clk)
                         when STATE_LostPulse =>
                             distance <= (others => '1');
                         when STATE_CalculateDistance =>
-                            distance <= std_logic_vector(to_unsigned(((numloops* SCHEDULE_LENGTH / 1000) * SPEED_OF_SOUND) / 10000, 16));
+                            distance <= std_logic_vector(to_unsigned(((numloops* SCHEDULE_LENGTH / 1000) * SPEED_OF_SOUND) / 10000 - SONAR_OFFSET, 16));
                         when STATE_WaitForMaxTime =>
                             hasResult <= '1';
                             ringlet_counter := 0;
