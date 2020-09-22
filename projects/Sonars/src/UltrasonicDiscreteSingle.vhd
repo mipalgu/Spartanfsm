@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-23 05:58 AEST
+--Date Generated: 2020-09-23 06:02 AEST
 --
 --Author: Morgan McColl
 --Email: morgan.mccoll@alumni.griffithuni.edu.au
@@ -200,7 +200,7 @@ process (clk)
                             if (echo = '0') then
                                 targetState <= STATE_WaitForPulseStart;
                                 internalState <= OnExit;
-                            elsif (ringlet_counter >= integer(ceil((real(MAX_TIME)) * RINGLETS_PER_US))) and (not (echo = '0')) then
+                            elsif (ringlet_counter >= integer(ceil((real(MAX_TIME)) * RINGLETS_PER_NS))) and (not (echo = '0')) then
                                 targetState <= STATE_LostPulse;
                                 internalState <= OnExit;
                             else
@@ -251,7 +251,7 @@ process (clk)
                                 internalState <= Internal;
                             end if;
                         when STATE_WaitForMaxTime =>
-                            if (ringlet_counter >= integer(ceil((real(MAX_TIME)) * RINGLETS_PER_US))) then
+                            if (ringlet_counter >= integer(ceil((real(MAX_TIME)) * RINGLETS_PER_NS))) then
                                 targetState <= STATE_Setup_Pin;
                                 internalState <= OnExit;
                             else
