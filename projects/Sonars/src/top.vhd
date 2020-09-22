@@ -4,8 +4,6 @@ use IEEE.std_logic_1164.All;
 entity top is
     port (
         CLOCK_50: in std_logic;
-        CLOCK2_50: in std_logic;
-        CLOCK3_50: in std_logic;
         triggers: out std_logic_vector(0 downto 0);
         echos: in std_logic_vector(0 downto 0);
         --HEX0: out std_logic_vector(6 downto 0);
