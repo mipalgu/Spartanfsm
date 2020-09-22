@@ -1,5 +1,5 @@
 //
-// State_InitialPseudoState_Variables.h
+// State_CalculateDistance_Variables.h
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //

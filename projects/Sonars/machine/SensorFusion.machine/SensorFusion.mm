@@ -8,7 +8,6 @@
 
 #include "State_Initial.h"
 #include "State_SUSPENDED.h"
-#include "State_InitialPseudoState.h"
 #include "State_ConvertToUnsigned.h"
 #include "State_changeCurrentSensor.h"
 #include "State_ConvertToSigned.h"
@@ -32,14 +31,13 @@ SensorFusion::SensorFusion(int mid, const char *name): CLMachine(mid, name)
 {
 	_states[0] = new FSMSensorFusion::State::Initial;
 	_states[1] = new FSMSensorFusion::State::SUSPENDED;
-	_states[2] = new FSMSensorFusion::State::InitialPseudoState;
-	_states[3] = new FSMSensorFusion::State::ConvertToUnsigned;
-	_states[4] = new FSMSensorFusion::State::changeCurrentSensor;
-	_states[5] = new FSMSensorFusion::State::ConvertToSigned;
-	_states[6] = new FSMSensorFusion::State::SetSmallestOutput;
-	_states[7] = new FSMSensorFusion::State::SignedOutput;
-	_states[8] = new FSMSensorFusion::State::UnsignedOutput;
-	_states[9] = new FSMSensorFusion::State::ChangeOutput;
+	_states[2] = new FSMSensorFusion::State::ConvertToUnsigned;
+	_states[3] = new FSMSensorFusion::State::changeCurrentSensor;
+	_states[4] = new FSMSensorFusion::State::ConvertToSigned;
+	_states[5] = new FSMSensorFusion::State::SetSmallestOutput;
+	_states[6] = new FSMSensorFusion::State::SignedOutput;
+	_states[7] = new FSMSensorFusion::State::UnsignedOutput;
+	_states[8] = new FSMSensorFusion::State::ChangeOutput;
 
 	setSuspendState(_states[1]);            // set suspend state
 	setInitialState(_states[0]);            // set initial state
@@ -56,5 +54,4 @@ SensorFusion::~SensorFusion()
 	delete _states[6];
 	delete _states[7];
 	delete _states[8];
-	delete _states[9];
 }

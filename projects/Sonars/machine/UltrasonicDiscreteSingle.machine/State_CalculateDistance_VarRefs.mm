@@ -1,5 +1,5 @@
 //
-// State_Calculate_Distance_VarRefs.mm
+// State_CalculateDistance_VarRefs.mm
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
@@ -7,7 +7,7 @@
 #pragma clang diagnostic ignored "-Wunused-variable"
 #pragma clang diagnostic ignored "-Wshadow"
 
-Calculate_Distance *_s = static_cast<Calculate_Distance *>(_state);
+CalculateDistance *_s = static_cast<CalculateDistance *>(_state);
 
 
 #pragma clang diagnostic pop

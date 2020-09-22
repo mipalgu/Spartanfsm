@@ -1,11 +1,10 @@
 Initial
 SUSPENDED
-InitialPseudoState
 Setup_Pin
 Skip_Garbage
 WaitForPulseStart
 ClearTrigger
 LostPulse
 WaitForPulseEnd
-Calculate_Distance
+CalculateDistance
 WaitForMaxTime

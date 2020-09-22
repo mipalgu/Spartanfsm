@@ -1,5 +1,5 @@
 //
-// State_InitialPseudoState_FuncRefs.mm
+// State_CalculateDistance_FuncRefs.mm
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //

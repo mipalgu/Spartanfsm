@@ -1,10 +1,10 @@
 //
-// State_InitialPseudoState.h
+// State_CalculateDistance.h
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
-#ifndef clfsm_SensorFusion_State_InitialPseudoState_h
-#define clfsm_SensorFusion_State_InitialPseudoState_h
+#ifndef clfsm_UltrasonicDiscreteSingle_State_CalculateDistance_h
+#define clfsm_UltrasonicDiscreteSingle_State_CalculateDistance_h
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wc++98-compat"
@@ -17,11 +17,11 @@ namespace FSM
 {
   namespace CLM
   {
-    namespace FSMSensorFusion
+    namespace FSMUltrasonicDiscreteSingle
     {
       namespace State
       {
-        class InitialPseudoState: public CLState
+        class CalculateDistance: public CLState
         {
           class OnEntry: public CLAction
           {
@@ -50,7 +50,7 @@ namespace FSM
                           class Transition_0: public CLTransition
                 {
                 public:
-                    Transition_0(int toState = 0): CLTransition(toState) {}
+                    Transition_0(int toState = 9): CLTransition(toState) {}
 
                     virtual bool check(CLMachine *, CLState *) const;
                 };
@@ -58,14 +58,14 @@ namespace FSM
                 CLTransition *_transitions[1];
 
                 public:
-                    InitialPseudoState(const char *name = "InitialPseudoState");
-                    virtual ~InitialPseudoState();
+                    CalculateDistance(const char *name = "CalculateDistance");
+                    virtual ~CalculateDistance();
 
                     virtual CLTransition * const *transitions() const { return _transitions; }
                     virtual int numberOfTransitions() const { return 1; }
 
-#                   include "State_InitialPseudoState_Variables.h"
-#                   include "State_InitialPseudoState_Methods.h"
+#                   include "State_CalculateDistance_Variables.h"
+#                   include "State_CalculateDistance_Methods.h"
             };
         }
       }
