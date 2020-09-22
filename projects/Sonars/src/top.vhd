@@ -6,7 +6,8 @@ entity top is
         CLOCK_50: in std_logic;
         CLOCK2_50: in std_logic;
         CLOCK3_50: in std_logic;
-        GPIO: inout std_logic_vector(35 downto 0);
+        triggers: out std_logic_vector(0 downto 0);
+        echos: in std_logic_vector(0 downto 0);
         --HEX0: out std_logic_vector(6 downto 0);
         HEX1: out std_logic_vector(6 downto 0);
         HEX2: out std_logic_vector(6 downto 0);
@@ -19,10 +20,14 @@ entity top is
 end top;
 
 architecture Behavioural of top is
-	signal distance: std_logic_vector(15 downto 0);
-	signal platformCommand : std_logic_vector(1 downto 0) := "00";
-	signal platformSuspended: std_logic;
-    signal digits: std_logic_vector(34 downto 0);
+	signal distance: std_logic_vector(15 downto 0) := x"3039";
+    signal allDigits: std_logic_vector(34 downto 0);
+    constant COMMAND_NULL: std_logic_vector(1 downto 0) := "00";
+    constant COMMAND_RESTART: std_logic_vector(1 downto 0) := "01";
+    constant COMMAND_SUSPEND: std_logic_vector(1 downto 0) := "10";
+    constant COMMAND_RESUME: std_logic_vector(1 downto 0) := "11";
+    signal displaySuspended: std_logic;
+    signal displayCommand: std_logic_vector(1 downto 0) := COMMAND_SUSPEND;
 	
 	component SonarPlatform is
 		generic (
@@ -34,7 +39,7 @@ architecture Behavioural of top is
 			suspended: out std_logic;
 			EXTERNAL_distance: out std_logic_vector(15 downto 0);
 			EXTERNAL_triggers: out std_logic_vector(numberOfSensors - 1 downto 0);
-			EXTERNAL_echos: inout std_logic_vector(numberOfSensors - 1 downto 0)
+			EXTERNAL_echos: in std_logic_vector(numberOfSensors - 1 downto 0)
 		);
 	end component;
     
@@ -59,11 +64,10 @@ begin
 	)
 	port map (
 		clk => CLOCK_50,
-		command => platformCommand,
-		suspended => platformSuspended,
+        command => "00",
 		EXTERNAL_distance => distance,
-		EXTERNAL_triggers => GPIO(0 downto 0),
-		EXTERNAL_echos => GPIO(1 downto 1)
+		EXTERNAL_triggers => triggers,
+		EXTERNAL_echos => echos
 	);
     
     display: SevenSegDisplay generic map (
@@ -72,15 +76,25 @@ begin
     )
     port map (
         clk => CLOCK_50,
-        command => "00",
+        command => displayCommand,
+        suspended => displaySuspended,
         EXTERNAL_number => distance,
-        EXTERNAL_sevSegDigits => digits
+        EXTERNAL_sevSegDigits => allDigits
     );
     
-    HEX1 <= digits(6 downto 0);
-    HEX2 <= digits(13 downto 7);
-    HEX3 <= digits(20 downto 14);
-    HEX4 <= digits(27 downto 21);
-    HEX5 <= digits(34 downto 28);
+    HEX1 <= allDigits(6 downto 0);
+    HEX2 <= allDigits(13 downto 7);
+    HEX3 <= allDigits(20 downto 14);
+    HEX4 <= allDigits(27 downto 21);
+    HEX5 <= allDigits(34 downto 28);
+   
+process (CLOCK_50)
+begin
+    if displaySuspended = '1' then
+        displayCommand <= COMMAND_RESTART;
+    elsif displaySuspended = '0' and displayCommand = COMMAND_RESTART then
+        displayCommand <= COMMAND_NULL;
+    end if;
+end process;
 	
 end Behavioural;

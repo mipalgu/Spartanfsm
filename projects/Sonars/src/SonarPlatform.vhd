@@ -78,7 +78,63 @@ architecture LLFSM of SonarPlatform is
     signal sensorCommand: std_logic_vector(1 downto 0) := COMMAND_NULL;
     signal sensorFusionCommand: std_logic_vector(1 downto 0) := COMMAND_NULL;
     signal sensorsHaveResult: std_logic_vector(numberOfSensors - 1 downto 0);
-begin
+     component SensorFusion is
+         generic (
+              numberOfSensors: positive;
+              sensorOutputSize: positive;
+              signedOutput: boolean;
+              maxValue: Integer;
+              minValue: Integer
+         );
+         port (
+              clk: in std_logic;
+              command: in std_logic_vector(1 downto 0);
+              suspended: out std_logic;
+              EXTERNAL_smallestOutput: out std_logic_vector(sensorOutputSize - 1 downto 0);
+              EXTERNAL_sensorOutputs: in std_logic_vector(numberOfSensors * sensorOutputSize - 1 downto 0)
+         );
+     end component;
+     
+     component UltrasonicDiscreteSingle is
+         port (
+              clk: in std_logic;
+              command: in std_logic_vector(1 downto 0);
+              suspended: out std_logic;
+              EXTERNAL_triggerPin: out std_logic;
+              EXTERNAL_echo: in std_logic;
+              EXTERNAL_distance: out std_logic_vector(15 downto 0);
+              EXTERNAL_hasResult: out std_logic
+         );
+     end component;
+     
+begin    
+    sensor_fusion: Sensorfusion generic map (
+        numberOfSensors => numberOfSensors,
+        sensorOutputSize => 16,
+        signedOutput => false,
+        maxValue => 65535,
+        minValue => 0
+    )
+    port map (
+        clk => clk,
+        command => sensorFusionCommand,
+        suspended => sensorFusionSuspended,
+        EXTERNAL_smallestOutput => smallestDistance,
+        EXTERNAL_sensorOutputs => allOutputs
+    );
+    
+    sensors_gen:
+    for I in 0 to (numberOfSensors - 1) generate
+        sensor: UltrasonicDiscreteSingle port map (
+            clk => clk,
+            command => sensorCommand,
+            suspended => sensorsSuspended(I),
+            EXTERNAL_triggerPin => triggers(I),
+            EXTERNAL_echo => echos(I),
+            EXTERNAL_distance => allOutputs(16 * (I + 1) - 1 downto 16 * I),
+            EXTERNAL_hasResult => sensorsHaveResult(I)
+        );
+    end generate sensors_gen;
 process (clk)
     begin
         if (rising_edge(clk)) then
@@ -198,6 +254,8 @@ process (clk)
                     end case;
                 when Internal =>
                     case currentState is
+                        when STATE_Initial =>
+                            sensorCommand <= COMMAND_SUSPEND;
                         when others =>
                             null;
                     end case;
@@ -207,6 +265,7 @@ process (clk)
                         when STATE_Initial =>
                             sensorFusionCommand <= COMMAND_SUSPEND;
                             sensorCommand <= COMMAND_NULL;
+                            distance <= (others => '1');
                         when STATE_StartFusion =>
                             sensorFusionCommand <= COMMAND_NULL;
                         when others =>
