@@ -17,8 +17,8 @@ UltrasonicDiscreteSingle *_m = static_cast<UltrasonicDiscreteSingle *>(_machine)
 #machine	&constant SONAR_OFFSET: natural := 40 = _m->constant SONAR_OFFSET: natural := 40;	///<
 #machine	&constant MAX_DISTANCE: natural := 4000000 = _m->constant MAX_DISTANCE: natural := 4000000;	///<
 #machine	&constant MAX_TIME: natural := MAX_DISTANCE * 2 / SPEED_OF_SOUND * 1000 = _m->constant MAX_TIME: natural := MAX_DISTANCE * 2 / SPEED_OF_SOUND * 1000;	///<
-#machine	&signal numloops: unsigned(39 downto 0) = _m->signal numloops: unsigned(39 downto 0);	///<
-#machine	&constant maxloops: unsigned(39 downto 0) := to_unsigned(MAX_TIME / SCHEDULE_LENGTH, 40) = _m->constant maxloops: unsigned(39 downto 0) := to_unsigned(MAX_TIME / SCHEDULE_LENGTH, 40);	///<
+#machine	&signal numloops: natural := 0 = _m->signal numloops: natural := 0;	///<
+#machine	&constant maxloops: natural:= MAX_TIME / SCHEDULE_LENGTH = _m->constant maxloops: natural:= MAX_TIME / SCHEDULE_LENGTH;	///<
 #extern	&hasResult: out std_logic = _m->hasResult: out std_logic;	///<
 
 #pragma clang diagnostic pop

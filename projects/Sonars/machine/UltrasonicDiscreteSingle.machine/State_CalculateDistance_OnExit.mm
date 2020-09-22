@@ -1,1 +1,1 @@
-numloops <= (others => '0');
+numloops := 0;
