@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-23 07:09 AEST
+--Date Generated: 2020-09-23 07:13 AEST
 --
 --Author: Morgan McColl
 --Email: morgan.mccoll@alumni.griffithuni.edu.au
@@ -78,7 +78,7 @@ architecture LLFSM of UltrasonicDiscreteSingle is
     constant SONAR_OFFSET: natural := 40;
     constant MAX_DISTANCE: natural := 4000000;
     constant MAX_TIME: natural := MAX_DISTANCE * 2 / SPEED_OF_SOUND * 1000;
-    signal numloops: natural := 0;
+    shared variable numloops: natural := 0;
     constant maxloops: natural:= MAX_TIME / SCHEDULE_LENGTH;
 begin
 process (clk)
