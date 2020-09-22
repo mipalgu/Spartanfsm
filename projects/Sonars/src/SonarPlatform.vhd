@@ -101,7 +101,7 @@ architecture LLFSM of SonarPlatform is
               command: in std_logic_vector(1 downto 0);
               suspended: out std_logic;
               EXTERNAL_triggerPin: out std_logic;
-              EXTERNAL_echo: inout std_logic;
+              EXTERNAL_echo: in std_logic;
               EXTERNAL_distance: out std_logic_vector(15 downto 0)
          );
      end component;
