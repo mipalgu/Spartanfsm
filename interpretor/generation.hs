@@ -376,7 +376,7 @@ convertAfterToVHDLVariable afterStr valueStr
     | isAfter afterStr   = convertAfter valueStr ringletsPerS 
     | isAfterMs afterStr = convertAfter valueStr ringletsPerMs
     | isAfterUs afterStr = convertAfter valueStr ringletsPerUs
-    | isAfterNs afterStr = convertAfter valueStr ringletsPerUs
+    | isAfterNs afterStr = convertAfter valueStr ringletsPerNs
     | otherwise          = error ("Failed to convert after str. candidate: " ++ afterStr ++ "(" ++ valueStr ++ ")")
 
 counterVariables :: String
