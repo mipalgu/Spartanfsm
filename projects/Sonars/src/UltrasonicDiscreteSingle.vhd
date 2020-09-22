@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-23 04:47 AEST
+--Date Generated: 2020-09-23 05:03 AEST
 --
 --Author: Morgan McColl
 --Email: morgan.mccoll@alumni.griffithuni.edu.au
@@ -268,6 +268,7 @@ process (clk)
                     case currentState is
                         when STATE_Initial =>
                             numloops <= (others => '0');
+                            distance <= (others => '1');
                         when STATE_Skip_Garbage =>
                             triggerPin <= '1';
                             numloops <= numloops + 1;
