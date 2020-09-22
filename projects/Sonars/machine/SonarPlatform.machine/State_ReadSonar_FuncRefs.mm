@@ -1,5 +1,5 @@
 //
-// State_StartSensors_FuncRefs.mm
+// State_ReadSonar_FuncRefs.mm
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //

@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-23 05:03 AEST
+--Date Generated: 2020-09-23 05:24 AEST
 --
 --Author: Morgan McColl
 --Email: morgan.mccoll@alumni.griffithuni.edu.au
@@ -24,7 +24,8 @@ entity UltrasonicDiscreteSingle is
         suspended: out std_logic;
         EXTERNAL_triggerPin: out std_logic;
         EXTERNAL_echo: in std_logic;
-        EXTERNAL_distance: out std_logic_vector(15 downto 0)
+        EXTERNAL_distance: out std_logic_vector(15 downto 0);
+        EXTERNAL_hasResult: out std_logic
     );
 end UltrasonicDiscreteSingle;
 
@@ -70,6 +71,7 @@ architecture LLFSM of UltrasonicDiscreteSingle is
     signal triggerPin: std_logic;
     signal echo: std_logic;
     signal distance: std_logic_vector(15 downto 0);
+    signal hasResult: std_logic;
     --Machine Variables
     constant SCHEDULE_LENGTH: natural := 100;
     constant SPEED_OF_SOUND: natural := 343;
@@ -144,6 +146,9 @@ process (clk)
                             distance <= (others => '1');
                         when STATE_CalculateDistance =>
                             distance <= std_logic_vector(resize((numloops* to_unsigned(SCHEDULE_LENGTH, 8) / x"3E8" / to_unsigned(SPEED_OF_SOUND, 12) / x"2710"), 16));
+                        when STATE_WaitForMaxTime =>
+                            hasResult <= '1';
+                            ringlet_counter := 0;
                         when others =>
                             null;
                     end case;
@@ -163,6 +168,7 @@ process (clk)
                         when STATE_CalculateDistance =>
                             distance <= std_logic_vector(resize((numloops* to_unsigned(SCHEDULE_LENGTH, 8) / x"3E8" / to_unsigned(SPEED_OF_SOUND, 12) / x"2710"), 16));
                         when STATE_WaitForMaxTime =>
+                            hasResult <= '1';
                             ringlet_counter := 0;
                         when others =>
                             null;
@@ -269,6 +275,7 @@ process (clk)
                         when STATE_Initial =>
                             numloops <= (others => '0');
                             distance <= (others => '1');
+                            hasResult <= '0';
                         when STATE_Skip_Garbage =>
                             triggerPin <= '1';
                             numloops <= numloops + 1;
@@ -288,6 +295,7 @@ process (clk)
                 when WriteSnapshot =>
                     EXTERNAL_triggerPin <= triggerPin;
                     EXTERNAL_distance <= distance;
+                    EXTERNAL_hasResult <= hasResult;
                     internalState <= ReadSnapshot;
                     previousRinglet <= currentState;
                     currentState <= targetState;

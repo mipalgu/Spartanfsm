@@ -1,1 +1,1 @@
-sensorFusionCommand <= COMMAND_NULL;
+

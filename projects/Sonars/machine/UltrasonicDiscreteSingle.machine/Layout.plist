@@ -18,9 +18,9 @@
 					<key>controlPoint2Y</key>
 					<real>483</real>
 					<key>dstPointX</key>
-					<real>292.73860581699211</real>
+					<real>283.95402648163088</real>
 					<key>dstPointY</key>
-					<real>380.95719677818732</real>
+					<real>376.18604913335537</real>
 					<key>srcPointX</key>
 					<real>355.24814048950054</real>
 					<key>srcPointY</key>
@@ -184,9 +184,9 @@
 					<key>dstPointY</key>
 					<real>199.65323001255572</real>
 					<key>srcPointX</key>
-					<real>390.97709955356748</real>
+					<real>365.97451212346374</real>
 					<key>srcPointY</key>
-					<real>140.79169301203393</real>
+					<real>136.82782065121108</real>
 				</dict>
 			</array>
 			<key>bgColour</key>
@@ -213,7 +213,7 @@
 			<key>onExitHeight</key>
 			<real>0.0</real>
 			<key>stateSelected</key>
-			<true/>
+			<false/>
 			<key>strokeColour</key>
 			<dict>
 				<key>alpha</key>
@@ -228,9 +228,9 @@
 			<key>w</key>
 			<real>100</real>
 			<key>x</key>
-			<real>358</real>
+			<real>320</real>
 			<key>y</key>
-			<real>122</real>
+			<real>127</real>
 			<key>zoomedInternalHeight</key>
 			<real>0.0</real>
 			<key>zoomedOnEntryHeight</key>
@@ -252,9 +252,9 @@
 					<key>controlPoint2Y</key>
 					<real>362</real>
 					<key>dstPointX</key>
-					<real>369.97960432303472</real>
+					<real>356.76935151629328</real>
 					<key>dstPointY</key>
-					<real>360.71399434747195</real>
+					<real>356.39852296464062</real>
 					<key>srcPointX</key>
 					<real>442.06302380624152</real>
 					<key>srcPointY</key>
@@ -525,9 +525,9 @@
 					<key>dstPointY</key>
 					<real>244.16482968036624</real>
 					<key>srcPointX</key>
-					<real>351.54236368625868</real>
+					<real>346.26887869718837</real>
 					<key>srcPointY</key>
-					<real>340.60232428173549</real>
+					<real>338.52457459497879</real>
 				</dict>
 			</array>
 			<key>bgColour</key>
@@ -554,7 +554,7 @@
 			<key>onExitHeight</key>
 			<real>0.0</real>
 			<key>stateSelected</key>
-			<false/>
+			<true/>
 			<key>strokeColour</key>
 			<dict>
 				<key>alpha</key>
@@ -569,9 +569,9 @@
 			<key>w</key>
 			<real>100</real>
 			<key>x</key>
-			<real>320</real>
+			<real>307</real>
 			<key>y</key>
-			<real>360</real>
+			<real>354</real>
 			<key>zoomedInternalHeight</key>
 			<real>0.0</real>
 			<key>zoomedOnEntryHeight</key>

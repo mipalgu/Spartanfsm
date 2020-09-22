@@ -1,1 +1,1 @@
-sensorCommand <= COMMAND_SUSPEND;
+

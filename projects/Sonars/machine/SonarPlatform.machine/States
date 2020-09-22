@@ -1,7 +1,6 @@
 Initial
 SUSPENDED
-StartSensors
-WaitTillFinished
 StartFusion
 SetMinimum
 FindMinimum
+ReadSonar

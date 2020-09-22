@@ -1,10 +1,10 @@
 //
-// State_StartSensors.h
+// State_ReadSonar.h
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
-#ifndef clfsm_SonarPlatform_State_StartSensors_h
-#define clfsm_SonarPlatform_State_StartSensors_h
+#ifndef clfsm_SonarPlatform_State_ReadSonar_h
+#define clfsm_SonarPlatform_State_ReadSonar_h
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wc++98-compat"
@@ -21,7 +21,7 @@ namespace FSM
     {
       namespace State
       {
-        class StartSensors: public CLState
+        class ReadSonar: public CLState
         {
           class OnEntry: public CLAction
           {
@@ -50,7 +50,7 @@ namespace FSM
                           class Transition_0: public CLTransition
                 {
                 public:
-                    Transition_0(int toState = 3): CLTransition(toState) {}
+                    Transition_0(int toState = 2): CLTransition(toState) {}
 
                     virtual bool check(CLMachine *, CLState *) const;
                 };
@@ -58,14 +58,14 @@ namespace FSM
                 CLTransition *_transitions[1];
 
                 public:
-                    StartSensors(const char *name = "StartSensors");
-                    virtual ~StartSensors();
+                    ReadSonar(const char *name = "ReadSonar");
+                    virtual ~ReadSonar();
 
                     virtual CLTransition * const *transitions() const { return _transitions; }
                     virtual int numberOfTransitions() const { return 1; }
 
-#                   include "State_StartSensors_Variables.h"
-#                   include "State_StartSensors_Methods.h"
+#                   include "State_ReadSonar_Variables.h"
+#                   include "State_ReadSonar_Methods.h"
             };
         }
       }
