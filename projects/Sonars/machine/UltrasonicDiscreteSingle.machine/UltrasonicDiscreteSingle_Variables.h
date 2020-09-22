@@ -4,12 +4,12 @@
 // Automatically created through MiPalCASE -- do not change manually!
 //
 #extern	triggerPin: out std_logic;	///<
-#extern	echo: inout std_logic;	///<
+#extern	echo: in std_logic;	///<
 #extern	distance: out std_logic_vector(15 downto 0);	///<
-#machine	constant SCHEDULE_LENGTH: unsigned(7 downto 0) := x"78";	///<
-#machine	constant SPEED_OF_SOUND: unsigned(11 downto 0) := x"157";	///<
-#machine	constant SONAR_OFFSET: unsigned(7 downto 0) := x"28";	///<
-#machine	constant MAX_DISTANCE: unsigned(23 downto 0) := x"3D0900";	///<
-#machine	constant MAX_TIME: unsigned(39 downto 0) := (MAX_DISTANCE * x"2") / SPEED_OF_SOUND *x"3E8";	///<
+#machine	constant SCHEDULE_LENGTH: natural := 100;	///<
+#machine	constant SPEED_OF_SOUND: natural: 343;	///<
+#machine	constant SONAR_OFFSET: natural := 40;	///<
+#machine	constant MAX_DISTANCE: natural := 4000000;	///<
+#machine	constant MAX_TIME: natural := MAX_DISTANCE * 2 / SPEED_OF_SOUND * 1000;	///<
 #machine	signal numloops: unsigned(39 downto 0);	///<
-#machine	constant maxloops: unsigned(39 downto 0) := MAX_TIME / SCHEDULE_LENGTH;	///<
+#machine	constant maxloops: unsigned(39 downto 0) := to_unsigned(MAX_TIME / SCHEDULE_LENGTH, 40);	///<

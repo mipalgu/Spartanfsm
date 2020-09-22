@@ -1,1 +1,1 @@
-after_ns(real(to_integer(MAX_TIME)))
+after_ns(real(MAX_TIME))
