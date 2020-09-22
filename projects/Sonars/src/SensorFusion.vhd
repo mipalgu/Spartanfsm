@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-23 03:57 AEST
+--Date Generated: 2020-09-23 04:21 AEST
 --
 --Author: Morgan McColl
 --Email: morgan.mccoll@alumni.griffithuni.edu.au
@@ -135,11 +135,11 @@ process (clk)
                 when OnResume =>
                     case currentState is
                         when STATE_ConvertToUnsigned =>
-                            currentOutput := to_integer(unsigned(sensorOutputs(currentSensor * (sensorOutputSize + 1) - 1 downto currentSensor * sensorOutputSize)));
+                            currentOutput := to_integer(unsigned(sensorOutputs((currentSensor + 1) * sensorOutputSize - 1 downto currentSensor * sensorOutputSize)));
                         when STATE_changeCurrentSensor =>
                             currentSensor := currentSensor + 1;
                         when STATE_ConvertToSigned =>
-                            currentOutput := to_integer(signed(sensorOutputs(currentSensor * (sensorOutputSize + 1) - 1 downto currentSensor * sensorOutputSize)));
+                            currentOutput := to_integer(signed(sensorOutputs((currentSensor + 1) * sensorOutputSize - 1 downto currentSensor * sensorOutputSize)));
                         when STATE_SignedOutput =>
                             smallestOutput <= std_logic_vector(to_signed(singleOutput, sensorOutputSize));
                         when STATE_UnsignedOutput =>
@@ -153,11 +153,11 @@ process (clk)
                 when OnEntry =>
                     case currentState is
                         when STATE_ConvertToUnsigned =>
-                            currentOutput := to_integer(unsigned(sensorOutputs(currentSensor * (sensorOutputSize + 1) - 1 downto currentSensor * sensorOutputSize)));
+                            currentOutput := to_integer(unsigned(sensorOutputs((currentSensor + 1) * sensorOutputSize - 1 downto currentSensor * sensorOutputSize)));
                         when STATE_changeCurrentSensor =>
                             currentSensor := currentSensor + 1;
                         when STATE_ConvertToSigned =>
-                            currentOutput := to_integer(signed(sensorOutputs(currentSensor * (sensorOutputSize + 1) - 1 downto currentSensor * sensorOutputSize)));
+                            currentOutput := to_integer(signed(sensorOutputs((currentSensor + 1) * sensorOutputSize - 1 downto currentSensor * sensorOutputSize)));
                         when STATE_SignedOutput =>
                             smallestOutput <= std_logic_vector(to_signed(singleOutput, sensorOutputSize));
                         when STATE_UnsignedOutput =>
