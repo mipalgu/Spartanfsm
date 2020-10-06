@@ -7,4 +7,3 @@ ClearTrigger
 LostPulse
 WaitForPulseEnd
 CalculateDistance
-WaitForMaxTime
