@@ -141,6 +141,7 @@ transitionToVhdl n m ts s
 createTransitionCode :: [String] -> [String] -> String
 createTransitionCode trans states
     | trans == [] = "internalState <= Internal;"
+    | length trans == 1 && lower (trans!!0) == "true" = setTargetState (states!!0)
     | otherwise   = createCode (map replaceAftersInTransition trans) states 0 ((length trans) - 1) ""
         where
             createCode :: [String] -> [String] -> Int -> Int -> String -> String
