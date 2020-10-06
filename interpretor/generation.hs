@@ -218,7 +218,8 @@ createCommandDeclaration :: String -> String -> String
 createCommandDeclaration cmd val = "constant" ++> cmd ++ ": std_logic_vector(1 downto 0) := \"" ++ val ++ "\";"
 
 suspensionConstants :: String
-suspensionConstants = createCommandDeclaration (toCommand SpartanLLFSM_Variables.null) "00"
+suspensionConstants = "--Suspension Commands"
+    +\> createCommandDeclaration (toCommand SpartanLLFSM_Variables.null) "00"
     +\> createCommandDeclaration (toCommand restart) "01"
     +\> createCommandDeclaration (toCommand suspend) "10"
     +\> createCommandDeclaration (toCommand resume) "11"
@@ -260,6 +261,9 @@ isAfterUs str = "after_us" == (lower str)
 
 isAfterNs :: String -> Bool
 isAfterNs str = "after_ns" == (lower str)
+
+isAfterRl :: String -> Bool
+isAfterRl str = "after_rl" == (lower str)
 
 isAnyAfter :: String -> Bool
 isAnyAfter str = isAfter str || isAfterMs str || isAfterUs str || isAfterNs str
@@ -307,7 +311,7 @@ sliceString :: Int -> Int -> String -> String
 sliceString from to str = removeLastFromString (removeFirstFromString str from) ((length str) - to - 1)
 
 isSmallAfter :: String -> Bool
-isSmallAfter str = str == "after_ns" || str == "after_us" || str == "after_ms"
+isSmallAfter str = str == "after_ns" || str == "after_us" || str == "after_ms" || str == "after_rl"
 
 isNormalAfter :: String -> Bool
 isNormalAfter str | length str /= 8 = False
@@ -377,10 +381,12 @@ convertAfterToVHDLVariable afterStr valueStr
     | isAfterMs afterStr = convertAfter valueStr ringletsPerMs
     | isAfterUs afterStr = convertAfter valueStr ringletsPerUs
     | isAfterNs afterStr = convertAfter valueStr ringletsPerNs
+    | isAfterRl afterStr = ringletCounter ++> ">= integer(ceil(" ++ toDecimal valueStr ++ "))"
     | otherwise          = error ("Failed to convert after str. candidate: " ++ afterStr ++ "(" ++ valueStr ++ ")")
 
 counterVariables :: String
-counterVariables = "shared variable ringlet_counter: natural := 0;"
+counterVariables = "--After Variables"
+    +\> "shared variable " ++ ringletCounter ++ ": natural := 0;"
     +\> "constant" ++> clockPeriod ++ ": real := 20.0;"
     +\> "constant" ++> ringletLength ++ ": real := 5.0 *" ++> clockPeriod ++ ";"
     +\> "constant" ++> ringletsPerNs ++ ": real := 1.0 /" ++> ringletLength ++ ";"
@@ -511,11 +517,21 @@ onlyValidNewLine :: String -> String -> String
 onlyValidNewLine str1 str2 | str1 == "" && str2 == "" = ""
                            | otherwise                = trimNewLines (str1 +\> str2)
 
+createStateCaseWithNull :: String -> String -> String
+createStateCaseWithNull stateVar stateCase 
+  | stateCase == "" = ""
+  | otherwise       = "case" ++> stateVar ++> "is"
+                      +\> beautifyTrimmed 1 (stateCase +\> othersNullBlock)
+                      +\> "end case;"
+
+createStateCase :: String -> [String] -> [String] -> [Bool] -> String -> String
+createStateCase internalState states codes afters suspendedState =
+    trimNewLines (foldl onlyValidNewLine "" (map (\(a, (s,c)) -> createCodeForState s c a internalState suspendedState) $ zip afters (zip states codes)))
+
 createAllInternalStateCodeWithStateVar :: String -> [String] -> [String] -> String -> [Bool] -> String -> String -> String 
 createAllInternalStateCodeWithStateVar internalState states codes trailer afters stateVar suspendedState =
-    "when " ++ internalState ++> "=>" +\> beautifyTrimmed 1 ("case " ++ stateVar ++>  "is"
-    +\> beautifyTrimmed 1 (trimNewLines (foldl onlyValidNewLine "" (map (\(a, (s,c)) -> createCodeForState s c a internalState suspendedState) $ zip afters (zip states codes)))
-    +\> othersNullBlock) +\> "end case;" +\> trailer)
+    let stateCase = createStateCaseWithNull stateVar (createStateCase internalState states codes afters suspendedState)
+    in "when " ++ internalState ++> "=>" +\> beautifyTrimmed 1 (stateCase +\> trailer)
 
 createAllInternalStateCode :: String -> [String] -> [String] -> String -> [Bool] -> String -> String 
 createAllInternalStateCode internalState states codes trailer afters suspendedState =
