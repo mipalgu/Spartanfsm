@@ -539,15 +539,15 @@ createStateCase :: String -> [String] -> [String] -> [Bool] -> String -> String
 createStateCase internalState states codes afters suspendedState =
     trimNewLines (foldl onlyValidNewLine "" (map (\(a, (s,c)) -> createCodeForState s c a internalState suspendedState) $ zip afters (zip states codes)))
 
-createAllInternalStateCodeWithStateVar :: String -> [String] -> [String] -> String -> [Bool] -> String -> String -> String 
-createAllInternalStateCodeWithStateVar internalState states codes trailer afters stateVar suspendedState =
+createAllInternalStateCodeWithStateVar :: String -> [String] -> [String] -> String -> [Bool] -> String -> String -> String -> String 
+createAllInternalStateCodeWithStateVar internalState states codes trailer afters stateVar suspendedState header =
     let stateCase = createStateCaseWithNull stateVar (createStateCase internalState states codes afters suspendedState)
-    in "when " ++ internalState ++> "=>" +\> beautifyTrimmed 1 (stateCase +\> trailer)
+    in "when " ++ internalState ++> "=>" +\> beautifyTrimmed 1 (header +\> stateCase +\> trailer)
 
-createAllInternalStateCode :: String -> [String] -> [String] -> String -> [Bool] -> String -> String 
-createAllInternalStateCode internalState states codes trailer afters suspendedState =
+createAllInternalStateCode :: String -> [String] -> [String] -> String -> [Bool] -> String -> String -> String 
+createAllInternalStateCode internalState states codes trailer afters suspendedState header =
     let var = if internalState == onSuspend then suspendedFrom else currentState
-    in createAllInternalStateCodeWithStateVar internalState states codes trailer afters var suspendedState
+    in createAllInternalStateCodeWithStateVar internalState states codes trailer afters var suspendedState header
 
 setToDefault :: String -> String -> String
 setToDefault str def | str == "" = def
@@ -566,7 +566,7 @@ getSuspendedIndex :: [String] -> String -> Int
 getSuspendedIndex states suspendedState = fromJust (elemIndex (toStateName suspendedState) states)
 
 createMergedActions :: [[String]] -> [String] -> [[String]]
-createMergedActions stateActions suspendedActions = map (\as -> [as!!0, as!!1, as!!2, (as!!3 +\?> suspendedActions!!0), (suspendedActions!!4 +\?> as!!4 +\?> as!!0)]) stateActions
+createMergedActions stateActions suspendedActions = map (\as -> [as!!0, as!!1, as!!2, as!!3, (as!!4 +\?> as!!0)]) stateActions
 
 createAllInRisingEdge :: String-> String -> [String] -> [[String]] -> [[String]] -> [[String]] -> String -> [Bool] -> String
 createAllInRisingEdge initialState suspendedState states codes trans targets vars afters =
@@ -579,13 +579,13 @@ createAllInRisingEdge initialState suspendedState states codes trans targets var
     "if (rising_edge(" ++ clk ++ ")) then"
     ++ beautify 1 ("case" ++> internalState ++> "is")
     ++ beautifyTrimmed 2 (createReadSnapshot vars initialState suspendedState)
-    +\> beautifyTrimmed 2 (createAllInternalStateCode onSuspend states (getActions actions 3) internalToCheckTrans afters suspendedState) 
-    +\> beautifyTrimmed 2 (createAllInternalStateCode onResume states (getActions actions 4) internalToCheckTrans afters suspendedState)
-    +\> beautifyTrimmed 2 (createAllInternalStateCode onEntry states (getActions actions 0) internalToCheckTrans afters suspendedState)
+    +\> beautifyTrimmed 2 (createAllInternalStateCode onSuspend states (getActions actions 3) (suspendedActions!!0 +\> internalToCheckTrans) afters suspendedState "") 
+    +\> beautifyTrimmed 2 (createAllInternalStateCode onResume states (getActions actions 4) internalToCheckTrans afters suspendedState (suspendedActions!!4))
+    +\> beautifyTrimmed 2 (createAllInternalStateCode onEntry states (getActions actions 0) internalToCheckTrans afters suspendedState "")
     +\> beautifyTrimmed 2 ("when" ++> noOnEntry ++> "=>" +\-> internalToCheckTrans)
-    +\> beautifyTrimmed 2 (createAllInternalStateCode checkTransition states (map (\(trans, trgs) -> createTransitionCode trans trgs) (zip trans targets)) "" afters suspendedState)
-    +\> beautifyTrimmed 2 (createAllInternalStateCode internal states (getActions actions 1) internalToWriteSnapshot afters suspendedState)
-    +\> beautifyTrimmed 2 (createAllInternalStateCode onExit states (getActions actions 2) internalToWriteSnapshot afters suspendedState)
+    +\> beautifyTrimmed 2 (createAllInternalStateCode checkTransition states (map (\(trans, trgs) -> createTransitionCode trans trgs) (zip trans targets)) "" afters suspendedState "")
+    +\> beautifyTrimmed 2 (createAllInternalStateCode internal states (getActions actions 1) internalToWriteSnapshot afters suspendedState "")
+    +\> beautifyTrimmed 2 (createAllInternalStateCode onExit states (getActions actions 2) internalToWriteSnapshot afters suspendedState "")
     +\> beautifyTrimmed 2 (createWriteSnapshot vars)
     +\> beautifyTrimmed 2 othersNullBlock 
     +\> beautifyTrimmed 1 "end case;"
