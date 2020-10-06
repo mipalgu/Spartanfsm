@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-10-06 15:30 AEST
+--Date Generated: 2020-10-06 16:06 AEST
 --
 --Author: Morgan McColl
 --Email: morgan.mccoll@alumni.griffithuni.edu.au
@@ -68,21 +68,7 @@ architecture LLFSM of ParentMachine is
     signal childCommand: std_logic_vector(1 downto 0);
     signal childsLED: std_logic;
     signal childSuspended: std_logic;
-	 component SuspensibleHelloWorld is
-		port (
-        clk: in std_logic;
-        command: in std_logic_vector(1 downto 0);
-        suspended: out std_logic;
-        EXTERNAL_LED: out std_logic
-		);
-	 end component;
 begin
-	child_gen: SuspensibleHelloWorld port map (
-        clk => clk,
-        command => childCommand,
-        suspended => childSuspended,
-        EXTERNAL_LED => childsLED
-	);
 process (clk)
     begin
         if (rising_edge(clk)) then
@@ -140,20 +126,7 @@ process (clk)
                         end if;
                     end if;
                 when OnSuspend =>
-                    case suspendedFrom is
-                        when STATE_Initial =>
-                            LED <= '0';
-                        when STATE_SetLED =>
-                            LED <= '0';
-                        when STATE_ToggleLight =>
-                            LED <= '0';
-                        when STATE_SuspendChild =>
-                            LED <= '0';
-                        when STATE_RestartChild =>
-                            LED <= '0';
-                        when others =>
-                            null;
-                    end case;
+                    LED <= '0';
                     internalState <= CheckTransition;
                 when OnResume =>
                     case currentState is

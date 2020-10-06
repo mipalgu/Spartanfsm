@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-10-06 15:30 AEST
+--Date Generated: 2020-10-06 16:06 AEST
 --
 --Author: Morgan McColl
 --Email: morgan.mccoll@alumni.griffithuni.edu.au
@@ -120,14 +120,7 @@ process (clk)
                         end if;
                     end if;
                 when OnSuspend =>
-                    case suspendedFrom is
-                        when STATE_Initial =>
-                            LED <= '0';
-                        when STATE_LightOn =>
-                            LED <= '0';
-                        when others =>
-                            null;
-                    end case;
+                    LED <= '0';
                     internalState <= CheckTransition;
                 when OnResume =>
                     case currentState is
