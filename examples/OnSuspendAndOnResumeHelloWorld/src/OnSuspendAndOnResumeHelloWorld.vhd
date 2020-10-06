@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-10-06 15:38 AEST
+--Date Generated: 2020-10-06 16:01 AEST
 --
 --Author: Morgan McColl
 --Email: morgan.mccoll@alumni.griffithuni.edu.au
@@ -123,16 +123,7 @@ process (clk)
                         end if;
                     end if;
                 when OnSuspend =>
-                    case suspendedFrom is
-                        when STATE_Initial =>
-                            commandMe <= COMMAND_RESUME;
-                        when STATE_LightOn =>
-                            commandMe <= COMMAND_RESUME;
-                        when STATE_LightOff =>
-                            commandMe <= COMMAND_RESUME;
-                        when others =>
-                            null;
-                    end case;
+                    commandMe <= COMMAND_RESUME;
                     internalState <= CheckTransition;
                 when OnResume =>
                     case currentState is
