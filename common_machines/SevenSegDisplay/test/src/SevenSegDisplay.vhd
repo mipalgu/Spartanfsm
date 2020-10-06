@@ -78,7 +78,56 @@ architecture LLFSM of SevenSegDisplay is
     constant allSuspended: std_logic_vector(digits - 1 downto 0) := (others => '1');
     signal digitsCommand: std_logic_vector(1 downto 0) := command_SUSPEND;
     signal bcdCommand: std_logic_vector(1 downto 0) := command_SUSPEND;
+	 
+	 component bcd is
+		generic (
+            N: Integer;
+            digits: Integer
+        );
+        port (
+            clk: in std_logic;
+            command: in std_logic_vector(1 downto 0);
+            suspended: out std_logic;
+            EXTERNAL_binary: in std_logic_vector(N - 1 downto 0);
+            EXTERNAL_bcd: out std_logic_vector(digits * 4 - 1 downto 0)
+        );
+	end component;
+	
+	component SevenSegDigit is
+		port (
+            clk: in std_logic;
+            command: in std_logic_vector(1 downto 0);
+            suspended: out std_logic;
+            EXTERNAL_bcd: in std_logic_vector(3 downto 0);
+            EXTERNAL_output: out std_logic_vector(6 downto 0)
+        );
+	end component;
+	 
 begin
+
+	bcd_gen: bcd generic map (
+		N => N,
+		digits => digits
+	)
+	port map (
+		clk => clk,
+		command => bcdCommand,
+		suspended => bcdSuspended,
+		EXTERNAL_binary => number,
+		EXTERNAL_bcd => bcdOut
+	);
+	
+	digit_generation:
+	for I in 0 to (digits - 1) generate
+		digit: SevenSegDigit port map (
+			clk => clk,
+			command => digitsCommand,
+			suspended => digitsSuspended(I),
+			EXTERNAL_bcd => bcdOut(I * 4 + 3 downto I * 4),
+			EXTERNAL_output => sevSegDigits(I * 7 + 6 downto I * 7)
+		);
+	end generate digit_generation;
+
 process (clk)
     begin
         if (rising_edge(clk)) then
