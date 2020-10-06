@@ -1,10 +1,10 @@
 //
-// State_CalculateDistance.h
+// State_WaitForMaxTime.h
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
-#ifndef clfsm_UltrasonicDiscreteSingle_State_CalculateDistance_h
-#define clfsm_UltrasonicDiscreteSingle_State_CalculateDistance_h
+#ifndef clfsm_UltrasonicDiscreteSingle_State_WaitForMaxTime_h
+#define clfsm_UltrasonicDiscreteSingle_State_WaitForMaxTime_h
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wc++98-compat"
@@ -21,7 +21,7 @@ namespace FSM
     {
       namespace State
       {
-        class CalculateDistance: public CLState
+        class WaitForMaxTime: public CLState
         {
           class OnEntry: public CLAction
           {
@@ -50,7 +50,7 @@ namespace FSM
                           class Transition_0: public CLTransition
                 {
                 public:
-                    Transition_0(int toState = 9): CLTransition(toState) {}
+                    Transition_0(int toState = 2): CLTransition(toState) {}
 
                     virtual bool check(CLMachine *, CLState *) const;
                 };
@@ -58,14 +58,14 @@ namespace FSM
                 CLTransition *_transitions[1];
 
                 public:
-                    CalculateDistance(const char *name = "CalculateDistance");
-                    virtual ~CalculateDistance();
+                    WaitForMaxTime(const char *name = "WaitForMaxTime");
+                    virtual ~WaitForMaxTime();
 
                     virtual CLTransition * const *transitions() const { return _transitions; }
                     virtual int numberOfTransitions() const { return 1; }
 
-#                   include "State_CalculateDistance_Variables.h"
-#                   include "State_CalculateDistance_Methods.h"
+#                   include "State_WaitForMaxTime_Variables.h"
+#                   include "State_WaitForMaxTime_Methods.h"
             };
         }
       }

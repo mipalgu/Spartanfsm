@@ -1,0 +1,1 @@
+hasResult <= '1';

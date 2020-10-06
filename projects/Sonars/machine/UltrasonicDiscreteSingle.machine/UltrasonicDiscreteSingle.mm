@@ -15,6 +15,7 @@
 #include "State_LostPulse.h"
 #include "State_WaitForPulseEnd.h"
 #include "State_CalculateDistance.h"
+#include "State_WaitForMaxTime.h"
 
 using namespace FSM;
 using namespace CLM;
@@ -38,6 +39,7 @@ UltrasonicDiscreteSingle::UltrasonicDiscreteSingle(int mid, const char *name): C
 	_states[6] = new FSMUltrasonicDiscreteSingle::State::LostPulse;
 	_states[7] = new FSMUltrasonicDiscreteSingle::State::WaitForPulseEnd;
 	_states[8] = new FSMUltrasonicDiscreteSingle::State::CalculateDistance;
+	_states[9] = new FSMUltrasonicDiscreteSingle::State::WaitForMaxTime;
 
 	setSuspendState(_states[1]);            // set suspend state
 	setInitialState(_states[0]);            // set initial state
@@ -54,4 +56,5 @@ UltrasonicDiscreteSingle::~UltrasonicDiscreteSingle()
 	delete _states[6];
 	delete _states[7];
 	delete _states[8];
+	delete _states[9];
 }

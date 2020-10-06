@@ -1,1 +1,1 @@
-hasResult <= '1';
+numloops := 0;
