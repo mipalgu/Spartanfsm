@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-21 03:55 AEST
+--Date Generated: 2020-10-06 16:12 AEST
 --
 --Author: Morgan McColl
 --Email: morgan.mccoll@alumni.griffithuni.edu.au
@@ -59,13 +59,15 @@ architecture LLFSM of SevenSegDigit is
     constant STATE_E: std_logic_vector(4 downto 0) := "10000";
     constant STATE_F: std_logic_vector(4 downto 0) := "10001";
     signal currentState: std_logic_vector(4 downto 0) := STATE_Init;
-    signal targetState: std_logic_vector(4 downto 0) := currentState;
+    signal targetState: std_logic_vector(4 downto 0) := STATE_Init;
     signal previousRinglet: std_logic_vector(4 downto 0) := "ZZZZZ";
     signal suspendedFrom: std_logic_vector(4 downto 0) := STATE_Init;
+    --Suspension Commands
     constant COMMAND_NULL: std_logic_vector(1 downto 0) := "00";
     constant COMMAND_RESTART: std_logic_vector(1 downto 0) := "01";
     constant COMMAND_SUSPEND: std_logic_vector(1 downto 0) := "10";
     constant COMMAND_RESUME: std_logic_vector(1 downto 0) := "11";
+    --After Variables
     shared variable ringlet_counter: natural := 0;
     constant clockPeriod: real := 20.0;
     constant ringletLength: real := 5.0 * clockPeriod;
@@ -91,20 +93,30 @@ process (clk)
                         targetState <= STATE_Init;
                         if (previousRinglet = STATE_Suspend) then
                             internalState <= OnResume;
+                        elsif (previousRinglet = STATE_Init) then
+                            internalState <= NoOnEntry;
                         else
                             internalState <= OnEntry;
                         end if;
                     elsif (command = COMMAND_RESUME and currentState = STATE_Suspend and suspendedFrom /= STATE_Suspend) then
                         suspended <= '0';
                         currentState <= suspendedFrom;
-                        internalState <= OnResume;
                         targetState <= suspendedFrom;
+                        if (previousRinglet = suspendedFrom) then
+                            internalState <= NoOnEntry;
+                        else
+                            internalState <= OnResume;
+                        end if;
                     elsif (command = COMMAND_SUSPEND and currentState /= STATE_Suspend) then
                         suspendedFrom <= currentState;
                         suspended <= '1';
                         currentState <= STATE_Suspend;
-                        internalState <= OnSuspend;
                         targetState <= STATE_Suspend;
+                        if (previousRinglet = STATE_Suspend) then
+                            internalState <= NoOnEntry;
+                        else
+                            internalState <= OnSuspend;
+                        end if;
                     elsif (currentState = STATE_Suspend) then
                         suspended <= '1';
                         if (previousRinglet /= STATE_Suspend) then
@@ -126,10 +138,6 @@ process (clk)
                         end if;
                     end if;
                 when OnSuspend =>
-                    case suspendedFrom is
-                        when others =>
-                            null;
-                    end case;
                     internalState <= CheckTransition;
                 when OnResume =>
                     case currentState is
@@ -266,131 +274,59 @@ process (clk)
                         when STATE_Suspend =>
                             internalState <= Internal;
                         when STATE_Zero =>
-                            if (true) then
-                                targetState <= STATE_Suspend;
-                                internalState <= OnExit;
-                            else
-                                internalState <= Internal;
-                            end if;
+                            targetState <= STATE_Suspend;
+                            internalState <= OnExit;
                         when STATE_One =>
-                            if (true) then
-                                targetState <= STATE_Suspend;
-                                internalState <= OnExit;
-                            else
-                                internalState <= Internal;
-                            end if;
+                            targetState <= STATE_Suspend;
+                            internalState <= OnExit;
                         when STATE_Two =>
-                            if (true) then
-                                targetState <= STATE_Suspend;
-                                internalState <= OnExit;
-                            else
-                                internalState <= Internal;
-                            end if;
+                            targetState <= STATE_Suspend;
+                            internalState <= OnExit;
                         when STATE_Three =>
-                            if (true) then
-                                targetState <= STATE_Suspend;
-                                internalState <= OnExit;
-                            else
-                                internalState <= Internal;
-                            end if;
+                            targetState <= STATE_Suspend;
+                            internalState <= OnExit;
                         when STATE_Four =>
-                            if (true) then
-                                targetState <= STATE_Suspend;
-                                internalState <= OnExit;
-                            else
-                                internalState <= Internal;
-                            end if;
+                            targetState <= STATE_Suspend;
+                            internalState <= OnExit;
                         when STATE_Five =>
-                            if (true) then
-                                targetState <= STATE_Suspend;
-                                internalState <= OnExit;
-                            else
-                                internalState <= Internal;
-                            end if;
+                            targetState <= STATE_Suspend;
+                            internalState <= OnExit;
                         when STATE_Six =>
-                            if (true) then
-                                targetState <= STATE_Suspend;
-                                internalState <= OnExit;
-                            else
-                                internalState <= Internal;
-                            end if;
+                            targetState <= STATE_Suspend;
+                            internalState <= OnExit;
                         when STATE_Seven =>
-                            if (true) then
-                                targetState <= STATE_Suspend;
-                                internalState <= OnExit;
-                            else
-                                internalState <= Internal;
-                            end if;
+                            targetState <= STATE_Suspend;
+                            internalState <= OnExit;
                         when STATE_Eight =>
-                            if (true) then
-                                targetState <= STATE_Suspend;
-                                internalState <= OnExit;
-                            else
-                                internalState <= Internal;
-                            end if;
+                            targetState <= STATE_Suspend;
+                            internalState <= OnExit;
                         when STATE_Nine =>
-                            if (true) then
-                                targetState <= STATE_Suspend;
-                                internalState <= OnExit;
-                            else
-                                internalState <= Internal;
-                            end if;
+                            targetState <= STATE_Suspend;
+                            internalState <= OnExit;
                         when STATE_A =>
-                            if (true) then
-                                targetState <= STATE_Suspend;
-                                internalState <= OnExit;
-                            else
-                                internalState <= Internal;
-                            end if;
+                            targetState <= STATE_Suspend;
+                            internalState <= OnExit;
                         when STATE_B =>
-                            if (true) then
-                                targetState <= STATE_Suspend;
-                                internalState <= OnExit;
-                            else
-                                internalState <= Internal;
-                            end if;
+                            targetState <= STATE_Suspend;
+                            internalState <= OnExit;
                         when STATE_C =>
-                            if (true) then
-                                targetState <= STATE_Suspend;
-                                internalState <= OnExit;
-                            else
-                                internalState <= Internal;
-                            end if;
+                            targetState <= STATE_Suspend;
+                            internalState <= OnExit;
                         when STATE_D =>
-                            if (true) then
-                                targetState <= STATE_Suspend;
-                                internalState <= OnExit;
-                            else
-                                internalState <= Internal;
-                            end if;
+                            targetState <= STATE_Suspend;
+                            internalState <= OnExit;
                         when STATE_E =>
-                            if (true) then
-                                targetState <= STATE_Suspend;
-                                internalState <= OnExit;
-                            else
-                                internalState <= Internal;
-                            end if;
+                            targetState <= STATE_Suspend;
+                            internalState <= OnExit;
                         when STATE_F =>
-                            if (true) then
-                                targetState <= STATE_Suspend;
-                                internalState <= OnExit;
-                            else
-                                internalState <= Internal;
-                            end if;
+                            targetState <= STATE_Suspend;
+                            internalState <= OnExit;
                         when others =>
                             null;
                     end case;
                 when Internal =>
-                    case currentState is
-                        when others =>
-                            null;
-                    end case;
                     internalState <= WriteSnapshot;
                 when OnExit =>
-                    case currentState is
-                        when others =>
-                            null;
-                    end case;
                     internalState <= WriteSnapshot;
                 when WriteSnapshot =>
                     EXTERNAL_output <= output;

@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-09-23 05:24 AEST
+--Date Generated: 2020-10-06 16:18 AEST
 --
 --Author: Morgan McColl
 --Email: morgan.mccoll@alumni.griffithuni.edu.au
@@ -51,13 +51,15 @@ architecture LLFSM of SonarPlatform is
     constant STATE_FindMinimum: std_logic_vector(2 downto 0) := "100";
     constant STATE_ReadSonar: std_logic_vector(2 downto 0) := "101";
     signal currentState: std_logic_vector(2 downto 0) := STATE_Initial;
-    signal targetState: std_logic_vector(2 downto 0) := currentState;
+    signal targetState: std_logic_vector(2 downto 0) := STATE_Initial;
     signal previousRinglet: std_logic_vector(2 downto 0) := "ZZZ";
     signal suspendedFrom: std_logic_vector(2 downto 0) := STATE_Initial;
+    --Suspension Commands
     constant COMMAND_NULL: std_logic_vector(1 downto 0) := "00";
     constant COMMAND_RESTART: std_logic_vector(1 downto 0) := "01";
     constant COMMAND_SUSPEND: std_logic_vector(1 downto 0) := "10";
     constant COMMAND_RESUME: std_logic_vector(1 downto 0) := "11";
+    --After Variables
     shared variable ringlet_counter: natural := 0;
     constant clockPeriod: real := 20.0;
     constant ringletLength: real := 5.0 * clockPeriod;
@@ -148,20 +150,30 @@ process (clk)
                         targetState <= STATE_Initial;
                         if (previousRinglet = STATE_SUSPENDED) then
                             internalState <= OnResume;
+                        elsif (previousRinglet = STATE_Initial) then
+                            internalState <= NoOnEntry;
                         else
                             internalState <= OnEntry;
                         end if;
                     elsif (command = COMMAND_RESUME and currentState = STATE_SUSPENDED and suspendedFrom /= STATE_SUSPENDED) then
                         suspended <= '0';
                         currentState <= suspendedFrom;
-                        internalState <= OnResume;
                         targetState <= suspendedFrom;
+                        if (previousRinglet = suspendedFrom) then
+                            internalState <= NoOnEntry;
+                        else
+                            internalState <= OnResume;
+                        end if;
                     elsif (command = COMMAND_SUSPEND and currentState /= STATE_SUSPENDED) then
                         suspendedFrom <= currentState;
                         suspended <= '1';
                         currentState <= STATE_SUSPENDED;
-                        internalState <= OnSuspend;
                         targetState <= STATE_SUSPENDED;
+                        if (previousRinglet = STATE_SUSPENDED) then
+                            internalState <= NoOnEntry;
+                        else
+                            internalState <= OnSuspend;
+                        end if;
                     elsif (currentState = STATE_SUSPENDED) then
                         suspended <= '1';
                         if (previousRinglet /= STATE_SUSPENDED) then
@@ -183,10 +195,6 @@ process (clk)
                         end if;
                     end if;
                 when OnSuspend =>
-                    case suspendedFrom is
-                        when others =>
-                            null;
-                    end case;
                     internalState <= CheckTransition;
                 when OnResume =>
                     case currentState is
@@ -213,12 +221,8 @@ process (clk)
                 when CheckTransition =>
                     case currentState is
                         when STATE_Initial =>
-                            if (true) then
-                                targetState <= STATE_ReadSonar;
-                                internalState <= OnExit;
-                            else
-                                internalState <= Internal;
-                            end if;
+                            targetState <= STATE_ReadSonar;
+                            internalState <= OnExit;
                         when STATE_SUSPENDED =>
                             internalState <= Internal;
                         when STATE_StartFusion =>
@@ -229,12 +233,8 @@ process (clk)
                                 internalState <= Internal;
                             end if;
                         when STATE_SetMinimum =>
-                            if (true) then
-                                targetState <= STATE_ReadSonar;
-                                internalState <= OnExit;
-                            else
-                                internalState <= Internal;
-                            end if;
+                            targetState <= STATE_ReadSonar;
+                            internalState <= OnExit;
                         when STATE_FindMinimum =>
                             if (sensorFusionSuspended = '1') then
                                 targetState <= STATE_SetMinimum;
@@ -253,19 +253,12 @@ process (clk)
                             null;
                     end case;
                 when Internal =>
-                    case currentState is
-                        when STATE_Initial =>
-                            sensorCommand <= COMMAND_SUSPEND;
-                        when others =>
-                            null;
-                    end case;
                     internalState <= WriteSnapshot;
                 when OnExit =>
                     case currentState is
                         when STATE_Initial =>
                             sensorFusionCommand <= COMMAND_SUSPEND;
                             sensorCommand <= COMMAND_NULL;
-                            distance <= (others => '1');
                         when STATE_StartFusion =>
                             sensorFusionCommand <= COMMAND_NULL;
                         when others =>
