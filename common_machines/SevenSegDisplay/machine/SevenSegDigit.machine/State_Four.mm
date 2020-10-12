@@ -1,16 +1,16 @@
 //
 // State_Four.mm
 //
-// Automatically created through MiPalCASE -- do not change manually!
+// Automatically created through MiCASE -- do not change manually!
 //
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wc++98-compat"
-
 #include "SevenSegDigit_Includes.h"
 #include "SevenSegDigit.h"
 #include "State_Four.h"
 
 #include "State_Four_Includes.h"
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wc++98-compat"
 
 using namespace FSM;
 using namespace CLM;
@@ -29,6 +29,7 @@ Four::~Four()
 	delete &internalAction();
 	delete onSuspendAction();
 	delete onResumeAction();
+
 	delete _transitions[0];
 }
 
@@ -40,7 +41,7 @@ void Four::OnEntry::perform(CLMachine *_machine, CLState *_state) const
 #	include "State_Four_FuncRefs.mm"
 #	include "State_Four_OnEntry.mm"
 }
- 
+
 void Four::OnExit::perform(CLMachine *_machine, CLState *_state) const
 {
 #	include "SevenSegDigit_VarRefs.mm"
@@ -76,6 +77,7 @@ void Four::OnResume::perform(CLMachine *_machine, CLState *_state) const
 #	include "State_Four_FuncRefs.mm"
 #	include "State_Four_OnResume.mm"
 }
+
 bool Four::Transition_0::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "SevenSegDigit_VarRefs.mm"

@@ -1,16 +1,16 @@
 //
 // State_Initial.mm
 //
-// Automatically created through MiPalCASE -- do not change manually!
+// Automatically created through MiCASE -- do not change manually!
 //
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wc++98-compat"
-
 #include "bcd_Includes.h"
 #include "bcd.h"
 #include "State_Initial.h"
 
 #include "State_Initial_Includes.h"
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wc++98-compat"
 
 using namespace FSM;
 using namespace CLM;
@@ -29,6 +29,7 @@ Initial::~Initial()
 	delete &internalAction();
 	delete onSuspendAction();
 	delete onResumeAction();
+
 	delete _transitions[0];
 }
 
@@ -40,7 +41,7 @@ void Initial::OnEntry::perform(CLMachine *_machine, CLState *_state) const
 #	include "State_Initial_FuncRefs.mm"
 #	include "State_Initial_OnEntry.mm"
 }
- 
+
 void Initial::OnExit::perform(CLMachine *_machine, CLState *_state) const
 {
 #	include "bcd_VarRefs.mm"
@@ -76,6 +77,7 @@ void Initial::OnResume::perform(CLMachine *_machine, CLState *_state) const
 #	include "State_Initial_FuncRefs.mm"
 #	include "State_Initial_OnResume.mm"
 }
+
 bool Initial::Transition_0::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "bcd_VarRefs.mm"

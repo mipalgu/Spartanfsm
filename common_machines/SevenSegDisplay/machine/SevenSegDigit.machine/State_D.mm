@@ -1,16 +1,16 @@
 //
 // State_D.mm
 //
-// Automatically created through MiPalCASE -- do not change manually!
+// Automatically created through MiCASE -- do not change manually!
 //
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wc++98-compat"
-
 #include "SevenSegDigit_Includes.h"
 #include "SevenSegDigit.h"
 #include "State_D.h"
 
 #include "State_D_Includes.h"
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wc++98-compat"
 
 using namespace FSM;
 using namespace CLM;
@@ -29,6 +29,7 @@ D::~D()
 	delete &internalAction();
 	delete onSuspendAction();
 	delete onResumeAction();
+
 	delete _transitions[0];
 }
 
@@ -40,7 +41,7 @@ void D::OnEntry::perform(CLMachine *_machine, CLState *_state) const
 #	include "State_D_FuncRefs.mm"
 #	include "State_D_OnEntry.mm"
 }
- 
+
 void D::OnExit::perform(CLMachine *_machine, CLState *_state) const
 {
 #	include "SevenSegDigit_VarRefs.mm"
@@ -76,6 +77,7 @@ void D::OnResume::perform(CLMachine *_machine, CLState *_state) const
 #	include "State_D_FuncRefs.mm"
 #	include "State_D_OnResume.mm"
 }
+
 bool D::Transition_0::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "SevenSegDigit_VarRefs.mm"

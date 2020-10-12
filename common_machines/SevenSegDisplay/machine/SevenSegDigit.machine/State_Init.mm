@@ -1,16 +1,16 @@
 //
 // State_Init.mm
 //
-// Automatically created through MiPalCASE -- do not change manually!
+// Automatically created through MiCASE -- do not change manually!
 //
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wc++98-compat"
-
 #include "SevenSegDigit_Includes.h"
 #include "SevenSegDigit.h"
 #include "State_Init.h"
 
 #include "State_Init_Includes.h"
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wc++98-compat"
 
 using namespace FSM;
 using namespace CLM;
@@ -44,6 +44,7 @@ Init::~Init()
 	delete &internalAction();
 	delete onSuspendAction();
 	delete onResumeAction();
+
 	delete _transitions[0];
 	delete _transitions[1];
 	delete _transitions[2];
@@ -70,7 +71,7 @@ void Init::OnEntry::perform(CLMachine *_machine, CLState *_state) const
 #	include "State_Init_FuncRefs.mm"
 #	include "State_Init_OnEntry.mm"
 }
- 
+
 void Init::OnExit::perform(CLMachine *_machine, CLState *_state) const
 {
 #	include "SevenSegDigit_VarRefs.mm"
@@ -106,6 +107,7 @@ void Init::OnResume::perform(CLMachine *_machine, CLState *_state) const
 #	include "State_Init_FuncRefs.mm"
 #	include "State_Init_OnResume.mm"
 }
+
 bool Init::Transition_0::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "SevenSegDigit_VarRefs.mm"
@@ -118,6 +120,7 @@ bool Init::Transition_0::check(CLMachine *_machine, CLState *_state) const
 #		include "State_Init_Transition_0.expr"
 	);
 }
+
 bool Init::Transition_1::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "SevenSegDigit_VarRefs.mm"
@@ -130,6 +133,7 @@ bool Init::Transition_1::check(CLMachine *_machine, CLState *_state) const
 #		include "State_Init_Transition_1.expr"
 	);
 }
+
 bool Init::Transition_2::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "SevenSegDigit_VarRefs.mm"
@@ -142,6 +146,7 @@ bool Init::Transition_2::check(CLMachine *_machine, CLState *_state) const
 #		include "State_Init_Transition_2.expr"
 	);
 }
+
 bool Init::Transition_3::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "SevenSegDigit_VarRefs.mm"
@@ -154,6 +159,7 @@ bool Init::Transition_3::check(CLMachine *_machine, CLState *_state) const
 #		include "State_Init_Transition_3.expr"
 	);
 }
+
 bool Init::Transition_4::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "SevenSegDigit_VarRefs.mm"
@@ -166,6 +172,7 @@ bool Init::Transition_4::check(CLMachine *_machine, CLState *_state) const
 #		include "State_Init_Transition_4.expr"
 	);
 }
+
 bool Init::Transition_5::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "SevenSegDigit_VarRefs.mm"
@@ -178,6 +185,7 @@ bool Init::Transition_5::check(CLMachine *_machine, CLState *_state) const
 #		include "State_Init_Transition_5.expr"
 	);
 }
+
 bool Init::Transition_6::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "SevenSegDigit_VarRefs.mm"
@@ -190,6 +198,7 @@ bool Init::Transition_6::check(CLMachine *_machine, CLState *_state) const
 #		include "State_Init_Transition_6.expr"
 	);
 }
+
 bool Init::Transition_7::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "SevenSegDigit_VarRefs.mm"
@@ -202,6 +211,7 @@ bool Init::Transition_7::check(CLMachine *_machine, CLState *_state) const
 #		include "State_Init_Transition_7.expr"
 	);
 }
+
 bool Init::Transition_8::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "SevenSegDigit_VarRefs.mm"
@@ -214,6 +224,7 @@ bool Init::Transition_8::check(CLMachine *_machine, CLState *_state) const
 #		include "State_Init_Transition_8.expr"
 	);
 }
+
 bool Init::Transition_9::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "SevenSegDigit_VarRefs.mm"
@@ -226,6 +237,7 @@ bool Init::Transition_9::check(CLMachine *_machine, CLState *_state) const
 #		include "State_Init_Transition_9.expr"
 	);
 }
+
 bool Init::Transition_10::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "SevenSegDigit_VarRefs.mm"
@@ -238,6 +250,7 @@ bool Init::Transition_10::check(CLMachine *_machine, CLState *_state) const
 #		include "State_Init_Transition_10.expr"
 	);
 }
+
 bool Init::Transition_11::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "SevenSegDigit_VarRefs.mm"
@@ -250,6 +263,7 @@ bool Init::Transition_11::check(CLMachine *_machine, CLState *_state) const
 #		include "State_Init_Transition_11.expr"
 	);
 }
+
 bool Init::Transition_12::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "SevenSegDigit_VarRefs.mm"
@@ -262,6 +276,7 @@ bool Init::Transition_12::check(CLMachine *_machine, CLState *_state) const
 #		include "State_Init_Transition_12.expr"
 	);
 }
+
 bool Init::Transition_13::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "SevenSegDigit_VarRefs.mm"
@@ -274,6 +289,7 @@ bool Init::Transition_13::check(CLMachine *_machine, CLState *_state) const
 #		include "State_Init_Transition_13.expr"
 	);
 }
+
 bool Init::Transition_14::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "SevenSegDigit_VarRefs.mm"
@@ -286,6 +302,7 @@ bool Init::Transition_14::check(CLMachine *_machine, CLState *_state) const
 #		include "State_Init_Transition_14.expr"
 	);
 }
+
 bool Init::Transition_15::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "SevenSegDigit_VarRefs.mm"

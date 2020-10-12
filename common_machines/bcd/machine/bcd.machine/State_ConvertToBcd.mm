@@ -1,16 +1,16 @@
 //
 // State_ConvertToBcd.mm
 //
-// Automatically created through MiPalCASE -- do not change manually!
+// Automatically created through MiCASE -- do not change manually!
 //
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wc++98-compat"
-
 #include "bcd_Includes.h"
 #include "bcd.h"
 #include "State_ConvertToBcd.h"
 
 #include "State_ConvertToBcd_Includes.h"
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wc++98-compat"
 
 using namespace FSM;
 using namespace CLM;
@@ -30,6 +30,7 @@ ConvertToBcd::~ConvertToBcd()
 	delete &internalAction();
 	delete onSuspendAction();
 	delete onResumeAction();
+
 	delete _transitions[0];
 	delete _transitions[1];
 }
@@ -42,7 +43,7 @@ void ConvertToBcd::OnEntry::perform(CLMachine *_machine, CLState *_state) const
 #	include "State_ConvertToBcd_FuncRefs.mm"
 #	include "State_ConvertToBcd_OnEntry.mm"
 }
- 
+
 void ConvertToBcd::OnExit::perform(CLMachine *_machine, CLState *_state) const
 {
 #	include "bcd_VarRefs.mm"
@@ -78,6 +79,7 @@ void ConvertToBcd::OnResume::perform(CLMachine *_machine, CLState *_state) const
 #	include "State_ConvertToBcd_FuncRefs.mm"
 #	include "State_ConvertToBcd_OnResume.mm"
 }
+
 bool ConvertToBcd::Transition_0::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "bcd_VarRefs.mm"
@@ -90,6 +92,7 @@ bool ConvertToBcd::Transition_0::check(CLMachine *_machine, CLState *_state) con
 #		include "State_ConvertToBcd_Transition_0.expr"
 	);
 }
+
 bool ConvertToBcd::Transition_1::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "bcd_VarRefs.mm"

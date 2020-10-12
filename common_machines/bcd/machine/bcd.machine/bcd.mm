@@ -1,7 +1,7 @@
 //
 // bcd.mm
 //
-// Automatically created through MiPalCASE -- do not change manually!
+// Automatically created through MiCASE -- do not change manually!
 //
 #include "bcd_Includes.h"
 #include "bcd.h"
