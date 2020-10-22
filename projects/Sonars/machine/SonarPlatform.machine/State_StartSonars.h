@@ -1,10 +1,10 @@
 //
-// State_SetMinimum.h
+// State_StartSonars.h
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
-#ifndef clfsm_SonarPlatform_State_SetMinimum_h
-#define clfsm_SonarPlatform_State_SetMinimum_h
+#ifndef clfsm_SonarPlatform_State_StartSonars_h
+#define clfsm_SonarPlatform_State_StartSonars_h
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wc++98-compat"
@@ -21,7 +21,7 @@ namespace FSM
     {
       namespace State
       {
-        class SetMinimum: public CLState
+        class StartSonars: public CLState
         {
           class OnEntry: public CLAction
           {
@@ -50,7 +50,7 @@ namespace FSM
                           class Transition_0: public CLTransition
                 {
                 public:
-                    Transition_0(int toState = 6): CLTransition(toState) {}
+                    Transition_0(int toState = 5): CLTransition(toState) {}
 
                     virtual bool check(CLMachine *, CLState *) const;
                 };
@@ -58,14 +58,14 @@ namespace FSM
                 CLTransition *_transitions[1];
 
                 public:
-                    SetMinimum(const char *name = "SetMinimum");
-                    virtual ~SetMinimum();
+                    StartSonars(const char *name = "StartSonars");
+                    virtual ~StartSonars();
 
                     virtual CLTransition * const *transitions() const { return _transitions; }
                     virtual int numberOfTransitions() const { return 1; }
 
-#                   include "State_SetMinimum_Variables.h"
-#                   include "State_SetMinimum_Methods.h"
+#                   include "State_StartSonars_Variables.h"
+#                   include "State_StartSonars_Methods.h"
             };
         }
       }

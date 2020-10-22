@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-10-22 17:26 AEST
+--Date Generated: 2020-10-22 17:36 AEST
 --
 --Author: Morgan McColl
 --Email: morgan.mccoll@alumni.griffithuni.edu.au
@@ -50,6 +50,7 @@ architecture LLFSM of SonarPlatform is
     constant STATE_SetMinimum: std_logic_vector(2 downto 0) := "011";
     constant STATE_FindMinimum: std_logic_vector(2 downto 0) := "100";
     constant STATE_ReadSonar: std_logic_vector(2 downto 0) := "101";
+    constant STATE_StartSonars: std_logic_vector(2 downto 0) := "110";
     signal currentState: std_logic_vector(2 downto 0) := STATE_Initial;
     signal targetState: std_logic_vector(2 downto 0) := STATE_Initial;
     signal previousRinglet: std_logic_vector(2 downto 0) := "ZZZ";
@@ -146,8 +147,9 @@ process (clk)
                             sensorFusionCommand <= COMMAND_RESTART;
                         when STATE_SetMinimum =>
                             distance <= smallestDistance;
-                            sensorCommand <= COMMAND_RESTART;
                             ringlet_counter := 0;
+                        when STATE_StartSonars =>
+                            sensorCommand <= COMMAND_RESTART;
                         when others =>
                             null;
                     end case;
@@ -158,8 +160,9 @@ process (clk)
                             sensorFusionCommand <= COMMAND_RESTART;
                         when STATE_SetMinimum =>
                             distance <= smallestDistance;
-                            sensorCommand <= COMMAND_RESTART;
                             ringlet_counter := 0;
+                        when STATE_StartSonars =>
+                            sensorCommand <= COMMAND_RESTART;
                         when others =>
                             null;
                     end case;
@@ -169,7 +172,7 @@ process (clk)
                 when CheckTransition =>
                     case currentState is
                         when STATE_Initial =>
-                            targetState <= STATE_ReadSonar;
+                            targetState <= STATE_StartSonars;
                             internalState <= OnExit;
                         when STATE_SUSPENDED =>
                             internalState <= Internal;
@@ -181,8 +184,8 @@ process (clk)
                                 internalState <= Internal;
                             end if;
                         when STATE_SetMinimum =>
-                            if (sensorsSuspended = allLow and ringlet_counter >= integer(ceil(10.0 * RINGLETS_PER_US))) then
-                                targetState <= STATE_ReadSonar;
+                            if (ringlet_counter >= integer(ceil(10.0 * RINGLETS_PER_MS))) then
+                                targetState <= STATE_StartSonars;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
@@ -197,6 +200,13 @@ process (clk)
                         when STATE_ReadSonar =>
                             if (sensorsSuspended = allHigh) then
                                 targetState <= STATE_StartFusion;
+                                internalState <= OnExit;
+                            else
+                                internalState <= Internal;
+                            end if;
+                        when STATE_StartSonars =>
+                            if (sensorsSuspended = allLow) then
+                                targetState <= STATE_ReadSonar;
                                 internalState <= OnExit;
                             else
                                 internalState <= Internal;
@@ -216,10 +226,10 @@ process (clk)
                     case currentState is
                         when STATE_Initial =>
                             sensorFusionCommand <= COMMAND_SUSPEND;
-                            sensorCommand <= COMMAND_NULL;
+                            sensorCommand <= COMMAND_SUSPEND;
                         when STATE_StartFusion =>
                             sensorFusionCommand <= COMMAND_NULL;
-                        when STATE_SetMinimum =>
+                        when STATE_StartSonars =>
                             sensorCommand <= COMMAND_NULL;
                         when others =>
                             null;

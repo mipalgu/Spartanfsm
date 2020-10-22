@@ -1,0 +1,1 @@
+sensorCommand <= COMMAND_NULL;

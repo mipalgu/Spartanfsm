@@ -12,6 +12,7 @@
 #include "State_SetMinimum.h"
 #include "State_FindMinimum.h"
 #include "State_ReadSonar.h"
+#include "State_StartSonars.h"
 
 using namespace FSM;
 using namespace CLM;
@@ -32,6 +33,7 @@ SonarPlatform::SonarPlatform(int mid, const char *name): CLMachine(mid, name)
 	_states[3] = new FSMSonarPlatform::State::SetMinimum;
 	_states[4] = new FSMSonarPlatform::State::FindMinimum;
 	_states[5] = new FSMSonarPlatform::State::ReadSonar;
+	_states[6] = new FSMSonarPlatform::State::StartSonars;
 
 	setSuspendState(_states[1]);            // set suspend state
 	setInitialState(_states[0]);            // set initial state
@@ -45,4 +47,5 @@ SonarPlatform::~SonarPlatform()
 	delete _states[3];
 	delete _states[4];
 	delete _states[5];
+	delete _states[6];
 }
