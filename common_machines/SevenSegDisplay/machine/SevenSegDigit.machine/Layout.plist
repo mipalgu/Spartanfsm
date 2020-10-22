@@ -10,21 +10,21 @@
 			<array>
 				<dict>
 					<key>controlPoint1X</key>
-					<real>680.11887446389244</real>
+					<real>356</real>
 					<key>controlPoint1Y</key>
-					<real>249.34246127542588</real>
+					<real>262.82415771484375</real>
 					<key>controlPoint2X</key>
-					<real>715.05943723194616</real>
+					<real>343.48224996550528</real>
 					<key>controlPoint2Y</key>
-					<real>259.17123063771294</real>
+					<real>264.03862249931387</real>
 					<key>dstPointX</key>
-					<real>722.66922403055503</real>
+					<real>323.64155766842674</real>
 					<key>dstPointY</key>
-					<real>267.59421952078981</real>
+					<real>261.51931124965694</real>
 					<key>srcPointX</key>
-					<real>645.28869589612907</real>
+					<real>376</real>
 					<key>srcPointY</key>
-					<real>239.20191792098879</real>
+					<real>262.82415771484375</real>
 				</dict>
 			</array>
 			<key>bgColour</key>
@@ -38,20 +38,16 @@
 				<key>red</key>
 				<real>0.92000000000000004</real>
 			</dict>
-			<key>editingMode</key>
-			<true/>
 			<key>expanded</key>
-			<false/>
-			<key>h</key>
-			<real>50</real>
-			<key>internalHeight</key>
-			<real>0.0</real>
-			<key>onEntryHeight</key>
-			<real>0.0</real>
-			<key>onExitHeight</key>
-			<real>0.0</real>
-			<key>stateSelected</key>
 			<true/>
+			<key>h</key>
+			<real>296</real>
+			<key>internalHeight</key>
+			<real>3</real>
+			<key>onEntryHeight</key>
+			<real>243</real>
+			<key>onExitHeight</key>
+			<real>3</real>
 			<key>strokeColour</key>
 			<dict>
 				<key>alpha</key>
@@ -64,17 +60,17 @@
 				<real>0.0</real>
 			</dict>
 			<key>w</key>
-			<real>100</real>
+			<real>304</real>
 			<key>x</key>
-			<real>596</real>
+			<real>523</real>
 			<key>y</key>
-			<real>235</real>
+			<real>221</real>
 			<key>zoomedInternalHeight</key>
-			<real>0.0</real>
+			<real>233</real>
 			<key>zoomedOnEntryHeight</key>
-			<real>0.0</real>
+			<real>241</real>
 			<key>zoomedOnExitHeight</key>
-			<real>0.0</real>
+			<real>232</real>
 		</dict>
 		<key>Init</key>
 		<dict>
@@ -82,21 +78,21 @@
 			<array>
 				<dict>
 					<key>controlPoint1X</key>
-					<real>486.79163753339043</real>
+					<real>345.91744971252677</real>
 					<key>controlPoint1Y</key>
-					<real>217.52727249473836</real>
+					<real>181.86074138261722</real>
 					<key>controlPoint2X</key>
-					<real>521.89581876669524</real>
+					<real>356</real>
 					<key>controlPoint2Y</key>
-					<real>224.26363624736919</real>
+					<real>180.181640625</real>
 					<key>dstPointX</key>
-					<real>546.51665042158641</real>
+					<real>376</real>
 					<key>dstPointY</key>
-					<real>231.41537608316716</real>
+					<real>180.181640625</real>
 					<key>srcPointX</key>
-					<real>451.68733265956814</real>
+					<real>326.25054210867239</real>
 					<key>srcPointY</key>
-					<real>210.79145899026895</real>
+					<real>178.22580736650991</real>
 				</dict>
 			</array>
 			<key>bgColour</key>
@@ -110,20 +106,16 @@
 				<key>red</key>
 				<real>0.92000000000000004</real>
 			</dict>
-			<key>editingMode</key>
-			<false/>
 			<key>expanded</key>
 			<false/>
 			<key>h</key>
-			<real>50</real>
+			<real>51</real>
 			<key>internalHeight</key>
-			<real>40</real>
+			<real>2</real>
 			<key>onEntryHeight</key>
-			<real>31</real>
+			<real>14</real>
 			<key>onExitHeight</key>
-			<real>32</real>
-			<key>stateSelected</key>
-			<false/>
+			<real>2</real>
 			<key>strokeColour</key>
 			<dict>
 				<key>alpha</key>
@@ -138,9 +130,9 @@
 			<key>w</key>
 			<real>100</real>
 			<key>x</key>
-			<real>402</real>
+			<real>282</real>
 			<key>y</key>
-			<real>208</real>
+			<real>174.5</real>
 			<key>zoomedInternalHeight</key>
 			<real>0.0</real>
 			<key>zoomedOnEntryHeight</key>
@@ -163,8 +155,6 @@
 				<key>red</key>
 				<real>0.23999999999999999</real>
 			</dict>
-			<key>editingMode</key>
-			<false/>
 			<key>expanded</key>
 			<false/>
 			<key>h</key>
@@ -175,8 +165,6 @@
 			<real>34</real>
 			<key>onExitHeight</key>
 			<real>16</real>
-			<key>stateSelected</key>
-			<false/>
 			<key>strokeColour</key>
 			<dict>
 				<key>alpha</key>
@@ -191,9 +179,9 @@
 			<key>w</key>
 			<real>100</real>
 			<key>x</key>
-			<real>771</real>
+			<real>279</real>
 			<key>y</key>
-			<real>274</real>
+			<real>259.22857666015625</real>
 			<key>zoomedInternalHeight</key>
 			<real>0.0</real>
 			<key>zoomedOnEntryHeight</key>

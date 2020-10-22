@@ -1,16 +1,16 @@
 //
 // State_UnsignedOutput.mm
 //
-// Automatically created through MiPalCASE -- do not change manually!
+// Automatically created through MiCASE -- do not change manually!
 //
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wc++98-compat"
-
 #include "SensorFusion_Includes.h"
 #include "SensorFusion.h"
 #include "State_UnsignedOutput.h"
 
 #include "State_UnsignedOutput_Includes.h"
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wc++98-compat"
 
 using namespace FSM;
 using namespace CLM;
@@ -29,6 +29,7 @@ UnsignedOutput::~UnsignedOutput()
 	delete &internalAction();
 	delete onSuspendAction();
 	delete onResumeAction();
+
 	delete _transitions[0];
 }
 
@@ -40,7 +41,7 @@ void UnsignedOutput::OnEntry::perform(CLMachine *_machine, CLState *_state) cons
 #	include "State_UnsignedOutput_FuncRefs.mm"
 #	include "State_UnsignedOutput_OnEntry.mm"
 }
- 
+
 void UnsignedOutput::OnExit::perform(CLMachine *_machine, CLState *_state) const
 {
 #	include "SensorFusion_VarRefs.mm"
@@ -76,6 +77,7 @@ void UnsignedOutput::OnResume::perform(CLMachine *_machine, CLState *_state) con
 #	include "State_UnsignedOutput_FuncRefs.mm"
 #	include "State_UnsignedOutput_OnResume.mm"
 }
+
 bool UnsignedOutput::Transition_0::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "SensorFusion_VarRefs.mm"

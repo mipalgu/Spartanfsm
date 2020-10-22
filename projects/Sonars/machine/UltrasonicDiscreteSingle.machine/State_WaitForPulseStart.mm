@@ -1,16 +1,16 @@
 //
 // State_WaitForPulseStart.mm
 //
-// Automatically created through MiPalCASE -- do not change manually!
+// Automatically created through MiCASE -- do not change manually!
 //
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wc++98-compat"
-
 #include "UltrasonicDiscreteSingle_Includes.h"
 #include "UltrasonicDiscreteSingle.h"
 #include "State_WaitForPulseStart.h"
 
 #include "State_WaitForPulseStart_Includes.h"
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wc++98-compat"
 
 using namespace FSM;
 using namespace CLM;
@@ -30,6 +30,7 @@ WaitForPulseStart::~WaitForPulseStart()
 	delete &internalAction();
 	delete onSuspendAction();
 	delete onResumeAction();
+
 	delete _transitions[0];
 	delete _transitions[1];
 }
@@ -42,7 +43,7 @@ void WaitForPulseStart::OnEntry::perform(CLMachine *_machine, CLState *_state) c
 #	include "State_WaitForPulseStart_FuncRefs.mm"
 #	include "State_WaitForPulseStart_OnEntry.mm"
 }
- 
+
 void WaitForPulseStart::OnExit::perform(CLMachine *_machine, CLState *_state) const
 {
 #	include "UltrasonicDiscreteSingle_VarRefs.mm"
@@ -78,6 +79,7 @@ void WaitForPulseStart::OnResume::perform(CLMachine *_machine, CLState *_state) 
 #	include "State_WaitForPulseStart_FuncRefs.mm"
 #	include "State_WaitForPulseStart_OnResume.mm"
 }
+
 bool WaitForPulseStart::Transition_0::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "UltrasonicDiscreteSingle_VarRefs.mm"
@@ -90,6 +92,7 @@ bool WaitForPulseStart::Transition_0::check(CLMachine *_machine, CLState *_state
 #		include "State_WaitForPulseStart_Transition_0.expr"
 	);
 }
+
 bool WaitForPulseStart::Transition_1::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "UltrasonicDiscreteSingle_VarRefs.mm"

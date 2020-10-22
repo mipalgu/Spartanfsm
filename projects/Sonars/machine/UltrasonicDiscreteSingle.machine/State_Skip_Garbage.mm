@@ -1,16 +1,16 @@
 //
 // State_Skip_Garbage.mm
 //
-// Automatically created through MiPalCASE -- do not change manually!
+// Automatically created through MiCASE -- do not change manually!
 //
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wc++98-compat"
-
 #include "UltrasonicDiscreteSingle_Includes.h"
 #include "UltrasonicDiscreteSingle.h"
 #include "State_Skip_Garbage.h"
 
 #include "State_Skip_Garbage_Includes.h"
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wc++98-compat"
 
 using namespace FSM;
 using namespace CLM;
@@ -30,6 +30,7 @@ Skip_Garbage::~Skip_Garbage()
 	delete &internalAction();
 	delete onSuspendAction();
 	delete onResumeAction();
+
 	delete _transitions[0];
 	delete _transitions[1];
 }
@@ -42,7 +43,7 @@ void Skip_Garbage::OnEntry::perform(CLMachine *_machine, CLState *_state) const
 #	include "State_Skip_Garbage_FuncRefs.mm"
 #	include "State_Skip_Garbage_OnEntry.mm"
 }
- 
+
 void Skip_Garbage::OnExit::perform(CLMachine *_machine, CLState *_state) const
 {
 #	include "UltrasonicDiscreteSingle_VarRefs.mm"
@@ -78,6 +79,7 @@ void Skip_Garbage::OnResume::perform(CLMachine *_machine, CLState *_state) const
 #	include "State_Skip_Garbage_FuncRefs.mm"
 #	include "State_Skip_Garbage_OnResume.mm"
 }
+
 bool Skip_Garbage::Transition_0::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "UltrasonicDiscreteSingle_VarRefs.mm"
@@ -90,6 +92,7 @@ bool Skip_Garbage::Transition_0::check(CLMachine *_machine, CLState *_state) con
 #		include "State_Skip_Garbage_Transition_0.expr"
 	);
 }
+
 bool Skip_Garbage::Transition_1::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "UltrasonicDiscreteSingle_VarRefs.mm"

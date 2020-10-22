@@ -1,7 +1,7 @@
 //
 // UltrasonicDiscreteSingle.mm
 //
-// Automatically created through MiPalCASE -- do not change manually!
+// Automatically created through MiCASE -- do not change manually!
 //
 #include "UltrasonicDiscreteSingle_Includes.h"
 #include "UltrasonicDiscreteSingle.h"

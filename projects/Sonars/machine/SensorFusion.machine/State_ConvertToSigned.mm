@@ -1,16 +1,16 @@
 //
 // State_ConvertToSigned.mm
 //
-// Automatically created through MiPalCASE -- do not change manually!
+// Automatically created through MiCASE -- do not change manually!
 //
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wc++98-compat"
-
 #include "SensorFusion_Includes.h"
 #include "SensorFusion.h"
 #include "State_ConvertToSigned.h"
 
 #include "State_ConvertToSigned_Includes.h"
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wc++98-compat"
 
 using namespace FSM;
 using namespace CLM;
@@ -30,6 +30,7 @@ ConvertToSigned::~ConvertToSigned()
 	delete &internalAction();
 	delete onSuspendAction();
 	delete onResumeAction();
+
 	delete _transitions[0];
 	delete _transitions[1];
 }
@@ -42,7 +43,7 @@ void ConvertToSigned::OnEntry::perform(CLMachine *_machine, CLState *_state) con
 #	include "State_ConvertToSigned_FuncRefs.mm"
 #	include "State_ConvertToSigned_OnEntry.mm"
 }
- 
+
 void ConvertToSigned::OnExit::perform(CLMachine *_machine, CLState *_state) const
 {
 #	include "SensorFusion_VarRefs.mm"
@@ -78,6 +79,7 @@ void ConvertToSigned::OnResume::perform(CLMachine *_machine, CLState *_state) co
 #	include "State_ConvertToSigned_FuncRefs.mm"
 #	include "State_ConvertToSigned_OnResume.mm"
 }
+
 bool ConvertToSigned::Transition_0::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "SensorFusion_VarRefs.mm"
@@ -90,6 +92,7 @@ bool ConvertToSigned::Transition_0::check(CLMachine *_machine, CLState *_state) 
 #		include "State_ConvertToSigned_Transition_0.expr"
 	);
 }
+
 bool ConvertToSigned::Transition_1::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "SensorFusion_VarRefs.mm"

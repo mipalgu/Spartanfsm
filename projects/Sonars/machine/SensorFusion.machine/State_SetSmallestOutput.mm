@@ -1,16 +1,16 @@
 //
 // State_SetSmallestOutput.mm
 //
-// Automatically created through MiPalCASE -- do not change manually!
+// Automatically created through MiCASE -- do not change manually!
 //
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wc++98-compat"
-
 #include "SensorFusion_Includes.h"
 #include "SensorFusion.h"
 #include "State_SetSmallestOutput.h"
 
 #include "State_SetSmallestOutput_Includes.h"
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wc++98-compat"
 
 using namespace FSM;
 using namespace CLM;
@@ -30,6 +30,7 @@ SetSmallestOutput::~SetSmallestOutput()
 	delete &internalAction();
 	delete onSuspendAction();
 	delete onResumeAction();
+
 	delete _transitions[0];
 	delete _transitions[1];
 }
@@ -42,7 +43,7 @@ void SetSmallestOutput::OnEntry::perform(CLMachine *_machine, CLState *_state) c
 #	include "State_SetSmallestOutput_FuncRefs.mm"
 #	include "State_SetSmallestOutput_OnEntry.mm"
 }
- 
+
 void SetSmallestOutput::OnExit::perform(CLMachine *_machine, CLState *_state) const
 {
 #	include "SensorFusion_VarRefs.mm"
@@ -78,6 +79,7 @@ void SetSmallestOutput::OnResume::perform(CLMachine *_machine, CLState *_state) 
 #	include "State_SetSmallestOutput_FuncRefs.mm"
 #	include "State_SetSmallestOutput_OnResume.mm"
 }
+
 bool SetSmallestOutput::Transition_0::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "SensorFusion_VarRefs.mm"
@@ -90,6 +92,7 @@ bool SetSmallestOutput::Transition_0::check(CLMachine *_machine, CLState *_state
 #		include "State_SetSmallestOutput_Transition_0.expr"
 	);
 }
+
 bool SetSmallestOutput::Transition_1::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "SensorFusion_VarRefs.mm"

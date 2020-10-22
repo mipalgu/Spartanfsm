@@ -1,7 +1,7 @@
 //
 // SensorFusion.mm
 //
-// Automatically created through MiPalCASE -- do not change manually!
+// Automatically created through MiCASE -- do not change manually!
 //
 #include "SensorFusion_Includes.h"
 #include "SensorFusion.h"

@@ -1,16 +1,16 @@
 //
 // State_CalculateDistance.mm
 //
-// Automatically created through MiPalCASE -- do not change manually!
+// Automatically created through MiCASE -- do not change manually!
 //
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wc++98-compat"
-
 #include "UltrasonicDiscreteSingle_Includes.h"
 #include "UltrasonicDiscreteSingle.h"
 #include "State_CalculateDistance.h"
 
 #include "State_CalculateDistance_Includes.h"
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wc++98-compat"
 
 using namespace FSM;
 using namespace CLM;
@@ -29,6 +29,7 @@ CalculateDistance::~CalculateDistance()
 	delete &internalAction();
 	delete onSuspendAction();
 	delete onResumeAction();
+
 	delete _transitions[0];
 }
 
@@ -40,7 +41,7 @@ void CalculateDistance::OnEntry::perform(CLMachine *_machine, CLState *_state) c
 #	include "State_CalculateDistance_FuncRefs.mm"
 #	include "State_CalculateDistance_OnEntry.mm"
 }
- 
+
 void CalculateDistance::OnExit::perform(CLMachine *_machine, CLState *_state) const
 {
 #	include "UltrasonicDiscreteSingle_VarRefs.mm"
@@ -76,6 +77,7 @@ void CalculateDistance::OnResume::perform(CLMachine *_machine, CLState *_state) 
 #	include "State_CalculateDistance_FuncRefs.mm"
 #	include "State_CalculateDistance_OnResume.mm"
 }
+
 bool CalculateDistance::Transition_0::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "UltrasonicDiscreteSingle_VarRefs.mm"

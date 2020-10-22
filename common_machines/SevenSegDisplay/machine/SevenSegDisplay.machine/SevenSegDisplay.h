@@ -1,7 +1,7 @@
 //
 // SevenSegDisplay.h
 //
-// Automatically created through MiPalCASE -- do not change manually!
+// Automatically created through MiCASE -- do not change manually!
 //
 #ifndef clfsm_machine_SevenSegDisplay_
 #define clfsm_machine_SevenSegDisplay_

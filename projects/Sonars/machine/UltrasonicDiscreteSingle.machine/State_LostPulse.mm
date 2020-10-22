@@ -1,16 +1,16 @@
 //
 // State_LostPulse.mm
 //
-// Automatically created through MiPalCASE -- do not change manually!
+// Automatically created through MiCASE -- do not change manually!
 //
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wc++98-compat"
-
 #include "UltrasonicDiscreteSingle_Includes.h"
 #include "UltrasonicDiscreteSingle.h"
 #include "State_LostPulse.h"
 
 #include "State_LostPulse_Includes.h"
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wc++98-compat"
 
 using namespace FSM;
 using namespace CLM;
@@ -29,6 +29,7 @@ LostPulse::~LostPulse()
 	delete &internalAction();
 	delete onSuspendAction();
 	delete onResumeAction();
+
 	delete _transitions[0];
 }
 
@@ -40,7 +41,7 @@ void LostPulse::OnEntry::perform(CLMachine *_machine, CLState *_state) const
 #	include "State_LostPulse_FuncRefs.mm"
 #	include "State_LostPulse_OnEntry.mm"
 }
- 
+
 void LostPulse::OnExit::perform(CLMachine *_machine, CLState *_state) const
 {
 #	include "UltrasonicDiscreteSingle_VarRefs.mm"
@@ -76,6 +77,7 @@ void LostPulse::OnResume::perform(CLMachine *_machine, CLState *_state) const
 #	include "State_LostPulse_FuncRefs.mm"
 #	include "State_LostPulse_OnResume.mm"
 }
+
 bool LostPulse::Transition_0::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "UltrasonicDiscreteSingle_VarRefs.mm"

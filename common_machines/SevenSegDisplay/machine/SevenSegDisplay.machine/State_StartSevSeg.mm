@@ -1,16 +1,16 @@
 //
 // State_StartSevSeg.mm
 //
-// Automatically created through MiPalCASE -- do not change manually!
+// Automatically created through MiCASE -- do not change manually!
 //
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wc++98-compat"
-
 #include "SevenSegDisplay_Includes.h"
 #include "SevenSegDisplay.h"
 #include "State_StartSevSeg.h"
 
 #include "State_StartSevSeg_Includes.h"
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wc++98-compat"
 
 using namespace FSM;
 using namespace CLM;
@@ -29,6 +29,7 @@ StartSevSeg::~StartSevSeg()
 	delete &internalAction();
 	delete onSuspendAction();
 	delete onResumeAction();
+
 	delete _transitions[0];
 }
 
@@ -40,7 +41,7 @@ void StartSevSeg::OnEntry::perform(CLMachine *_machine, CLState *_state) const
 #	include "State_StartSevSeg_FuncRefs.mm"
 #	include "State_StartSevSeg_OnEntry.mm"
 }
- 
+
 void StartSevSeg::OnExit::perform(CLMachine *_machine, CLState *_state) const
 {
 #	include "SevenSegDisplay_VarRefs.mm"
@@ -76,6 +77,7 @@ void StartSevSeg::OnResume::perform(CLMachine *_machine, CLState *_state) const
 #	include "State_StartSevSeg_FuncRefs.mm"
 #	include "State_StartSevSeg_OnResume.mm"
 }
+
 bool StartSevSeg::Transition_0::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "SevenSegDisplay_VarRefs.mm"

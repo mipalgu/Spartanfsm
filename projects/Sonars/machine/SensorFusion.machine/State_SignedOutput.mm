@@ -1,16 +1,16 @@
 //
 // State_SignedOutput.mm
 //
-// Automatically created through MiPalCASE -- do not change manually!
+// Automatically created through MiCASE -- do not change manually!
 //
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wc++98-compat"
-
 #include "SensorFusion_Includes.h"
 #include "SensorFusion.h"
 #include "State_SignedOutput.h"
 
 #include "State_SignedOutput_Includes.h"
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wc++98-compat"
 
 using namespace FSM;
 using namespace CLM;
@@ -29,6 +29,7 @@ SignedOutput::~SignedOutput()
 	delete &internalAction();
 	delete onSuspendAction();
 	delete onResumeAction();
+
 	delete _transitions[0];
 }
 
@@ -40,7 +41,7 @@ void SignedOutput::OnEntry::perform(CLMachine *_machine, CLState *_state) const
 #	include "State_SignedOutput_FuncRefs.mm"
 #	include "State_SignedOutput_OnEntry.mm"
 }
- 
+
 void SignedOutput::OnExit::perform(CLMachine *_machine, CLState *_state) const
 {
 #	include "SensorFusion_VarRefs.mm"
@@ -76,6 +77,7 @@ void SignedOutput::OnResume::perform(CLMachine *_machine, CLState *_state) const
 #	include "State_SignedOutput_FuncRefs.mm"
 #	include "State_SignedOutput_OnResume.mm"
 }
+
 bool SignedOutput::Transition_0::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "SensorFusion_VarRefs.mm"

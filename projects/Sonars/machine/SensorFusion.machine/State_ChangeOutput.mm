@@ -1,16 +1,16 @@
 //
 // State_ChangeOutput.mm
 //
-// Automatically created through MiPalCASE -- do not change manually!
+// Automatically created through MiCASE -- do not change manually!
 //
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wc++98-compat"
-
 #include "SensorFusion_Includes.h"
 #include "SensorFusion.h"
 #include "State_ChangeOutput.h"
 
 #include "State_ChangeOutput_Includes.h"
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wc++98-compat"
 
 using namespace FSM;
 using namespace CLM;
@@ -29,6 +29,7 @@ ChangeOutput::~ChangeOutput()
 	delete &internalAction();
 	delete onSuspendAction();
 	delete onResumeAction();
+
 	delete _transitions[0];
 }
 
@@ -40,7 +41,7 @@ void ChangeOutput::OnEntry::perform(CLMachine *_machine, CLState *_state) const
 #	include "State_ChangeOutput_FuncRefs.mm"
 #	include "State_ChangeOutput_OnEntry.mm"
 }
- 
+
 void ChangeOutput::OnExit::perform(CLMachine *_machine, CLState *_state) const
 {
 #	include "SensorFusion_VarRefs.mm"
@@ -76,6 +77,7 @@ void ChangeOutput::OnResume::perform(CLMachine *_machine, CLState *_state) const
 #	include "State_ChangeOutput_FuncRefs.mm"
 #	include "State_ChangeOutput_OnResume.mm"
 }
+
 bool ChangeOutput::Transition_0::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "SensorFusion_VarRefs.mm"

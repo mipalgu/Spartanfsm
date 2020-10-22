@@ -1,7 +1,7 @@
 //
 // State_ReadSonar.h
 //
-// Automatically created through MiPalCASE -- do not change manually!
+// Automatically created through MiCASE -- do not change manually!
 //
 #ifndef clfsm_SonarPlatform_State_ReadSonar_h
 #define clfsm_SonarPlatform_State_ReadSonar_h
@@ -15,39 +15,40 @@
 
 namespace FSM
 {
-  namespace CLM
-  {
-    namespace FSMSonarPlatform
+    namespace CLM
     {
-      namespace State
+      namespace FSMSonarPlatform
       {
-        class ReadSonar: public CLState
+        namespace State
         {
-          class OnEntry: public CLAction
-          {
-            virtual void perform(CLMachine *, CLState *) const;
-          };
-          
-          class OnExit: public CLAction
-          {
-            virtual void perform(CLMachine *, CLState *) const;
-          };
-          
-          class Internal: public CLAction
-          {
-            virtual void perform(CLMachine *, CLState *) const;
-          };
-          
-          class OnSuspend: public CLAction
-          {
-            virtual void perform(CLMachine *, CLState *) const;
-          };
-          
-          class OnResume: public CLAction
-          {
-            virtual void perform(CLMachine *, CLState *) const;
-          };
-                          class Transition_0: public CLTransition
+            class ReadSonar: public CLState
+            {
+                class OnEntry: public CLAction
+                {
+                    virtual void perform(CLMachine *, CLState *) const;
+                };
+
+                class OnExit: public CLAction
+                {
+                    virtual void perform(CLMachine *, CLState *) const;
+                };
+
+                class Internal: public CLAction
+                {
+                    virtual void perform(CLMachine *, CLState *) const;
+                };
+
+                class OnSuspend: public CLAction
+                {
+                    virtual void perform(CLMachine *, CLState *) const;
+                };
+
+                class OnResume: public CLAction
+                {
+                    virtual void perform(CLMachine *, CLState *) const;
+                };
+
+                class Transition_0: public CLTransition
                 {
                 public:
                     Transition_0(int toState = 2): CLTransition(toState) {}

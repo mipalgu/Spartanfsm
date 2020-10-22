@@ -1,16 +1,16 @@
 //
 // State_changeCurrentSensor.mm
 //
-// Automatically created through MiPalCASE -- do not change manually!
+// Automatically created through MiCASE -- do not change manually!
 //
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wc++98-compat"
-
 #include "SensorFusion_Includes.h"
 #include "SensorFusion.h"
 #include "State_changeCurrentSensor.h"
 
 #include "State_changeCurrentSensor_Includes.h"
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wc++98-compat"
 
 using namespace FSM;
 using namespace CLM;
@@ -31,6 +31,7 @@ changeCurrentSensor::~changeCurrentSensor()
 	delete &internalAction();
 	delete onSuspendAction();
 	delete onResumeAction();
+
 	delete _transitions[0];
 	delete _transitions[1];
 	delete _transitions[2];
@@ -44,7 +45,7 @@ void changeCurrentSensor::OnEntry::perform(CLMachine *_machine, CLState *_state)
 #	include "State_changeCurrentSensor_FuncRefs.mm"
 #	include "State_changeCurrentSensor_OnEntry.mm"
 }
- 
+
 void changeCurrentSensor::OnExit::perform(CLMachine *_machine, CLState *_state) const
 {
 #	include "SensorFusion_VarRefs.mm"
@@ -80,6 +81,7 @@ void changeCurrentSensor::OnResume::perform(CLMachine *_machine, CLState *_state
 #	include "State_changeCurrentSensor_FuncRefs.mm"
 #	include "State_changeCurrentSensor_OnResume.mm"
 }
+
 bool changeCurrentSensor::Transition_0::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "SensorFusion_VarRefs.mm"
@@ -92,6 +94,7 @@ bool changeCurrentSensor::Transition_0::check(CLMachine *_machine, CLState *_sta
 #		include "State_changeCurrentSensor_Transition_0.expr"
 	);
 }
+
 bool changeCurrentSensor::Transition_1::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "SensorFusion_VarRefs.mm"
@@ -104,6 +107,7 @@ bool changeCurrentSensor::Transition_1::check(CLMachine *_machine, CLState *_sta
 #		include "State_changeCurrentSensor_Transition_1.expr"
 	);
 }
+
 bool changeCurrentSensor::Transition_2::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "SensorFusion_VarRefs.mm"

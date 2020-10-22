@@ -1,7 +1,7 @@
 //
 // State_BcdEncode.h
 //
-// Automatically created through MiPalCASE -- do not change manually!
+// Automatically created through MiCASE -- do not change manually!
 //
 #ifndef clfsm_SevenSegDisplay_State_BcdEncode_h
 #define clfsm_SevenSegDisplay_State_BcdEncode_h
@@ -15,39 +15,40 @@
 
 namespace FSM
 {
-  namespace CLM
-  {
-    namespace FSMSevenSegDisplay
+    namespace CLM
     {
-      namespace State
+      namespace FSMSevenSegDisplay
       {
-        class BcdEncode: public CLState
+        namespace State
         {
-          class OnEntry: public CLAction
-          {
-            virtual void perform(CLMachine *, CLState *) const;
-          };
-          
-          class OnExit: public CLAction
-          {
-            virtual void perform(CLMachine *, CLState *) const;
-          };
-          
-          class Internal: public CLAction
-          {
-            virtual void perform(CLMachine *, CLState *) const;
-          };
-          
-          class OnSuspend: public CLAction
-          {
-            virtual void perform(CLMachine *, CLState *) const;
-          };
-          
-          class OnResume: public CLAction
-          {
-            virtual void perform(CLMachine *, CLState *) const;
-          };
-                          class Transition_0: public CLTransition
+            class BcdEncode: public CLState
+            {
+                class OnEntry: public CLAction
+                {
+                    virtual void perform(CLMachine *, CLState *) const;
+                };
+
+                class OnExit: public CLAction
+                {
+                    virtual void perform(CLMachine *, CLState *) const;
+                };
+
+                class Internal: public CLAction
+                {
+                    virtual void perform(CLMachine *, CLState *) const;
+                };
+
+                class OnSuspend: public CLAction
+                {
+                    virtual void perform(CLMachine *, CLState *) const;
+                };
+
+                class OnResume: public CLAction
+                {
+                    virtual void perform(CLMachine *, CLState *) const;
+                };
+
+                class Transition_0: public CLTransition
                 {
                 public:
                     Transition_0(int toState = 3): CLTransition(toState) {}

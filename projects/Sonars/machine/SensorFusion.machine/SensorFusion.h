@@ -1,7 +1,7 @@
 //
 // SensorFusion.h
 //
-// Automatically created through MiPalCASE -- do not change manually!
+// Automatically created through MiCASE -- do not change manually!
 //
 #ifndef clfsm_machine_SensorFusion_
 #define clfsm_machine_SensorFusion_

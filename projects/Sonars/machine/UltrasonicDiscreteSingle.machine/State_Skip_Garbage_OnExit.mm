@@ -1,2 +1,2 @@
 triggerPin <= '1';
-numloops := numloops + 1;
+num_loops := num_loops + 1;

@@ -1,7 +1,7 @@
 //
 // SevenSegDigit.mm
 //
-// Automatically created through MiPalCASE -- do not change manually!
+// Automatically created through MiCASE -- do not change manually!
 //
 #include "SevenSegDigit_Includes.h"
 #include "SevenSegDigit.h"

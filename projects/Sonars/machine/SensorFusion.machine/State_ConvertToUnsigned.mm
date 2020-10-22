@@ -1,16 +1,16 @@
 //
 // State_ConvertToUnsigned.mm
 //
-// Automatically created through MiPalCASE -- do not change manually!
+// Automatically created through MiCASE -- do not change manually!
 //
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wc++98-compat"
-
 #include "SensorFusion_Includes.h"
 #include "SensorFusion.h"
 #include "State_ConvertToUnsigned.h"
 
 #include "State_ConvertToUnsigned_Includes.h"
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wc++98-compat"
 
 using namespace FSM;
 using namespace CLM;
@@ -30,6 +30,7 @@ ConvertToUnsigned::~ConvertToUnsigned()
 	delete &internalAction();
 	delete onSuspendAction();
 	delete onResumeAction();
+
 	delete _transitions[0];
 	delete _transitions[1];
 }
@@ -42,7 +43,7 @@ void ConvertToUnsigned::OnEntry::perform(CLMachine *_machine, CLState *_state) c
 #	include "State_ConvertToUnsigned_FuncRefs.mm"
 #	include "State_ConvertToUnsigned_OnEntry.mm"
 }
- 
+
 void ConvertToUnsigned::OnExit::perform(CLMachine *_machine, CLState *_state) const
 {
 #	include "SensorFusion_VarRefs.mm"
@@ -78,6 +79,7 @@ void ConvertToUnsigned::OnResume::perform(CLMachine *_machine, CLState *_state) 
 #	include "State_ConvertToUnsigned_FuncRefs.mm"
 #	include "State_ConvertToUnsigned_OnResume.mm"
 }
+
 bool ConvertToUnsigned::Transition_0::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "SensorFusion_VarRefs.mm"
@@ -90,6 +92,7 @@ bool ConvertToUnsigned::Transition_0::check(CLMachine *_machine, CLState *_state
 #		include "State_ConvertToUnsigned_Transition_0.expr"
 	);
 }
+
 bool ConvertToUnsigned::Transition_1::check(CLMachine *_machine, CLState *_state) const
 {
 #	include "SensorFusion_VarRefs.mm"
