@@ -14,4 +14,4 @@
 #machine	signal allOutputs: std_logic_vector(numberOfSensors * 16 - 1 downto 0);	///<
 #machine	signal sensorCommand: std_logic_vector(1 downto 0) := COMMAND_NULL;	///<
 #machine	signal sensorFusionCommand: std_logic_vector(1 downto 0) := COMMAND_NULL;	///<
-#machine	signal sensorsHaveResult: std_logic_vector(numberOfSensors - 1 downto 0);	///<
+#machine	constant allLow: std_logic_vector(numberOfSensors - 1 downto 0) := (others => '0');	///<

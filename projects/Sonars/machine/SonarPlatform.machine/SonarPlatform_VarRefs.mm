@@ -20,6 +20,6 @@ SonarPlatform *_m = static_cast<SonarPlatform *>(_machine);
 #machine	&signal allOutputs: std_logic_vector(numberOfSensors * 16 - 1 downto 0) = _m->signal allOutputs: std_logic_vector(numberOfSensors * 16 - 1 downto 0);	///<
 #machine	&signal sensorCommand: std_logic_vector(1 downto 0) := COMMAND_NULL = _m->signal sensorCommand: std_logic_vector(1 downto 0) := COMMAND_NULL;	///<
 #machine	&signal sensorFusionCommand: std_logic_vector(1 downto 0) := COMMAND_NULL = _m->signal sensorFusionCommand: std_logic_vector(1 downto 0) := COMMAND_NULL;	///<
-#machine	&signal sensorsHaveResult: std_logic_vector(numberOfSensors - 1 downto 0) = _m->signal sensorsHaveResult: std_logic_vector(numberOfSensors - 1 downto 0);	///<
+#machine	&constant allLow: std_logic_vector(numberOfSensors - 1 downto 0) := (others => '0') = _m->constant allLow: std_logic_vector(numberOfSensors - 1 downto 0) := (others => '0');	///<
 
 #pragma clang diagnostic pop
