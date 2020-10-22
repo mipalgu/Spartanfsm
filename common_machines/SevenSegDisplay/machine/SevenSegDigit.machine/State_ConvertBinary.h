@@ -1,10 +1,10 @@
 //
-// State_Init.h
+// State_ConvertBinary.h
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //
-#ifndef clfsm_SevenSegDigit_State_Init_h
-#define clfsm_SevenSegDigit_State_Init_h
+#ifndef clfsm_SevenSegDigit_State_ConvertBinary_h
+#define clfsm_SevenSegDigit_State_ConvertBinary_h
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wc++98-compat"
@@ -21,7 +21,7 @@ namespace FSM
     {
       namespace State
       {
-        class Init: public CLState
+        class ConvertBinary: public CLState
         {
           class OnEntry: public CLAction
           {
@@ -50,7 +50,7 @@ namespace FSM
                           class Transition_0: public CLTransition
                 {
                 public:
-                    Transition_0(int toState = 2): CLTransition(toState) {}
+                    Transition_0(int toState = 1): CLTransition(toState) {}
 
                     virtual bool check(CLMachine *, CLState *) const;
                 };
@@ -58,14 +58,14 @@ namespace FSM
                 CLTransition *_transitions[1];
 
                 public:
-                    Init(const char *name = "Init");
-                    virtual ~Init();
+                    ConvertBinary(const char *name = "ConvertBinary");
+                    virtual ~ConvertBinary();
 
                     virtual CLTransition * const *transitions() const { return _transitions; }
                     virtual int numberOfTransitions() const { return 1; }
 
-#                   include "State_Init_Variables.h"
-#                   include "State_Init_Methods.h"
+#                   include "State_ConvertBinary_Variables.h"
+#                   include "State_ConvertBinary_Methods.h"
             };
         }
       }

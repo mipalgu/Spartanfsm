@@ -1,5 +1,5 @@
 //
-// State_Suspend_Variables.h
+// State_ConvertBinary_Variables.h
 //
 // Automatically created through MiPalCASE -- do not change manually!
 //

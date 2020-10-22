@@ -1,16 +1,16 @@
 //
 // State_Suspend.mm
 //
-// Automatically created through MiCASE -- do not change manually!
+// Automatically created through MiPalCASE -- do not change manually!
 //
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wc++98-compat"
+
 #include "SevenSegDigit_Includes.h"
 #include "SevenSegDigit.h"
 #include "State_Suspend.h"
 
 #include "State_Suspend_Includes.h"
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wc++98-compat"
 
 using namespace FSM;
 using namespace CLM;
@@ -28,7 +28,6 @@ Suspend::~Suspend()
 	delete &internalAction();
 	delete onSuspendAction();
 	delete onResumeAction();
-
 }
 
 void Suspend::OnEntry::perform(CLMachine *_machine, CLState *_state) const
@@ -39,7 +38,7 @@ void Suspend::OnEntry::perform(CLMachine *_machine, CLState *_state) const
 #	include "State_Suspend_FuncRefs.mm"
 #	include "State_Suspend_OnEntry.mm"
 }
-
+ 
 void Suspend::OnExit::perform(CLMachine *_machine, CLState *_state) const
 {
 #	include "SevenSegDigit_VarRefs.mm"

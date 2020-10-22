@@ -1,7 +1,7 @@
 //
 // SevenSegDigit.h
 //
-// Automatically created through MiCASE -- do not change manually!
+// Automatically created through MiPalCASE -- do not change manually!
 //
 #ifndef clfsm_machine_SevenSegDigit_
 #define clfsm_machine_SevenSegDigit_
@@ -16,12 +16,12 @@ namespace FSM
     {
         class SevenSegDigit: public CLMachine
         {
-            CLState *_states[18];
+            CLState *_states[3];
         public:
             SevenSegDigit(int mid  = 0, const char *name = "SevenSegDigit");
             virtual ~SevenSegDigit();
             virtual CLState * const * states() const { return _states; }
-            virtual int numberOfStates() const { return 18; }
+            virtual int numberOfStates() const { return 3; }
 #           include "SevenSegDigit_Variables.h"
 #           include "SevenSegDigit_Methods.h"
         };

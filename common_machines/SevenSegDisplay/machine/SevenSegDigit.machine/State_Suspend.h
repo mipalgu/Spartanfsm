@@ -1,7 +1,7 @@
 //
 // State_Suspend.h
 //
-// Automatically created through MiCASE -- do not change manually!
+// Automatically created through MiPalCASE -- do not change manually!
 //
 #ifndef clfsm_SevenSegDigit_State_Suspend_h
 #define clfsm_SevenSegDigit_State_Suspend_h
@@ -15,42 +15,43 @@
 
 namespace FSM
 {
-    namespace CLM
+  namespace CLM
+  {
+    namespace FSMSevenSegDigit
     {
-      namespace FSMSevenSegDigit
+      namespace State
       {
-        namespace State
+        class Suspend: public CLState
         {
-            class Suspend: public CLState
-            {
-                class OnEntry: public CLAction
-                {
-                    virtual void perform(CLMachine *, CLState *) const;
-                };
-
-                class OnExit: public CLAction
-                {
-                    virtual void perform(CLMachine *, CLState *) const;
-                };
-
-                class Internal: public CLAction
-                {
-                    virtual void perform(CLMachine *, CLState *) const;
-                };
-
-                class OnSuspend: public CLAction
-                {
-                    virtual void perform(CLMachine *, CLState *) const;
-                };
-
-                class OnResume: public CLAction
-                {
-                    virtual void perform(CLMachine *, CLState *) const;
-                };
-
-#pragma clang diagnostic push
+          class OnEntry: public CLAction
+          {
+            virtual void perform(CLMachine *, CLState *) const;
+          };
+          
+          class OnExit: public CLAction
+          {
+            virtual void perform(CLMachine *, CLState *) const;
+          };
+          
+          class Internal: public CLAction
+          {
+            virtual void perform(CLMachine *, CLState *) const;
+          };
+          
+          class OnSuspend: public CLAction
+          {
+            virtual void perform(CLMachine *, CLState *) const;
+          };
+          
+          class OnResume: public CLAction
+          {
+            virtual void perform(CLMachine *, CLState *) const;
+          };
+          #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wzero-length-array"
                 CLTransition *_transitions[0];
+#pragma clang diagnostic pop
+
 
                 public:
                     Suspend(const char *name = "Suspend");
@@ -68,4 +69,3 @@ namespace FSM
 }
 
 #endif
-#pragma clang diagnostic pop
