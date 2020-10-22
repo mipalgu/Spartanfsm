@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-10-22 17:23 AEST
+--Date Generated: 2020-10-22 17:26 AEST
 --
 --Author: Morgan McColl
 --Email: morgan.mccoll@alumni.griffithuni.edu.au
@@ -181,7 +181,7 @@ process (clk)
                                 internalState <= Internal;
                             end if;
                         when STATE_SetMinimum =>
-                            if (sensorsSuspended = allLow and ringlet_counter >= integer(ceil(10.0 * RINGLETS_PER_MS))) then
+                            if (sensorsSuspended = allLow and ringlet_counter >= integer(ceil(10.0 * RINGLETS_PER_US))) then
                                 targetState <= STATE_ReadSonar;
                                 internalState <= OnExit;
                             else
