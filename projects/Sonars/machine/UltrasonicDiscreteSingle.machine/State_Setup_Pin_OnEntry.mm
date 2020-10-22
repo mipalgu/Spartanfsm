@@ -1,1 +1,0 @@
-triggerPin <= '0';

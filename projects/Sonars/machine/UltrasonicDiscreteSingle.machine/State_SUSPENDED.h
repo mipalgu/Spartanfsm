@@ -6,48 +6,36 @@
 #ifndef clfsm_UltrasonicDiscreteSingle_State_SUSPENDED_h
 #define clfsm_UltrasonicDiscreteSingle_State_SUSPENDED_h
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wc++98-compat"
-
 #include "CLState.h"
 #include "CLAction.h"
 #include "CLTransition.h"
 
 namespace FSM
 {
-  namespace CLM
-  {
-    namespace FSMUltrasonicDiscreteSingle
+    namespace CLM
     {
-      namespace State
+      namespace FSMUltrasonicDiscreteSingle
       {
-        class SUSPENDED: public CLState
+        namespace State
         {
-          class OnEntry: public CLAction
-          {
-            virtual void perform(CLMachine *, CLState *) const;
-          };
-          
-          class OnExit: public CLAction
-          {
-            virtual void perform(CLMachine *, CLState *) const;
-          };
-          
-          class Internal: public CLAction
-          {
-            virtual void perform(CLMachine *, CLState *) const;
-          };
-          
-          class OnSuspend: public CLAction
-          {
-            virtual void perform(CLMachine *, CLState *) const;
-          };
-          
-          class OnResume: public CLAction
-          {
-            virtual void perform(CLMachine *, CLState *) const;
-          };
-          #pragma clang diagnostic push
+            class SUSPENDED: public CLState
+            {
+                class OnEntry: public CLAction
+                {
+                    virtual void perform(CLMachine *, CLState *) const;
+                };
+
+                class OnExit: public CLAction
+                {
+                    virtual void perform(CLMachine *, CLState *) const;
+                };
+
+                class Internal: public CLAction
+                {
+                    virtual void perform(CLMachine *, CLState *) const;
+                };
+
+#pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wzero-length-array"
                 CLTransition *_transitions[0];
 #pragma clang diagnostic pop

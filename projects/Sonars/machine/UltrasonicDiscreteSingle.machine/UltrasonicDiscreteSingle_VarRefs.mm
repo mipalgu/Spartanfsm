@@ -19,6 +19,5 @@ UltrasonicDiscreteSingle *_m = static_cast<UltrasonicDiscreteSingle *>(_machine)
 #machine	&constant MAX_TIME: natural := MAX_DISTANCE * 2 / SPEED_OF_SOUND * 1000 = _m->constant MAX_TIME: natural := MAX_DISTANCE * 2 / SPEED_OF_SOUND * 1000;	///<
 #machine	&shared variable numloops: natural := 0 = _m->shared variable numloops: natural := 0;	///<
 #machine	&constant maxloops: natural:= MAX_TIME / SCHEDULE_LENGTH = _m->constant maxloops: natural:= MAX_TIME / SCHEDULE_LENGTH;	///<
-#extern	&hasResult: out std_logic = _m->hasResult: out std_logic;	///<
 
 #pragma clang diagnostic pop

@@ -1,1 +1,1 @@
-
+triggerPin <= '0';

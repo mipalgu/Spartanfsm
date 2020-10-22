@@ -6,48 +6,36 @@
 #ifndef clfsm_UltrasonicDiscreteSingle_State_Initial_h
 #define clfsm_UltrasonicDiscreteSingle_State_Initial_h
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wc++98-compat"
-
 #include "CLState.h"
 #include "CLAction.h"
 #include "CLTransition.h"
 
 namespace FSM
 {
-  namespace CLM
-  {
-    namespace FSMUltrasonicDiscreteSingle
+    namespace CLM
     {
-      namespace State
+      namespace FSMUltrasonicDiscreteSingle
       {
-        class Initial: public CLState
+        namespace State
         {
-          class OnEntry: public CLAction
-          {
-            virtual void perform(CLMachine *, CLState *) const;
-          };
-          
-          class OnExit: public CLAction
-          {
-            virtual void perform(CLMachine *, CLState *) const;
-          };
-          
-          class Internal: public CLAction
-          {
-            virtual void perform(CLMachine *, CLState *) const;
-          };
-          
-          class OnSuspend: public CLAction
-          {
-            virtual void perform(CLMachine *, CLState *) const;
-          };
-          
-          class OnResume: public CLAction
-          {
-            virtual void perform(CLMachine *, CLState *) const;
-          };
-                          class Transition_0: public CLTransition
+            class Initial: public CLState
+            {
+                class OnEntry: public CLAction
+                {
+                    virtual void perform(CLMachine *, CLState *) const;
+                };
+
+                class OnExit: public CLAction
+                {
+                    virtual void perform(CLMachine *, CLState *) const;
+                };
+
+                class Internal: public CLAction
+                {
+                    virtual void perform(CLMachine *, CLState *) const;
+                };
+
+                class Transition_0: public CLTransition
                 {
                 public:
                     Transition_0(int toState = 2): CLTransition(toState) {}
