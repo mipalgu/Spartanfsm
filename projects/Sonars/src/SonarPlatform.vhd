@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-10-06 16:18 AEST
+--Date Generated: 2020-10-22 17:03 AEST
 --
 --Author: Morgan McColl
 --Email: morgan.mccoll@alumni.griffithuni.edu.au
@@ -79,64 +79,8 @@ architecture LLFSM of SonarPlatform is
     signal allOutputs: std_logic_vector(numberOfSensors * 16 - 1 downto 0);
     signal sensorCommand: std_logic_vector(1 downto 0) := COMMAND_NULL;
     signal sensorFusionCommand: std_logic_vector(1 downto 0) := COMMAND_NULL;
-    signal sensorsHaveResult: std_logic_vector(numberOfSensors - 1 downto 0);
-     component SensorFusion is
-         generic (
-              numberOfSensors: positive;
-              sensorOutputSize: positive;
-              signedOutput: boolean;
-              maxValue: Integer;
-              minValue: Integer
-         );
-         port (
-              clk: in std_logic;
-              command: in std_logic_vector(1 downto 0);
-              suspended: out std_logic;
-              EXTERNAL_smallestOutput: out std_logic_vector(sensorOutputSize - 1 downto 0);
-              EXTERNAL_sensorOutputs: in std_logic_vector(numberOfSensors * sensorOutputSize - 1 downto 0)
-         );
-     end component;
-     
-     component UltrasonicDiscreteSingle is
-         port (
-              clk: in std_logic;
-              command: in std_logic_vector(1 downto 0);
-              suspended: out std_logic;
-              EXTERNAL_triggerPin: out std_logic;
-              EXTERNAL_echo: in std_logic;
-              EXTERNAL_distance: out std_logic_vector(15 downto 0);
-              EXTERNAL_hasResult: out std_logic
-         );
-     end component;
-     
-begin    
-    sensor_fusion: Sensorfusion generic map (
-        numberOfSensors => numberOfSensors,
-        sensorOutputSize => 16,
-        signedOutput => false,
-        maxValue => 65535,
-        minValue => 0
-    )
-    port map (
-        clk => clk,
-        command => sensorFusionCommand,
-        suspended => sensorFusionSuspended,
-        EXTERNAL_smallestOutput => smallestDistance,
-        EXTERNAL_sensorOutputs => allOutputs
-    );
-    
-    sensors_gen:
-    for I in 0 to (numberOfSensors - 1) generate
-        sensor: UltrasonicDiscreteSingle port map (
-            clk => clk,
-            command => sensorCommand,
-            suspended => sensorsSuspended(I),
-            EXTERNAL_triggerPin => triggers(I),
-            EXTERNAL_echo => echos(I),
-            EXTERNAL_distance => allOutputs(16 * (I + 1) - 1 downto 16 * I),
-            EXTERNAL_hasResult => sensorsHaveResult(I)
-        );
-    end generate sensors_gen;
+    constant allLow: std_logic_vector(numberOfSensors - 1 downto 0) := (others => '0');
+begin
 process (clk)
     begin
         if (rising_edge(clk)) then
@@ -233,8 +177,12 @@ process (clk)
                                 internalState <= Internal;
                             end if;
                         when STATE_SetMinimum =>
-                            targetState <= STATE_ReadSonar;
-                            internalState <= OnExit;
+                            if (sensorsSuspended = allLow) then
+                                targetState <= STATE_ReadSonar;
+                                internalState <= OnExit;
+                            else
+                                internalState <= Internal;
+                            end if;
                         when STATE_FindMinimum =>
                             if (sensorFusionSuspended = '1') then
                                 targetState <= STATE_SetMinimum;
@@ -243,7 +191,7 @@ process (clk)
                                 internalState <= Internal;
                             end if;
                         when STATE_ReadSonar =>
-                            if (sensorsHaveResult = allHigh) then
+                            if (sensorsSuspended = allHigh) then
                                 targetState <= STATE_StartFusion;
                                 internalState <= OnExit;
                             else
@@ -261,6 +209,8 @@ process (clk)
                             sensorCommand <= COMMAND_NULL;
                         when STATE_StartFusion =>
                             sensorFusionCommand <= COMMAND_NULL;
+                        when STATE_SetMinimum =>
+                            sensorCommand <= COMMAND_RESTART;
                         when others =>
                             null;
                     end case;

@@ -2,7 +2,7 @@
 --
 --This is a generated file - DO NOT ALTER.
 --Please use an LLFSM editor to change this file.
---Date Generated: 2020-10-06 16:18 AEST
+--Date Generated: 2020-10-22 16:56 AEST
 --
 --Author: Morgan McColl
 --Email: morgan.mccoll@alumni.griffithuni.edu.au
@@ -24,8 +24,7 @@ entity UltrasonicDiscreteSingle is
         suspended: out std_logic;
         EXTERNAL_triggerPin: out std_logic;
         EXTERNAL_echo: in std_logic;
-        EXTERNAL_distance: out std_logic_vector(15 downto 0);
-        EXTERNAL_hasResult: out std_logic
+        EXTERNAL_distance: out std_logic_vector(15 downto 0)
     );
 end UltrasonicDiscreteSingle;
 
@@ -42,20 +41,18 @@ architecture LLFSM of UltrasonicDiscreteSingle is
     constant WriteSnapshot: std_logic_vector(3 downto 0) := "1000";
     signal internalState: std_logic_vector(3 downto 0) := ReadSnapshot;
     --State Representation Bits
-    constant STATE_Initial: std_logic_vector(3 downto 0) := "0000";
-    constant STATE_SUSPENDED: std_logic_vector(3 downto 0) := "0001";
-    constant STATE_Setup_Pin: std_logic_vector(3 downto 0) := "0010";
-    constant STATE_Skip_Garbage: std_logic_vector(3 downto 0) := "0011";
-    constant STATE_WaitForPulseStart: std_logic_vector(3 downto 0) := "0100";
-    constant STATE_ClearTrigger: std_logic_vector(3 downto 0) := "0101";
-    constant STATE_LostPulse: std_logic_vector(3 downto 0) := "0110";
-    constant STATE_WaitForPulseEnd: std_logic_vector(3 downto 0) := "0111";
-    constant STATE_CalculateDistance: std_logic_vector(3 downto 0) := "1000";
-    constant STATE_WaitForMaxTime: std_logic_vector(3 downto 0) := "1001";
-    signal currentState: std_logic_vector(3 downto 0) := STATE_Initial;
-    signal targetState: std_logic_vector(3 downto 0) := STATE_Initial;
-    signal previousRinglet: std_logic_vector(3 downto 0) := "ZZZZ";
-    signal suspendedFrom: std_logic_vector(3 downto 0) := STATE_Initial;
+    constant STATE_Initial: std_logic_vector(2 downto 0) := "000";
+    constant STATE_SUSPENDED: std_logic_vector(2 downto 0) := "001";
+    constant STATE_Skip_Garbage: std_logic_vector(2 downto 0) := "010";
+    constant STATE_WaitForPulseStart: std_logic_vector(2 downto 0) := "011";
+    constant STATE_ClearTrigger: std_logic_vector(2 downto 0) := "100";
+    constant STATE_LostPulse: std_logic_vector(2 downto 0) := "101";
+    constant STATE_WaitForPulseEnd: std_logic_vector(2 downto 0) := "110";
+    constant STATE_CalculateDistance: std_logic_vector(2 downto 0) := "111";
+    signal currentState: std_logic_vector(2 downto 0) := STATE_Initial;
+    signal targetState: std_logic_vector(2 downto 0) := STATE_Initial;
+    signal previousRinglet: std_logic_vector(2 downto 0) := "ZZZ";
+    signal suspendedFrom: std_logic_vector(2 downto 0) := STATE_Initial;
     --Suspension Commands
     constant COMMAND_NULL: std_logic_vector(1 downto 0) := "00";
     constant COMMAND_RESTART: std_logic_vector(1 downto 0) := "01";
@@ -73,7 +70,6 @@ architecture LLFSM of UltrasonicDiscreteSingle is
     signal triggerPin: std_logic;
     signal echo: std_logic;
     signal distance: std_logic_vector(15 downto 0);
-    signal hasResult: std_logic;
     --Machine Variables
     constant SCHEDULE_LENGTH: natural := 100;
     constant SPEED_OF_SOUND: natural := 343;
@@ -141,33 +137,25 @@ process (clk)
                         end if;
                     end if;
                 when OnSuspend =>
+                    triggerPin <= '0';
                     internalState <= CheckTransition;
                 when OnResume =>
                     case currentState is
-                        when STATE_Setup_Pin =>
-                            triggerPin <= '0';
-                        when STATE_Skip_Garbage =>
-                            triggerPin <= '0';
-                            ringlet_counter := 0;
                         when STATE_ClearTrigger =>
                             triggerPin <= '0';
                         when STATE_LostPulse =>
                             distance <= (others => '1');
                         when STATE_CalculateDistance =>
                             distance <= std_logic_vector(to_unsigned(((numloops* SCHEDULE_LENGTH / 1000) * SPEED_OF_SOUND) / 10000 - SONAR_OFFSET, 16));
-                        when STATE_WaitForMaxTime =>
-                            hasResult <= '1';
-                            ringlet_counter := 0;
                         when others =>
                             null;
                     end case;
                     internalState <= CheckTransition;
                 when OnEntry =>
                     case currentState is
-                        when STATE_Setup_Pin =>
+                        when STATE_SUSPENDED =>
                             triggerPin <= '0';
                         when STATE_Skip_Garbage =>
-                            triggerPin <= '0';
                             ringlet_counter := 0;
                         when STATE_WaitForPulseStart =>
                             ringlet_counter := 0;
@@ -177,9 +165,6 @@ process (clk)
                             distance <= (others => '1');
                         when STATE_CalculateDistance =>
                             distance <= std_logic_vector(to_unsigned(((numloops* SCHEDULE_LENGTH / 1000) * SPEED_OF_SOUND) / 10000 - SONAR_OFFSET, 16));
-                        when STATE_WaitForMaxTime =>
-                            hasResult <= '1';
-                            ringlet_counter := 0;
                         when others =>
                             null;
                     end case;
@@ -189,13 +174,10 @@ process (clk)
                 when CheckTransition =>
                     case currentState is
                         when STATE_Initial =>
-                            targetState <= STATE_Setup_Pin;
+                            targetState <= STATE_Skip_Garbage;
                             internalState <= OnExit;
                         when STATE_SUSPENDED =>
                             internalState <= Internal;
-                        when STATE_Setup_Pin =>
-                            targetState <= STATE_Skip_Garbage;
-                            internalState <= OnExit;
                         when STATE_Skip_Garbage =>
                             if (echo = '0') then
                                 targetState <= STATE_WaitForPulseStart;
@@ -227,7 +209,7 @@ process (clk)
                                 internalState <= Internal;
                             end if;
                         when STATE_LostPulse =>
-                            targetState <= STATE_WaitForMaxTime;
+                            targetState <= STATE_SUSPENDED;
                             internalState <= OnExit;
                         when STATE_WaitForPulseEnd =>
                             if (numloops >= maxloops) then
@@ -240,15 +222,8 @@ process (clk)
                                 internalState <= Internal;
                             end if;
                         when STATE_CalculateDistance =>
-                            targetState <= STATE_WaitForMaxTime;
+                            targetState <= STATE_SUSPENDED;
                             internalState <= OnExit;
-                        when STATE_WaitForMaxTime =>
-                            if (ringlet_counter >= integer(ceil((real(MAX_TIME)) * RINGLETS_PER_NS))) then
-                                targetState <= STATE_Setup_Pin;
-                                internalState <= OnExit;
-                            else
-                                internalState <= Internal;
-                            end if;
                         when others =>
                             null;
                     end case;
@@ -263,8 +238,6 @@ process (clk)
                             numloops := numloops + 1;
                         when STATE_WaitForPulseEnd =>
                             numloops := numloops + 1;
-                        when STATE_WaitForMaxTime =>
-                            ringlet_counter := ringlet_counter + 1;
                         when others =>
                             null;
                     end case;
@@ -274,7 +247,7 @@ process (clk)
                         when STATE_Initial =>
                             numloops := 0;
                             distance <= (others => '1');
-                            hasResult <= '0';
+                            triggerPin <= '0';
                         when STATE_Skip_Garbage =>
                             triggerPin <= '1';
                             numloops := numloops + 1;
@@ -283,10 +256,6 @@ process (clk)
                             triggerPin <= '0';
                         when STATE_ClearTrigger =>
                             numloops := numloops + 1;
-                        when STATE_LostPulse =>
-                            numloops := 0;
-                        when STATE_CalculateDistance =>
-                            numloops := 0;
                         when others =>
                             null;
                     end case;
@@ -294,7 +263,6 @@ process (clk)
                 when WriteSnapshot =>
                     EXTERNAL_triggerPin <= triggerPin;
                     EXTERNAL_distance <= distance;
-                    EXTERNAL_hasResult <= hasResult;
                     internalState <= ReadSnapshot;
                     previousRinglet <= currentState;
                     currentState <= targetState;
