@@ -1,1 +1,1 @@
-sensorsSuspended = allLow
+sensorsSuspended = allLow and after_ms(10)
