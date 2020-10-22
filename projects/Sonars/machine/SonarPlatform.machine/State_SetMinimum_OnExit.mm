@@ -1,1 +1,1 @@
-sensorCommand <= COMMAND_RESTART;
+sensorCommand <= COMMAND_NULL;
