@@ -9,15 +9,12 @@
 
 #include "State_SUSPENDED_Includes.h"
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wc++98-compat"
-
 using namespace FSM;
 using namespace CLM;
 using namespace FSMUltrasonicDiscreteSingle;
 using namespace State;
 
-SUSPENDED::SUSPENDED(const char *name): CLState(name, *new SUSPENDED::OnEntry, *new SUSPENDED::OnExit, *new SUSPENDED::Internal, NULLPTR, new SUSPENDED::OnSuspend, new SUSPENDED::OnResume)
+SUSPENDED::SUSPENDED(const char *name): CLState(name, *new SUSPENDED::OnEntry, *new SUSPENDED::OnExit, *new SUSPENDED::Internal)
 {
 }
 
@@ -26,8 +23,6 @@ SUSPENDED::~SUSPENDED()
 	delete &onEntryAction();
 	delete &onExitAction();
 	delete &internalAction();
-	delete onSuspendAction();
-	delete onResumeAction();
 
 }
 
@@ -56,22 +51,4 @@ void SUSPENDED::Internal::perform(CLMachine *_machine, CLState *_state) const
 #	include "UltrasonicDiscreteSingle_FuncRefs.mm"
 #	include "State_SUSPENDED_FuncRefs.mm"
 #	include "State_SUSPENDED_Internal.mm"
-}
-
-void SUSPENDED::OnSuspend::perform(CLMachine *_machine, CLState *_state) const
-{
-#	include "UltrasonicDiscreteSingle_VarRefs.mm"
-#	include "State_SUSPENDED_VarRefs.mm"
-#	include "UltrasonicDiscreteSingle_FuncRefs.mm"
-#	include "State_SUSPENDED_FuncRefs.mm"
-#	include "State_SUSPENDED_OnSuspend.mm"
-}
-
-void SUSPENDED::OnResume::perform(CLMachine *_machine, CLState *_state) const
-{
-#	include "UltrasonicDiscreteSingle_VarRefs.mm"
-#	include "State_SUSPENDED_VarRefs.mm"
-#	include "UltrasonicDiscreteSingle_FuncRefs.mm"
-#	include "State_SUSPENDED_FuncRefs.mm"
-#	include "State_SUSPENDED_OnResume.mm"
 }

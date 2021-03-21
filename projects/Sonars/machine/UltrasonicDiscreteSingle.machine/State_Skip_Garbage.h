@@ -6,9 +6,6 @@
 #ifndef clfsm_UltrasonicDiscreteSingle_State_Skip_Garbage_h
 #define clfsm_UltrasonicDiscreteSingle_State_Skip_Garbage_h
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wc++98-compat"
-
 #include "CLState.h"
 #include "CLAction.h"
 #include "CLTransition.h"
@@ -34,16 +31,6 @@ namespace FSM
                 };
 
                 class Internal: public CLAction
-                {
-                    virtual void perform(CLMachine *, CLState *) const;
-                };
-
-                class OnSuspend: public CLAction
-                {
-                    virtual void perform(CLMachine *, CLState *) const;
-                };
-
-                class OnResume: public CLAction
                 {
                     virtual void perform(CLMachine *, CLState *) const;
                 };
